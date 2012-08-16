@@ -13,3 +13,9 @@ Usage:
 4. tests are launched with ./test.sh . It's wrapper around py.test command to provide right environment, so feel free to provide it command-line options like it was py.test
 
 Look into settings.cfg. There you can tune some properties of this process (log directory etc.)
+
+If you don't have git, you can use this set of commands instead of step 1:
+
+wget -O master.zip https://github.com/mfalesni/cloud-app-sanity/zipball/master && unzip master.zip && mv mfalesni-cloud-app-sanity-* cloud-app-sanity && rm master.zip
+
+But do it only in clean directory, otherwise FFUUUU (mv) :)
