@@ -16,7 +16,7 @@ test_all: bootstrap
 	./runtests.sh -v
 
 test_register_only: bootstrap
-	./runtests -v test_00register.py
+	./runtests.sh -v test_00register.py
 
 test_unregister_only: bootstrap
-	./runtests -v test_99unregister.py
+	./runtests.sh -v test_99unregister.py
