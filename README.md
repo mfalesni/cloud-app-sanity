@@ -9,13 +9,13 @@ Usage:
 
 1. Checkout the git repository
 <pre>
-# git clone git://github.com/mfalesni/cloud-app-sanity.git
+git clone git://github.com/mfalesni/cloud-app-sanity.git
 </pre>
 2. Change into the repository directory
 <pre>
-#   cd cloud-app-sanity
+cd cloud-app-sanity
 </pre>
 3. Prepare the environment and run the test suite
 <pre>
-#  make test
+make test
 </pre>
