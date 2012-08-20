@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
-#   Author(s):	Milan Falesnik <mfalesni@redhat.com>
-#				James Laska <jlaska@redhat.com>
+#   Author(s): Milan Falesnik <mfalesni@redhat.com>
+#              James Laska <jlaska@redhat.com>
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 #   Copyright (c) 2012 Red Hat, Inc. All rights reserved.
@@ -23,9 +23,9 @@
 import common
 
 def test_unregister():
-	common.run("subscription-manager unregister")
+    common.run("subscription-manager unregister")
 
 def test_uninstall_cert(audreyvars):
-	cert_rpm = common.s_format("candlepin-cert-consumer-{KATELLO_HOST}", audreyvars)
-	cmd = "rpm -e %s" % cert_rpm
-	common.run(cmd)
+    cert_rpm = common.s_format("candlepin-cert-consumer-{KATELLO_HOST}", audreyvars)
+    cmd = "rpm -e %s" % cert_rpm
+    common.run(cmd)

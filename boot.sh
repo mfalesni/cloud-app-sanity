@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#   Description:	CloudForms CloudForms Applications Sanity Test Suite
-#					bootstrap file.
-#   Author(s): Milan Falesnik <mfalesni@redhat.com>
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   Description: CloudForms CloudForms Applications Sanity Test Suite
+#                bootstrap file.
+#   Author(s): Milan Falesnik <mfalesni@redhat.com> # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 #   Copyright (c) 2012 Red Hat, Inc. All rights reserved.
 #
@@ -84,13 +83,13 @@ echo "----- Activating environment -----"
 echo "----- Installing desired packages -----"
 for package in $PYPACKAGES
 do
-	echo "Installing ${package}"
-	"${PYDIR}/bin/easy_install" "${package}" >/dev/null 2>&1
-	ec=$?
-	( [ $ec -ne 0 ] && {
-		echo "    Installation failed!"
-		exit $ec
-	} ) || echo "    Package installed correctly!"
+    echo "Installing ${package}"
+    "${PYDIR}/bin/easy_install" "${package}" >/dev/null 2>&1
+    ec=$?
+    ( [ $ec -ne 0 ] && {
+        echo "    Installation failed!"
+        exit $ec
+    } ) || echo "    Package installed correctly!"
 done
 echo "----- Packages installed -----"
 
@@ -99,8 +98,8 @@ echo "----- Cleaning up -----"
 
 #for f in bootstrap.py
 #do
-#	echo "Deleting file ${f}"
-#	rm -f "${f}"
+#    echo "Deleting file ${f}"
+#    rm -f "${f}"
 #done
 
 

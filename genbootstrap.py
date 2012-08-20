@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#   Description:	CloudForms CloudForms Applications Sanity Test Suite
-#					bootstrap.py generator file.
+#   Description: CloudForms CloudForms Applications Sanity Test Suite
+#                bootstrap.py generator file.
 #   Author(s): Milan Falesnik <mfalesni@redhat.com>
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
