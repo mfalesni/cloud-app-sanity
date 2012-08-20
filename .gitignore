@@ -1,0 +1,5 @@
+bootstrap.py
+virtualenv.py
+build-dir
+*.swp
+*.pyc
