@@ -22,11 +22,59 @@
 #   Boston, MA 02110-1301, USA.
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Load test suite settings
-. "./settings.cfg"
+
+# Display error and exit
+error() {
+    echo "$@"
+    exit 1
+}
+
+# Display usage and exit
+usage() {
+    echo "$0 <options> [package(s)...]
+
+Where <options> include:
+   -b <build-dir>       Where to prepare build/test environment
+"
+    exit 1
+}
+
+# Parse command-line arguments
+parse_args() {
+    while getopts "d:h" options "$@" ; do
+        case $options in
+            d )     PYDIR=$OPTARG ;;
+            \?|h )  usage ;;
+            * )     usage ;;
+        esac
+    done
+
+    # Any remaining arguments are used as PYPACKAGES
+    PYPACKAGES=${@:$OPTIND}
+    unset OPTIND
+
+    # Error handling
+    test -z "$PYDIR" && error "Missing -d <build-dir> arguement"
+    test -z "$PYPACKAGES" && error "No python packages specified"
+}
+
+#
+# Let's do something ...
+#
+
+PYDIR=""       # build directory location
+PYPACKAGES=""  # What python packages to install into environment?
+
+# Parse command-line arguments
+parse_args "$@"
 
 # Prepare environment
 python bootstrap.py "${PYDIR}"
+
+if [ $? -ne 0 ] ; then
+    echo "Error preparing bootstrap '${PYDIR}'"
+    exit 1
+fi
 
 # Activating environment
 echo "----- Activating environment -----"
