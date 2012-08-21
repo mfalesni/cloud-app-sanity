@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #   Author(s):	Milan Falesnik <mfalesni@redhat.com>
-#				James Laska <jlaska@redhat.com>
+#               James Laska <jlaska@redhat.com>
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 #   Copyright (c) 2012 Red Hat, Inc. All rights reserved.
@@ -21,7 +21,9 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUITE_DIR="cloud-app-sanity"
+# When not specified, use default cloud-app-sanity
+# Can be specified with export SUITE_DIR="some-dir" before launching the script
+SUITE_DIR=${SUITE_DIR:-"cloud-app-sanity"}
 wget -O master.tgz https://github.com/mfalesni/cloud-app-sanity/tarball/master
 if [ -f master.tgz ]; then
     test -d $SUITE_DIR || mkdir $SUITE_DIR
