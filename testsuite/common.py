@@ -28,6 +28,9 @@ from ConfigParser import ConfigParser
 import os
 
 def run(cmd):
+    """
+        This function runs desired command and checks whether it has failed or not
+    """
     print "# %s" % cmd
     if isinstance(cmd, str):
         cmd = shlex.split(cmd)
