@@ -38,10 +38,10 @@ def test_audreyvars(audreyvars):
         This test checks for presence of audrey environment variables.
 
         Args:
-            audreyvars: Dict of audrey environment variables
+        audreyvars: Dict of audrey environment variables
 
         Raises:
-            AssertionError
+        AssertionError
     """
     assert len(audreyvars) > 0
 
@@ -50,7 +50,7 @@ def test_gpg_key_import_release():
         This test imports redhat-release GPG certificate
 
         Raises:
-            AssertionError
+        AssertionError
     """
     common.run("rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release")
 
@@ -60,10 +60,10 @@ def test_gpg_key_import_beta(audreyvars):
         Otherwise, it's skipped.
 
         Args:
-            audreyvars: Dict of audrey environment variables
+        audreyvars: Dict of audrey environment variables
 
         Raises:
-            AssertionError
+        AssertionError
     """
     betakey = audreyvars.get("IMPORT_GPG_BETA_KEY", "false").lower()
     if betakey == "true":
@@ -76,11 +76,11 @@ def test_import_rhel_product_cert(audreyvars, ec2_deployment):
         This test imports RHEL product certificates if it's desired.
 
         Args:
-            audreyvars: Dict of audrey environment variables
-            ec2_deployment (bool): Whether is this machine in EC2 or not
+        audreyvars: Dict of audrey environment variables
+        ec2_deployment (bool): Whether is this machine in EC2 or not
 
         Raises:
-            AssertionError, Failed
+        AssertionError, Failed
     """
     if ec2_deployment and not os.path.isfile('/etc/pki/product/69.pem'):
         os.chdir('/var/audrey/tooling/user/%s' % audreyvars.get("RHEL_PRODUCT_CERT_TASK", "RHEL_PRODUCT_CERT"))
@@ -107,12 +107,12 @@ def test_setup_tunnel(audreyvars, katello_discoverable, tunnel_requested):
         This test configures SSH tunnel if it's desired.
 
         Args:
-            audreyvars: Dict of audrey environment variables
-            katello_discoverable (bool): Whether is katello service discoverable or not
-            tunnel_requested (bool): Whether was tunnel requested or not
+        audreyvars: Dict of audrey environment variables
+        katello_discoverable (bool): Whether is katello service discoverable or not
+        tunnel_requested (bool): Whether was tunnel requested or not
 
         Raises:
-            AssertionError
+        AssertionError
     """
     if not katello_discoverable and tunnel_requested:
         print "Configuring tunnel"
@@ -140,10 +140,10 @@ def test_setup_releasever(audreyvars):
         This test sets up yum releasever if it's desired
 
         Args:
-            audreyvars: Dict of audrey environment variables
+        audreyvars: Dict of audrey environment variables
 
         Raises:
-            KeyError, IOError
+        KeyError, IOError
     """
     if not audreyvars.get("RELEASEVER", "Auto").lower() in ["", "auto"]:
         if not os.path.isdir('/etc/yum/vars'):
@@ -159,10 +159,10 @@ def test_import_certificate(audreyvars):
         This test imports Candlepin consumer certificate.
 
         Args:
-            audreyvars: Dict of audrey environment variables
+        audreyvars: Dict of audrey environment variables
 
         Raises:
-            AssertionError
+        AssertionError
     """
     cert_rpm = common.s_format("http://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
     cmd = "rpm -ivh %s" % cert_rpm
@@ -173,11 +173,11 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
         This test sets up a RHSM tunnel, if it's desired.
 
         Args:
-            audreyvars: Dict of audrey environment variables
-            subscription_manager_version: 2-tuple of major and minor version
+        audreyvars: Dict of audrey environment variables
+        subscription_manager_version: 2-tuple of major and minor version
 
         Raises:
-            AssertionError, IOError
+        AssertionError, IOError
     """
     if not configure_rhsm_tunnel:
         pytest.skip(msg='Not setting up a tunnel')
@@ -204,11 +204,11 @@ def test_disable_rhui(audreyvars, ec2_deployment):
         This test disables RHUI, if it's desired.
 
         Args:
-            audreyvars: Dict of audrey environment variables
-            ec2_deployment (bool): Whether is this machine in EC2 or not.
+        audreyvars: Dict of audrey environment variables
+        ec2_deployment (bool): Whether is this machine in EC2 or not.
 
         Raises:
-            AssertionError
+        AssertionError
     """
     if ec2_deployment and audreyvars.get("DISABLE_RHUI", "True").lower() == "true":
         try:
@@ -229,11 +229,11 @@ def test_katello_register(audreyvars, subscription_manager_version):
         This test registers system into Katello server.
 
         Args:
-            audreyvars: Dict of audrey environment variables
-            subscription_manager_version: 2-tuple of major and minor version
+        audreyvars: Dict of audrey environment variables
+        subscription_manager_version: 2-tuple of major and minor version
 
         Raises:
-            AssertionError
+        AssertionError
     """
     org = audreyvars["KATELLO_ORG"]
     activation_key = audreyvars.get("ACTIVATION_KEY", "").strip()

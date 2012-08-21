@@ -2,7 +2,7 @@ SHELL := /bin/bash
 BUILD_DIR := build-dir
 JUNITXML := results.xml
 
-.PHONY: bootstrap pack clean
+.PHONY: bootstrap pack clean doc
 
 bootstrap: bootstrap.py ${BUILD_DIR}
 
@@ -21,3 +21,6 @@ clean:
 
 test: bootstrap
 	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" -v --junitxml="${JUNITXML}"
+
+doc:
+	epydoc -v --config epydoc.cfg
