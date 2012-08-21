@@ -20,6 +20,12 @@
 #   Boston, MA 02110-1301, USA.
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+""" This module contains some functions, which are likely to be shared
+    between modules.
+
+"""
+
 from string import Template
 import subprocess
 import shlex
@@ -28,8 +34,13 @@ from ConfigParser import ConfigParser
 import os
 
 def run(cmd):
-    """
-        This function runs desired command and checks whether it has failed or not
+    """This function runs desired command and checks whether it has failed or not
+
+    :param cmd: Command to be run
+    :type cmd: str or list (shlex-splitted)
+
+    :returns: ``STDOUT`` of called process
+    :raises: AssertionError
     """
     print "# %s" % cmd
     if isinstance(cmd, str):
@@ -42,6 +53,19 @@ def run(cmd):
     return stdout
 
 def s_format(s, dct):
+    """ Does the ``dict``-format of string.
+        Python-version-proof.
+
+    :param s: Formatting string
+    :type s: str
+
+    :param dct: Replacing dictionary
+    :type dct: dict
+
+    :returns: Formatted string.
+    :rtype: str
+
+    """
     if hasattr(s, 'format'):
         return s.format(**dct)
     else:

@@ -1,6 +1,9 @@
 SHELL := /bin/bash
 BUILD_DIR := build-dir
 JUNITXML := results.xml
+DOCS_TITLE := CloudForms Integration Sanity Test Suite
+DOCS_AUTHOR := Milan Falesnik (mfalesni at redhat.com)
+DOCS_VERSION := 1.00
 
 .PHONY: bootstrap pack clean doc
 
@@ -20,7 +23,12 @@ clean:
 	rm -rf ${BUILD_DIR} testsuite/__pycache__
 
 test: bootstrap
-	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" -v --junitxml="${JUNITXML}"
+	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v --junitxml="${JUNITXML}"
 
-doc:
-	epydoc -v --config epydoc.cfg
+doc_src:
+	mkdir -p docs
+	cd docs && sphinx-apidoc -F -H "${DOCS_TITLE}" -A "${DOCS_AUTHOR}" -V "${DOCS_VERSION}" -f -o ./ ../testsuite/
+	cd docs && mv conf.py conf.py.old && echo -ne "import sys\nimport os\nsys.path.insert(0, os.path.abspath('../testsuite'))\n" > conf.py && cat conf.py.old | sed -r -e "s/^import sys, os$///" >> conf.py && rm -f conf.py.old
+
+doc_html: doc_src
+	cd docs && make html

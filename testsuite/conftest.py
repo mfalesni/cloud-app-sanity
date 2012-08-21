@@ -21,15 +21,24 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+""" This module contains generator functions for variable injecting of py.test framework.
+    
+    Some of them are cached, some not. I don't know how to make multi-level dependency yet.
+"""
+
 import os
 import re
 import subprocess
 import common
 
 def pytest_funcarg__audreyvars(request):
-    '''
-    Setups variables for testing
-    '''
+    """Setups variables for testing
+
+    :param request: py.test request
+
+    :returns: All Audrey-relevant environment variables.
+    :rtype: dict
+    """
     result = {}
     for key in os.environ:
         if key.startswith("AUDREY_VAR_KATELLO_REGISTER_"):
@@ -39,14 +48,27 @@ def pytest_funcarg__audreyvars(request):
 
 
 def pytest_funcarg__katello_discoverable(request):
-    '''Returns boolean (True of False) to indicate whether the provided katello
-    server is accessible'''
+    """Returns boolean (True of False) to indicate whether the provided katello
+    server is accessible
+
+    :param request: py.test.request
+
+    :returns: Accesibility of Katello server
+    :rtype: bool
+
+    """
     cmd = "ping -q -c5 %s" % request.getfuncargvalue("audreyvars")["KATELLO_HOST"]
     print "# %s" % cmd
     return subprocess.call(cmd.split()) == 0
 
 def pytest_funcarg__tunnel_requested(request):
-    ''' Determines whether setting up SSH tunnel is requested '''
+    """Determines whether setting up SSH tunnel is requested
+
+    :param request: py.test request.
+
+    :returns: Whether was tunnel requested.
+    :rtype: bool
+    """
     audreyvars = request.getfuncargvalue("audreyvars")
     ec2_deployment = request.getfuncargvalue("ec2_deployment")
     ssh = audreyvars.get("SSH_TUNNEL_ENABLED", "Auto")
@@ -63,25 +85,43 @@ def pytest_funcarg__tunnel_requested(request):
     return False
 
 def pytest_funcarg__ec2_deployment(request):
-    '''
-    Setups cached variable whether it's ec2 deployment or not.
-    '''
+    """Setups cached variable whether it's ec2 deployment or not.
+
+    :param request: py.test request.
+
+    :returns: Whether is this EC2 deployment (cached).
+    :rtype: bool
+    
+    """
     return request.cached_setup(setup=setup_ec2_deployment, scope="module")
 
 def setup_ec2_deployment():
-    '''Returns boolean True of False to indicate whether the current system is
-       an ec2 image'''
+    """Returns boolean True of False to indicate whether the current system is
+       an ec2 image
+
+    :returns: Whether is this EC2 deployment.
+    :rtype: bool
+    """
     cmd = 'curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document'
     print "# %s" % cmd
     return subprocess.call(cmd.split()) == 0
 
 def pytest_funcarg__subscription_manager_version(request):
-    '''
-    Setups cached variable of version of sub-man
-    '''
+    """Setups cached variable of version of sub-man
+
+    :param request: py.test request.
+
+    :returns: SM version from cache
+    :rtype: 2-tuple
+    """
     return request.cached_setup(setup=setup_subscription_manager_version, scope="module")
 
 def setup_subscription_manager_version():
+    """Gets version of sub-man
+
+    :returns: SM version
+    :rtype: 2-tuple
+    """
     sm_rpm_ver = common.run("rpm -q --queryformat %{VERSION} subscription-manager")
     sm_ver_maj, sm_ver_min, sm_ver_rest = sm_rpm_ver.split(".", 2)
     return int(sm_ver_maj), int(sm_ver_min)

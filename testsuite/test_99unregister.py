@@ -20,12 +20,28 @@
 #   Boston, MA 02110-1301, USA.
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+""" This module contains tests, which are used to unregister and cleanup tasks.
+
+"""
+
 import common
 
 def test_unregister():
+    """This test unregisters system from Katello.
+
+    :raises: AssertionError
+    """
     common.run("subscription-manager unregister")
 
 def test_uninstall_cert(audreyvars):
+    """This test uninstalls Candlepin customer certificate.
+
+    :param audreyvars: Dict of audrey environment variables
+    :type audreyvars: dict
+
+    :raises: AssertionError
+    """
     cert_rpm = common.s_format("candlepin-cert-consumer-{KATELLO_HOST}", audreyvars)
     cmd = "rpm -e %s" % cert_rpm
     common.run(cmd)
