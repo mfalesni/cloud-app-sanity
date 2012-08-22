@@ -23,7 +23,11 @@ clean:
 	rm -rf ${BUILD_DIR} testsuite/__pycache__
 
 test: bootstrap
-	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v --junitxml="${JUNITXML}"
+	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v -l --junitxml="${JUNITXML}"
+
+test_grep: bootstrap
+	@echo "Testing files with '${GREP}' in their names" 
+	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v -l --junitxml="${JUNITXML}" -k "${GREP}"
 
 doc_src:
 	mkdir -p docs

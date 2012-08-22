@@ -27,6 +27,18 @@
 
 import common
 
+def test_audreyvars(audreyvars):
+    """ This test checks for presence of audrey environment variables.
+        It's checked here again because of possibility to invoke tests separately.
+
+    :param audreyvars: Dict of audrey environment variables
+    :type audreyvars: dict
+
+    :raises: AssertionError
+    """
+    assert len(audreyvars) > 0
+
+
 def test_unregister():
     """This test unregisters system from Katello.
 
