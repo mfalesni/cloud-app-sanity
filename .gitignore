@@ -1,6 +1,8 @@
 bootstrap.py
 virtualenv.py
 build-dir
+docs
 epydoc
+results.*
 *.swp
 *.pyc
