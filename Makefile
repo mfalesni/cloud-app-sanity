@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 BUILD_DIR := build-dir
-JUNITXML := results.xml
+RESULTS_FILENAME := results
 DOCS_TITLE := CloudForms Integration Sanity Test Suite
 DOCS_AUTHOR := Milan Falesnik (mfalesni at redhat.com)
 DOCS_VERSION := 1.00
@@ -23,11 +23,11 @@ clean:
 	rm -rf ${BUILD_DIR} testsuite/__pycache__
 
 test: bootstrap
-	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v -l --junitxml="${JUNITXML}"
+	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v -l --junitxml="${RESULTS_FILENAME}.xml" --resultlog="${RESULTS_FILENAME}.pytest"
 
 test_grep: bootstrap
 	@echo "Testing files with '${GREP}' in their names" 
-	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v -l --junitxml="${JUNITXML}" -k "${GREP}"
+	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v -l --junitxml="${RESULTS_FILENAME}.xml" --resultlog="${RESULTS_FILENAME}.pytest" -k "${GREP}"
 
 doc_src:
 	mkdir -p docs
