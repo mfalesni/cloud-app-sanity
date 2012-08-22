@@ -38,15 +38,11 @@ Documentation:
 
 You can generate documentation from sources:
 
-1. Remove any sphinx in your computer
-<pre>
-yum remove python-sphinx*
-</pre>
-2. Install latest sphinx
-<pre>
-easy_install_sphinx
-</pre>
-3. Generate documentation
 <pre>
 make doc_html
+</pre>
+
+This will put the HTML output into
+<pre>
+docs/_build/html
 </pre>

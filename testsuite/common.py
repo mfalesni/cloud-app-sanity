@@ -88,7 +88,6 @@ def update_yum_config(repo_file, enabled=True):
     :param enabled: Whether to enable or disable
     :type enabled: bool
 
-    .. note:: os.path.isfile() assert?
     """
     if os.path.isfile(repo_file):
         cfg = ConfigParser()
