@@ -36,7 +36,7 @@ configure_rhsm_tunnel = False
 """
 cwd = os.getcwd()
 """
-:var cwd: Keeps working directory
+:var cwd: Keeps working directory.
 """
 
 def test_audreyvars(audreyvars):
@@ -255,6 +255,9 @@ def test_katello_register(audreyvars, subscription_manager_version):
                 pass # determine and print error condition to stdout
     common.run(cmd)
 
-    # VERIFICATION
-    # Test whether registration succeeded
+def test_verify_katello_registered():
+    """ This test verifies whether the system is registered into Katello.
+
+    :raises: AssertionError
+    """
     common.run('subscription-manager refresh')

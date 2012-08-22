@@ -36,6 +36,7 @@ import shlex
 import re
 from ConfigParser import ConfigParser
 import os
+import pytest
 
 def run(cmd, errorcode=0):
     """This function runs desired command and checks whether it has failed or not
@@ -104,6 +105,8 @@ def update_yum_config(repo_file, enabled=True):
             fd = open(repo_file, 'rwa+')
             cfg.write(fd)
             fd.close()
+    else:
+        pytest.fail(msg="%s was not found!" % repo_file)
 
 def update_yum_repo(repo_file, enabled=True):
     """Enables or disables all sections in Yum repository files

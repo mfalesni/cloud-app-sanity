@@ -46,6 +46,13 @@ def test_unregister():
     """
     common.run("subscription-manager unregister")
 
+def test_verify_unregistered():
+    """This test verifies that the system was unregistered from Katello.
+
+    :raises: AssertionError
+    """
+    common.run("subscription-manager unregister", 1)    # SM unreg. returns 1 when not registered
+
 def test_uninstall_cert(audreyvars):
     """This test uninstalls Candlepin customer certificate.
 
