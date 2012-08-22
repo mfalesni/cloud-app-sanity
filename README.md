@@ -26,11 +26,11 @@ cd cloud-app-sanity
 <pre>
 make test
 </pre>
-But if you want to run only some particular tests, you can use this command:
+if you want to run only some tests matching a particular expression, you can use this command:
 <pre>
-GREP="some-string" make test_grep
+TESTNAME="some-string" make test
 </pre>
-Where "some-string" specifies the string, which must be contained in file name in order to run the tests. So for example <pre>GREP="99" make test_grep</pre> will run only those tests contained in file test_99unregister.py. It behaves like normal grep, just without regexps. Applies on files, not test functions itself (at least I hope so).
+Where "some-string" specifies a keyword expression used by py.test to determine which tests to run.  For more information, consult the ''-k KEYWORDEXPR'' parameter to py.test.
 
 
 Documentation:

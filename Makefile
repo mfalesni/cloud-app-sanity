@@ -5,6 +5,14 @@ DOCS_TITLE := CloudForms Integration Sanity Test Suite
 DOCS_AUTHOR := Milan Falesnik (mfalesni at redhat.com)
 DOCS_VERSION := 1.00
 
+# Variables to control test execution
+TEST_ARGS ?= -v -l --junitxml="${RESULTS_FILENAME}.xml" --resultlog="${RESULTS_FILENAME}.pytest"
+TESTNAME ?=
+# If a TESTNAME was provided, update TEST_ARGS
+ifneq (,$(TESTNAME))
+TEST_ARGS += -k "$(TESTNAME)"
+endif
+
 .PHONY: bootstrap pack clean doc
 
 bootstrap: bootstrap.py ${BUILD_DIR}
@@ -23,11 +31,7 @@ clean:
 	rm -rf ${BUILD_DIR} testsuite/__pycache__
 
 test: bootstrap
-	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v -l --junitxml="${RESULTS_FILENAME}.xml" --resultlog="${RESULTS_FILENAME}.pytest"
-
-test_grep: bootstrap
-	@echo "Testing files with '${GREP}' in their names" 
-	source "${BUILD_DIR}/bin/activate" && python "${BUILD_DIR}/bin/py.test" testsuite -v -l --junitxml="${RESULTS_FILENAME}.xml" --resultlog="${RESULTS_FILENAME}.pytest" -k "${GREP}"
+	source "$(BUILD_DIR)/bin/activate" && python "$(BUILD_DIR)/bin/py.test" testsuite $(TEST_ARGS)
 
 doc_src:
 	mkdir -p docs
