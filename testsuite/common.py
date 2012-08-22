@@ -24,6 +24,10 @@
 """ This module contains some functions, which are likely to be shared
     between modules.
 
+    When decide to put a function here?:
+
+        - When it's enough universal to be used with multiple modules
+        - It can't be parameter for py.test
 """
 
 from string import Template
@@ -33,11 +37,13 @@ import re
 from ConfigParser import ConfigParser
 import os
 
-def run(cmd):
+def run(cmd, errorcode=0):
     """This function runs desired command and checks whether it has failed or not
 
     :param cmd: Command to be run
-    :type cmd: str or list (shlex-splitted)
+    :type cmd: str or list (``shlex``-splitted)
+    :param errorcode: Desired error code of the program. Defaults to 0 (all ok). If set to ``None``, error code won't be checked.
+    :type errorcode: int
 
     :returns: ``STDOUT`` of called process
     :raises: AssertionError
@@ -49,7 +55,8 @@ def run(cmd):
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT)
     (stdout, stderr) = p_open.communicate()
-    assert p_open.returncode == 0
+    if errorcode != None:
+        assert p_open.returncode == errorcode
     return stdout
 
 def s_format(s, dct):
@@ -73,6 +80,15 @@ def s_format(s, dct):
         return Template(re.sub(r'{([^}]+)}', '$\\1', s)).substitute(dct)
 
 def update_yum_config(repo_file, enabled=True):
+    """Enables or disables all sections in Yum config files
+
+    :param repo_file: Config file, which should be processed
+    :type repo_file: str
+    :param enabled: Whether to enable or disable
+    :type enabled: bool
+
+    .. note:: os.path.isfile() assert?
+    """
     if os.path.isfile(repo_file):
         cfg = ConfigParser()
         cfg.read([repo_file])
@@ -90,6 +106,13 @@ def update_yum_config(repo_file, enabled=True):
             fd.close()
 
 def update_yum_repo(repo_file, enabled=True):
+    """Enables or disables all sections in Yum repository files
+
+    :param repo_file: Repo file, which should be processed
+    :type repo_file: str
+    :param enabled: Whether to enable or disable
+    :type enabled: bool
+    """
     if not repo_file.startswith('/'):
         repo_file = '/etc/yum.repos.d/%s' % repo_file
     if not repo_file.endswith('.repo'):
@@ -97,6 +120,13 @@ def update_yum_repo(repo_file, enabled=True):
     update_yum_config(repo_file, enabled)
 
 def update_yum_plugin(plugin_conf, enabled=True):
+    """Enables or disables all sections in Yum plugin config files
+
+    :param repo_file: Config file, which should be processed
+    :type repo_file: str
+    :param enabled: Whether to enable or disable
+    :type enabled: bool
+    """
     if not plugin_conf.startswith('/'):
         plugin_conf = '/etc/yum/pluginconf.d/%s' % plugin_conf
     if not plugin_conf.endswith('.conf'):

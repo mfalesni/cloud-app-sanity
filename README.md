@@ -3,6 +3,9 @@ CloudForms Applications Sanity Test Suite
 
 Test suite for validating deployed CloudForms applications.
 
+Prerequisities:
+===============
+* <pre>make</pre>
 
 Usage:
 ======
