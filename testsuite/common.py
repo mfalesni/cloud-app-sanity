@@ -68,7 +68,7 @@ def run(cmd, errorcode=0):
     return stdout
 
 def copy(source, destination):
-    if not os.isfile(source):
+    if not os.path.isfile(source):
         pytest.fail(msg="Couldn't find file '%s'" % source)
     shutil.copy(source, destination)
 
