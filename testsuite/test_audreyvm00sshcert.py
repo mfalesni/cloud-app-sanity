@@ -57,3 +57,5 @@ def test_import_ssh_certificate(audreyvars):
     # Verify that key is in place
     if not os.path.isfile(target):
         pytest.fail(msg="Importing the key was unsuccessful, key is not present in '%s'" % target)
+    # Add the key into authorized keys
+    common.run("cat '%s' >> '%s'" % (target, "%s/authorized_keys" % JENKINS_SSH_DIR))
