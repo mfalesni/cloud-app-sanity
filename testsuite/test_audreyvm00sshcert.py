@@ -61,7 +61,7 @@ def test_import_ssh_certificate(audreyvars):
     authkeys = "%s/authorized_keys" % JENKINS_SSH_DIR
     with open(authkeys, "a") as authfile:
         with open(target, "r") as keyfile:
-            authfile.write(key.file.read())
+            authfile.write(keyfile.read())
     # Verify again that the file exists
     # Verify that key is in place
     if not os.path.isfile(authkeys):
