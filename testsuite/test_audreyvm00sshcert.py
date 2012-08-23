@@ -59,9 +59,11 @@ def test_import_ssh_certificate(audreyvars):
         pytest.fail(msg="Importing the key was unsuccessful, key is not present in '%s'" % target)
     # Add the key into authorized keys
     authkeys = "%s/authorized_keys" % JENKINS_SSH_DIR
-    with open(authkeys, "a") as authfile:
-        with open(target, "r") as keyfile:
-            authfile.write(keyfile.read())
+    destination = open(authkeys, "a")
+    source = open(target, "r")
+    destination.write(source.read())
+    source.close()
+    destination.close()
     # Verify again that the file exists
     # Verify that key is in place
     if not os.path.isfile(authkeys):
