@@ -37,6 +37,12 @@ import re
 from ConfigParser import ConfigParser
 import os
 import pytest
+import shutil
+
+audrey_service_path = '/var/audrey/tooling/user'
+"""
+:var audrey_service_path: Where are all Audrey services from XML located
+"""
 
 def run(cmd, errorcode=0):
     """This function runs desired command and checks whether it has failed or not
@@ -47,6 +53,7 @@ def run(cmd, errorcode=0):
     :type errorcode: int
 
     :returns: ``STDOUT`` of called process
+    :rtype: str
     :raises: AssertionError
     """
     print "# %s" % cmd
@@ -59,6 +66,27 @@ def run(cmd, errorcode=0):
     if errorcode != None:
         assert p_open.returncode == errorcode
     return stdout
+
+def copy(source, destination):
+    if not os.isfile(source):
+        pytest.fail(msg="Couldn't find file '%s'" % source)
+    shutil.copy(source, destination)
+
+def mkdir(directory):
+    os.mkdir(directory)
+
+def filename_from_url(url):
+    """ Extracts the filename from given URL
+
+    :param url: URL to be used for extraction
+    :type url: str
+
+    :returns: File name from URL
+    :rtype: str
+    """
+    while url.endswith("/"):
+        url = url[:-1] # Strip the trailing /
+    return re.sub("^.*?/([^/]+)$", r"\1", url)
 
 def s_format(s, dct):
     """ Does the ``dict``-format of string.

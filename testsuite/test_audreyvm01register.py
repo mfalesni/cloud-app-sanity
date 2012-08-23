@@ -81,7 +81,7 @@ def test_import_rhel_product_cert(audreyvars, ec2_deployment):
     :raises: AssertionError, Failed
     """
     if ec2_deployment and not os.path.isfile('/etc/pki/product/69.pem'):
-        os.chdir('/var/audrey/tooling/user/%s' % audreyvars.get("RHEL_PRODUCT_CERT_TASK", "RHEL_PRODUCT_CERT"))
+        os.chdir('%s/%s' % (common.audrey_service_path, audreyvars.get("RHEL_PRODUCT_CERT_TASK", "RHEL_PRODUCT_CERT")))
         output = common.run('rpm -qf /etc/redhat-release --qf "%{release}"')
         (major, minor, garbage) = output.split('.', 2)
         pem_file = '%s.%s-%s.pem' % (major, minor, os.uname()[-1])
