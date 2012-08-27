@@ -127,7 +127,7 @@ def download_file(url, target_file_name, bulletproof=False):
         try:
             try:
                 handle = urlopen(url)
-                content = urlopen.readlines()
+                content = handle.readlines()
                 handle.close()
                 if bulletproof:
                     for line in content:
