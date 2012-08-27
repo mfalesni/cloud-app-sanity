@@ -53,14 +53,6 @@ def test_import_ssh_certificate(audreyvars):
             target = target = "%s/%s" % (JENKINS_SSH_DIR, location[1]) # Use provided file name
         location = location[0]
         if not location.startswith("/"):
-            # Key is file in local directory
-            filename = "%s/KATELLO_REGISTER/%s" % (common.audrey_service_path, location)
-            if target == None:
-                target = "%s/%s" % (JENKINS_SSH_DIR, location)
-            if not os.path.isfile(filename):
-                pytest.fail(msg="Unable to find file '%s'" % filename)
-            common.copy(filename, target)
-        else:
             # Key is file or URL
             if location.startswith("http"):
                 # It's an URL
@@ -68,12 +60,20 @@ def test_import_ssh_certificate(audreyvars):
                     target = "%s/%s" % (JENKINS_SSH_DIR, common.filename_from_url(location))
                 common.download_file(location, target, True)
             else:
-                # It's a file somewhere in filesystem
+                # Key is file in local directory
+                filename = "%s/KATELLO_REGISTER/%s" % (common.audrey_service_path, location)
+                if target == None:
+                    target = "%s/%s" % (JENKINS_SSH_DIR, location)
                 if not os.path.isfile(filename):
                     pytest.fail(msg="Unable to find file '%s'" % filename)
-                if target == None:
-                    target = "%s/%s" % (JENKINS_SSH_DIR, os.path.basename(location))
-                common.copy(location, target)           
+                common.copy(filename, target)
+        else:
+            # It's a file somewhere in filesystem
+            if not os.path.isfile(filename):
+                pytest.fail(msg="Unable to find file '%s'" % filename)
+            if target == None:
+                target = "%s/%s" % (JENKINS_SSH_DIR, os.path.basename(location))
+            common.copy(location, target)           
         # Verify that key is in place
         if not os.path.isfile(target):
             pytest.fail(msg="Importing the key was unsuccessful, key is not present in '%s'" % target)
