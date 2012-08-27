@@ -4,7 +4,7 @@ RESULTS_FILENAME := results
 
 # Documentation variables
 DOCS_DIR := docs
-DOCS_TITLE := CloudForms Integration Sanity Test Suite
+DOCS_TITLE := CloudForms Application Sanity Test Suite
 DOCS_AUTHOR := Milan Falesnik (mfalesni at redhat.com)
 DOCS_VERSION := 1.00
 
@@ -18,26 +18,26 @@ endif
 
 .PHONY: bootstrap pack clean doc
 
-bootstrap: bootstrap.py ${BUILD_DIR}
+bootstrap: ${BUILD_DIR}
 
-bootstrap.py: virtualenv.py
-	./genbootstrap.py
-
-virtualenv.py:
-	wget https://raw.github.com/pypa/virtualenv/master/virtualenv.py
-
+# Setup virtualenv
 ${BUILD_DIR}:
-	./boot.sh -d ${BUILD_DIR} pytest sphinx
+	[ -d $(BUILD_DIR) ] || mkdir $(BUILD_DIR)
+	wget -P $(BUILD_DIR) https://raw.github.com/pypa/virtualenv/master/virtualenv.py
+	python $(BUILD_DIR)/virtualenv.py --system-site-packages $(BUILD_DIR)
+	source $(BUILD_DIR)/bin/activate && easy_install pytest sphinx
 
 clean:
-	rm -f bootstrap.py virtualenv.py *.pyc testsuite/*.pyc
+	rm -f virtualenv.py *.pyc testsuite/*.pyc
 	rm -rf ${BUILD_DIR} $(DOCS_DIR) testsuite/__pycache__
 
 test: bootstrap
+	[ -d $(RESULTS_DIR) ] || mkdir -p $(RESULTS_DIR)
 	source "$(BUILD_DIR)/bin/activate" && python "$(BUILD_DIR)/bin/py.test" testsuite $(TEST_ARGS)
+	for SUFFIX in log xml ; do ln -f -s ${RESULTS_FILENAME}.$$SUFFIX ${RESULTS_DIR}/results.$$SUFFIX ; done
 
 doc_src: bootstrap
-	mkdir -p $(DOCS_DIR)
+	[ -d $(DOCS_DIR) ] || mkdir -p $(DOCS_DIR)
 	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && sphinx-apidoc -F -H "${DOCS_TITLE}" -A "${DOCS_AUTHOR}" -V "${DOCS_VERSION}" -f -o ./ ../testsuite/
 	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && mv conf.py conf.py.old && echo -ne "import sys\nimport os\nsys.path.insert(0, os.path.abspath('../testsuite'))\n" > conf.py && cat conf.py.old | sed -r -e "s/^import sys, os$///" >> conf.py && rm -f conf.py.old
 
