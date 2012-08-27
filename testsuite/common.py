@@ -92,7 +92,7 @@ def filename_from_url(url):
         url = url[:-1] # Strip the trailing /
     return re.sub("^.*?/([^/]+)$", r"\1", url)
 
-def append_file(target, from):
+def append_file(target, fromf):
     """ This function appends one file to another
 
     :param target: Target file
@@ -104,7 +104,7 @@ def append_file(target, from):
     :rtype: None
     """    
     destination = open(target, "a")
-    source = open(from, "r")
+    source = open(fromf, "r")
     destination.write(source.read())
     source.close()
     destination.close()
