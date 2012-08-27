@@ -38,6 +38,10 @@ from ConfigParser import ConfigParser
 import os
 import pytest
 import shutil
+from urllib2 import urlopen, URLError, HTTPError
+
+class DownloadException(Exception):
+    pass
 
 audrey_service_path = '/var/audrey/tooling/user'
 """
@@ -87,6 +91,63 @@ def filename_from_url(url):
     while url.endswith("/"):
         url = url[:-1] # Strip the trailing /
     return re.sub("^.*?/([^/]+)$", r"\1", url)
+
+def append_file(target, from):
+    """ This function appends one file to another
+
+    :param target: Target file
+    :type target: str
+    :param target: Source file
+    :type target: str
+
+    :returns: None
+    :rtype: None
+    """    
+    destination = open(target, "a")
+    source = open(from, "r")
+    destination.write(source.read())
+    source.close()
+    destination.close()
+
+def download_file(url, target_file_name, bulletproof=False):
+    """ Downloads file from desired URL. Can be specified as bulletproof,
+        if downloading from Gitweb-site
+
+    :param url: URL where to download from
+    :type url: str
+    :param target_file_name: Target file name
+    :type target_file_name: str
+    :param bulletproof: Whether it has to check if it didn't download garbage or not
+    :type bulletproof: bool
+    """
+    trials = 10
+    forbidden = "<!DOCTYPE html"
+    result = None
+    while result == None and trials > 0:
+        try:
+            try:
+                handle = urlopen(url)
+                content = urlopen.readlines()
+                handle.close()
+                if bulletproof:
+                    for line in content:
+                        if forbidden in line:
+                            raise DownloadException("Wrong file format!")
+                result = "\n".join(content)
+            except (URLError, HTTPError, DownloadException):
+                raise
+        except (DownloadException, HTTPError, URLError):
+            trials -= 1
+            if trials == 0:
+                raise
+            continue
+    try:
+        target_file = open(target_file_name, "w")
+        target_file.write(result)
+        target_file.close()
+    except TypeError:
+        pytest.fail(msg="Download unsuccessful")
+
 
 def s_format(s, dct):
     """ Does the ``dict``-format of string.
