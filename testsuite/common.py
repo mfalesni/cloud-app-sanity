@@ -197,11 +197,11 @@ def install_yum_package_remote(server, uuid, login, password, package):
     response = None
     try:
         response = urlopen(request)
-    except HTTPError as e:
+    except HTTPError, e:
         if int(e.getcode()) == 202:
             pass
         else:
-            pytest.fail(msg="Error when querying installation of package %s!" % package)
+            pytest.fail(msg="Error when querying installation of package %s with HTTP code %d!" % (package, int(e.getcode())))
     # get the task uuid
     task_uuid = json.loads("\n".join(response.readlines()))["uuid"]
     # poll it
