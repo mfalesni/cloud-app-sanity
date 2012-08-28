@@ -194,6 +194,7 @@ def install_yum_package_remote(server, uuid, login, password, package):
     request.add_header("content-length", str(len(body)))
     request.add_data(body)
     # send the request
+    response = None
     try:
         response = urlopen(request)
     except HTTPError as e:
