@@ -38,7 +38,12 @@ from ConfigParser import ConfigParser
 import os
 import pytest
 import shutil
-from urllib2 import urlopen, URLError, HTTPError
+import base64
+from urllib2 import urlopen, URLError, HTTPError, Request
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 class DownloadException(Exception):
     pass
@@ -160,6 +165,58 @@ def install_yum_package_local(package_name):
     run("yum -y install %s" % (package_name))
     # Verify it
     run("rpm -q %s" % (package_name))
+
+def make_auth_request(url, login, password):
+    """ Creates request with basic HTTP authentication
+
+    :param url: URL to use for request
+    :type url: str
+    :param login: Login name
+    :type login: str
+    :param password: Login password
+    :type password: str
+    :return: Basic HTTP authenticated request
+    :rtype: urllib2.Request
+    """
+    request = Request(url)
+    request.add_header("Authorization", "Basic %s" % base64.encodestring('%s:%s' % (login, password))[:-1])
+    return request
+
+def install_yum_packages_remote(server, uuid, login, password, packages):
+    """ This function installs package into this guest system via Katello request.
+        Basically, it tells Katello "Hey, Katello, install these packages into me"
+
+    """
+    # Prepare the request
+    request = make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
+    request.headers["content-type"] = "application/json"
+    body = json.dumps({"packages": packages})
+    request.headers["content-length"] = str(len(body) if body else 0)
+    request.data = body
+    # send the request
+    response = urlopen(request)
+    # get the task uuid
+    task_uuid = json.loads("\n".join(response.readlines()))["uuid"]
+    # poll it
+    state = ""
+    # List of allowed states
+    ok_states = ["running", "finished"]
+    while state != "finished":
+        state = katello_poll_system_task_state(server, task_uuid, login, password)
+        if state not in ok_states:
+            pytest.fail(msg="Installation of packages %s failed when task went to state '%s'" % (str(packages), state))
+    # Package is installed, let's verify it
+    for package in packages:
+        run("rpm -q %s" % (package))
+
+def katello_poll_system_task_state(server, task_uuid, login, password):
+    """ This function returns state of task with given UUID
+    """
+    request = make_auth_request("https://%s/katello/api/systems/tasks/%s" % (server, task_uuid), login, password)
+    response = urlopen(request)
+    data = json.loads("\n".join(response.readlines()))
+    return str(data["state"])
+      
 
 
 def s_format(s, dct):

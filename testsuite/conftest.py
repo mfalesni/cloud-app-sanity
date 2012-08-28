@@ -125,3 +125,17 @@ def setup_subscription_manager_version():
     sm_rpm_ver = common.run("rpm -q --queryformat %{VERSION} subscription-manager")
     sm_ver_maj, sm_ver_min, sm_ver_rest = sm_rpm_ver.split(".", 2)
     return int(sm_ver_maj), int(sm_ver_min)
+
+def pytest_funcarg__system_uuid(request):
+    """ Returns system UUID from subscription-manager
+
+    :param request: py.test request
+    :returns: System UUID
+    :rtype: str
+    """
+    facts = common.run("subscription-manager facts --list")
+    facts = facts.strip().split("\n")
+    for fact in facts:
+        name, value = fact.split(":", 1)
+        if name == "system.uuid":
+            return value.lstrip()

@@ -23,19 +23,13 @@
 import common
 import pytest
 
-def test_install_package_locally_from_yum(audreyvars):
-    """ This test does local install of package (by yum command).
-        It takes a list of packages (separated by spaces) and installs them one by one.
-
-    :param audreyvars: Dict of Audrey environment variables
-    :type audreyvars: dict
-    """
-    packages = audreyvars.get("YUM_LOCAL_INSTALL", "").strip()
+def test_install_packages_remote(audreyvars, system_uuid):
+    packages = audreyvars.get("YUM_REMOTE_INSTALL", "").strip()
+    server = audreyvars["KATELLO_HOST"]
+    login = audreyvars.get("KATELLO_USER", "admin")
+    password = audreyvars.get("KATELLO_PASS", "admin")
     if packages != "":
         packages = packages.split(" ")
     else:
-        pytest.skip(msg="No packages marked for local install")
-    for package in packages:
-        print "Installing package %s" % package
-        common.install_yum_package_local(package)
-
+        pytest.skip(msg="No packages marked for remote install")
+    common.install_yum_package_remote(server, system_uuid, login, password, packages)
