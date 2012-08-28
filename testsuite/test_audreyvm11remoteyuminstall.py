@@ -32,4 +32,4 @@ def test_install_packages_remote(audreyvars, system_uuid):
         packages = packages.split(" ")
     else:
         pytest.skip(msg="No packages marked for remote install")
-    common.install_yum_package_remote(server, system_uuid, login, password, packages)
+    common.install_yum_packages_remote(server, system_uuid, login, password, packages)
