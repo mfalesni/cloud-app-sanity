@@ -157,7 +157,7 @@ def install_yum_package_local(package_name):
     :raises: AssertionError
     """
     # Install it
-    run("yum -y install %s" (package_name))
+    run("yum -y install %s" % (package_name))
     # Verify it
     run("rpm -q %s" % (package_name))
 
