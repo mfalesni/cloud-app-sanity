@@ -198,7 +198,7 @@ def install_yum_package_remote(server, uuid, login, password, package):
     try:
         response = urlopen(request)
     except HTTPError, e:
-        if int(e.getcode()) == 202:
+        if int(e.code) in [202]:
             pass
         else:
             pytest.fail(msg="Error when querying installation of package %s with HTTP code %d!" % (package, int(e.getcode())))
