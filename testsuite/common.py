@@ -148,6 +148,19 @@ def download_file(url, target_file_name, bulletproof=False):
     except TypeError:
         pytest.fail(msg="Download unsuccessful")
 
+def install_yum_package_local(package_name):
+    """ Does the 'yum install <package>' command.
+
+    :param package_name: Name of the package to install (eg. katello-all)
+    :type package_name: str
+
+    :raises: AssertionError
+    """
+    # Install it
+    run("yum -y install %s" (package_name))
+    # Verify it
+    run("rpm -q %s" % (package_name))
+
 
 def s_format(s, dct):
     """ Does the ``dict``-format of string.
