@@ -182,7 +182,7 @@ def make_auth_request(url, login, password):
     request.add_header("Authorization", "Basic %s" % base64.encodestring('%s:%s' % (login, password))[:-1])
     return request
 
-def install_yum_packages_remote(server, uuid, login, password, packages):
+def install_yum_package_remote(server, uuid, login, password, package):
     """ This function installs package into this guest system via Katello request.
         Basically, it tells Katello "Hey, Katello, install these packages into me"
 
@@ -190,7 +190,7 @@ def install_yum_packages_remote(server, uuid, login, password, packages):
     # Prepare the request
     request = make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
     request.add_header("content-type", "application/json")
-    body = json.dumps({"packages": packages})
+    body = json.dumps({"packages": [package]})
     request.add_header("content-length", str(len(body)))
     request.data = body
     # send the request
@@ -206,8 +206,7 @@ def install_yum_packages_remote(server, uuid, login, password, packages):
         if state not in ok_states:
             pytest.fail(msg="Installation of packages %s failed when task went to state '%s'" % (str(packages), state))
     # Package is installed, let's verify it
-    for package in packages:
-        run("rpm -q %s" % (package))
+    run("rpm -q %s" % package)
 
 def katello_poll_system_task_state(server, task_uuid, login, password):
     """ This function returns state of task with given UUID
