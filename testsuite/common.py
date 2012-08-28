@@ -191,7 +191,7 @@ def install_yum_packages_remote(server, uuid, login, password, packages):
     request = make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
     request.headers["content-type"] = "application/json"
     body = json.dumps({"packages": packages})
-    request.headers["content-length"] = str(len(body) if body else 0)
+    request.headers["content-length"] = str(len(body))
     request.data = body
     # send the request
     response = urlopen(request)
@@ -216,8 +216,6 @@ def katello_poll_system_task_state(server, task_uuid, login, password):
     response = urlopen(request)
     data = json.loads("\n".join(response.readlines()))
     return str(data["state"])
-      
-
 
 def s_format(s, dct):
     """ Does the ``dict``-format of string.
