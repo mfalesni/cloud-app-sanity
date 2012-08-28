@@ -189,9 +189,9 @@ def install_yum_packages_remote(server, uuid, login, password, packages):
     """
     # Prepare the request
     request = make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
-    request.headers["content-type"] = "application/json"
+    request.add_header("content-type", "application/json")
     body = json.dumps({"packages": packages})
-    request.headers["content-length"] = str(len(body))
+    request.add_header("content-length", str(len(body)))
     request.data = body
     # send the request
     response = urlopen(request)
