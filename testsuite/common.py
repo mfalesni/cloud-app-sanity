@@ -199,7 +199,7 @@ def install_yum_package_remote(server, uuid, login, password, package):
         response = urlopen(request)
     except HTTPError, e:
         if int(e.code) in [202]:
-            reason = e.reason
+            pass
         else:
             pytest.fail(msg="Error when querying installation of package %s with HTTP code %d and reason '%s'!" % (package, int(e.code), e.reason))
     # get the task uuid
@@ -211,7 +211,7 @@ def install_yum_package_remote(server, uuid, login, password, package):
     while state != "finished":
         state = katello_poll_system_task_state(server, task_uuid, login, password)
         if state not in ok_states:
-            pytest.fail(msg="Installation of packages %s failed when task went to state '%s'" % (str(packages), state))
+            pytest.fail(msg="Installation of package %s failed when task went to state '%s'" % (str(package), state))
     # Package is installed, let's verify it
     run("rpm -q %s" % package)
 
