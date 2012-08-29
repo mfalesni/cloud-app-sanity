@@ -207,7 +207,7 @@ def install_yum_package_remote(server, uuid, login, password, package):
     # poll it
     state = ""
     # List of allowed states
-    ok_states = ["running", "finished"]
+    ok_states = ["waiting", "running", "finished"]
     while state != "finished":
         state = katello_poll_system_task_state(server, task_uuid, login, password)
         if state not in ok_states:
