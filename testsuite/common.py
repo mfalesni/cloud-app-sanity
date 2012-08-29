@@ -322,3 +322,16 @@ def update_yum_plugin(plugin_conf, enabled=True):
     if not plugin_conf.endswith('.conf'):
         plugin_conf = '%s.conf' % plugin_conf
     update_yum_config(plugin_conf, enabled)
+
+def exists_in_path(cmd, actual_directory):
+    # can't search the path if a directory is specified
+    extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
+    pathdirs = os.environ.get("PATH", "").split(os.pathsep)
+    pathdirs.append(actual_directory)
+    for directory in pathdirs:
+        base = os.path.join(directory, cmd)
+        options = [base] + [(base + ext) for ext in extensions]
+        for filename in options:
+            if os.path.exists(filename):
+                return True
+    return False
