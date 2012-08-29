@@ -25,11 +25,11 @@ ${BUILD_DIR}:
 	[ -d $(BUILD_DIR) ] || mkdir $(BUILD_DIR)
 	wget -P $(BUILD_DIR) https://raw.github.com/pypa/virtualenv/master/virtualenv.py
 	python $(BUILD_DIR)/virtualenv.py --system-site-packages $(BUILD_DIR)
-	source $(BUILD_DIR)/bin/activate && easy_install pytest sphinx
+	source $(BUILD_DIR)/bin/activate && easy_install pytest sphinx sphinxtogithub
 
 clean:
 	rm -f virtualenv.py *.pyc testsuite/*.pyc
-	rm -rf ${BUILD_DIR} $(DOCS_DIR) testsuite/__pycache__
+	rm -rf ${BUILD_DIR} $(DOCS_DIR)/*.rst $(DOCS_DIR)/_* $(DOCS_DIR)/make.bat testsuite/__pycache__
 
 test: bootstrap
 	[ -d $(RESULTS_DIR) ] || mkdir -p $(RESULTS_DIR)
@@ -38,8 +38,8 @@ test: bootstrap
 
 doc_src: bootstrap
 	[ -d $(DOCS_DIR) ] || mkdir -p $(DOCS_DIR)
-	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && sphinx-apidoc -F -H "${DOCS_TITLE}" -A "${DOCS_AUTHOR}" -V "${DOCS_VERSION}" -f -o ./ ../testsuite/
-	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && mv conf.py conf.py.old && echo -ne "import sys\nimport os\nsys.path.insert(0, os.path.abspath('../testsuite'))\n" > conf.py && cat conf.py.old | sed -r -e "s/^import sys, os$///" >> conf.py && rm -f conf.py.old
+	cd "$(DOCS_DIR)" && rm -rf index.rst
+	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && sphinx-apidoc -F -H "${DOCS_TITLE}" -A "${DOCS_AUTHOR}" -V "${DOCS_VERSION}" -o ./ ../testsuite/
 
 doc_html: doc_src
 	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && make html
