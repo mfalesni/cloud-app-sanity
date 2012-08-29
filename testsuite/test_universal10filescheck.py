@@ -28,7 +28,7 @@ import sys
 
 def test_check_permissions_and_broken_symlinks():
     stack = []  # Used for storing directories to parse
-    starting_dir = "/usr"
+    starting_dir = "/"
     failed = False
     # Helper functions
     isdir = lambda x: stat.S_ISDIR( x.st_mode)
