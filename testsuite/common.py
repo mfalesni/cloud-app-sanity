@@ -183,9 +183,21 @@ def make_auth_request(url, login, password):
     return request
 
 def install_yum_package_remote(server, uuid, login, password, package):
-    """ This function installs package into this guest system via Katello request.
-        Basically, it tells Katello "Hey, Katello, install these packages into me"
+    """ This function installs package into guest system via Katello request.
+        Basically, it tells Katello "Hey, Katello, install these packages into machine with that UUID"
 
+    :param server: Remote Katello server
+    :type server: ``str``
+    :param uuid: Target machine UUID
+    :type uuid: ``str``
+    :param login: Login name into Katello server
+    :type login: ``str``
+    :param password: Login password into Katello server
+    :type password: ``str``
+    :param package: Package to install into system
+    :type package: ``str``
+
+    :raises: pytest.Failed    
     """
     # Prepare the request
     request = make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
@@ -216,7 +228,20 @@ def install_yum_package_remote(server, uuid, login, password, package):
     run("rpm -q %s" % package)
 
 def katello_poll_system_task_state(server, task_uuid, login, password):
-    """ This function returns state of task with given UUID
+    """ This function returns state of task with given UUID.
+        Useful when polling certain task if finished or not.
+
+    :param server: Katello server to poll on.
+    :type server: ``str``
+    :param task_uuid: Checked task's unique ID
+    :type task_uuid: ``str``
+    :param password: Login password into Katello server
+    :type password: ``str``
+    :param package: Package to install into system
+    :type package: ``str``
+
+    :returns: Reported task state
+    :rtype: ``str``
     """
     request = make_auth_request("https://%s/katello/api/systems/tasks/%s" % (server, task_uuid), login, password)
     response = urlopen(request)

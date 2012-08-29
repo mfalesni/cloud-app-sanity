@@ -20,10 +20,24 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+""" This module contains tests which are supposed to test remote control
+    Katello -> guest computer
+"""
+
 import common
 import pytest
 
 def test_install_packages_remote(audreyvars, system_uuid):
+    """ Installs packages specified in YUM_REMOTE_INSTALL into this system via
+        remote request through Katello server to check whether there aren't any issues.
+
+    :param audreyvars: Audrey environemnt variables
+    :type audreyvars: ``dict``
+    :param system_uuid: This system's unique ID for Katello
+    :type system_uuid: ``str``
+
+    :raises: pytest.Skipped, pytest.Failed
+    """
     packages = audreyvars.get("YUM_REMOTE_INSTALL", "").strip()
     server = audreyvars["KATELLO_HOST"]
     login = audreyvars.get("KATELLO_USER", "admin")
