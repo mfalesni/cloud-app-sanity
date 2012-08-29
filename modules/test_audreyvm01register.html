@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test_audreyvm01register &mdash; CloudForms Application Sanity Test Suite 1.00 documentation</title>
+    
+    <link rel="stylesheet" href="../static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.00',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="CloudForms Application Sanity Test Suite 1.00 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">CloudForms Application Sanity Test Suite 1.00 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for test_audreyvm01register</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python2</span>
+<span class="c">#   Author(s): Milan Falesnik &lt;mfalesni@redhat.com&gt;</span>
+<span class="c">#              James Laska &lt;jlaska@redhat.com&gt;</span>
+<span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c">#</span>
+<span class="c">#   Copyright (c) 2012 Red Hat, Inc. All rights reserved.</span>
+<span class="c">#</span>
+<span class="c">#   This copyrighted material is made available to anyone wishing</span>
+<span class="c">#   to use, modify, copy, or redistribute it subject to the terms</span>
+<span class="c">#   and conditions of the GNU General Public License version 2.</span>
+<span class="c">#</span>
+<span class="c">#   This program is distributed in the hope that it will be</span>
+<span class="c">#   useful, but WITHOUT ANY WARRANTY; without even the implied</span>
+<span class="c">#   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR</span>
+<span class="c">#   PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#   You should have received a copy of the GNU General Public</span>
+<span class="c">#   License along with this program; if not, write to the Free</span>
+<span class="c">#   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,</span>
+<span class="c">#   Boston, MA 02110-1301, USA.</span>
+<span class="c">#</span>
+<span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="kn">import</span> <span class="nn">common</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">ConfigParser</span> <span class="kn">import</span> <span class="n">ConfigParser</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="n">configure_rhsm_tunnel</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">:var configure_rhsm_tunnel: Keeps whether we&#39;ll have to configure SSH tunnel.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">:var cwd: Keeps working directory.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="test_audreyvars"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_audreyvars">[docs]</a><span class="k">def</span> <span class="nf">test_audreyvars</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test checks for presence of audrey environment variables.</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+
+<span class="sd">    :raises: AssertionError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</div>
+<div class="viewcode-block" id="test_gpg_key_import_release"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_gpg_key_import_release">[docs]</a><span class="k">def</span> <span class="nf">test_gpg_key_import_release</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;This test imports redhat-release GPG certificate</span>
+
+<span class="sd">    :raises: AssertionError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_gpg_key_import_beta"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_gpg_key_import_beta">[docs]</a><span class="k">def</span> <span class="nf">test_gpg_key_import_beta</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test imports redhat-beta GPG certificate if it&#39;s wanted (audreyvars[IMPORT_GPG_BETA_KEY]). Otherwise, it&#39;s skipped.</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+
+<span class="sd">    :raises: AssertionError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">betakey</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;IMPORT_GPG_BETA_KEY&quot;</span><span class="p">,</span> <span class="s">&quot;false&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">betakey</span> <span class="o">==</span> <span class="s">&quot;true&quot;</span><span class="p">:</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&#39;Not importing beta key&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_import_rhel_product_cert"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_import_rhel_product_cert">[docs]</a><span class="k">def</span> <span class="nf">test_import_rhel_product_cert</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">,</span> <span class="n">ec2_deployment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test imports RHEL product certificates if it&#39;s desired.</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+<span class="sd">    :param ec2_deployment: Whether is this machine in EC2 or not</span>
+<span class="sd">    :type ec2_deployment: boolean</span>
+
+<span class="sd">    :raises: AssertionError, Failed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ec2_deployment</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s">&#39;/etc/pki/product/69.pem&#39;</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">common</span><span class="o">.</span><span class="n">audrey_service_path</span><span class="p">,</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;RHEL_PRODUCT_CERT_TASK&quot;</span><span class="p">,</span> <span class="s">&quot;RHEL_PRODUCT_CERT&quot;</span><span class="p">)))</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&#39;rpm -qf /etc/redhat-release --qf &quot;%{release}&quot;&#39;</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">,</span> <span class="n">garbage</span><span class="p">)</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">pem_file</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">.pem&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">uname</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">pem_file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s">&#39;/etc/pki/product&#39;</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">&#39;/etc/pki/product&#39;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">pem_file</span><span class="p">,</span> <span class="s">&#39;/etc/pki/product/69.pem&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;Unable to find PEM file for </span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">,</span> <span class="n">garbage</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&#39;Not importing RHEL Product key&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_return_to_default_directory"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_return_to_default_directory">[docs]</a><span class="k">def</span> <span class="nf">test_return_to_default_directory</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;This test just assures that we are in right directory&quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_setup_tunnel"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_setup_tunnel">[docs]</a><span class="k">def</span> <span class="nf">test_setup_tunnel</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">,</span> <span class="n">katello_discoverable</span><span class="p">,</span> <span class="n">tunnel_requested</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test configures SSH tunnel if it&#39;s desired.</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+<span class="sd">    :param katello_discoverable: Whether is katello service discoverable or not</span>
+<span class="sd">    :type katello_discoverable: bool</span>
+<span class="sd">    :param tunnel_requested: Whether was tunnel requested or not</span>
+<span class="sd">    :type tunnel_requested: bool</span>
+
+<span class="sd">    :raises: AssertionError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">katello_discoverable</span> <span class="ow">and</span> <span class="n">tunnel_requested</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;Configuring tunnel&quot;</span>
+        <span class="c"># Backup the /etc/hosts file</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="s">&quot;/etc/hosts&quot;</span><span class="p">,</span> <span class="s">&quot;/etc/hosts.orig&quot;</span><span class="p">)</span>
+        <span class="c"># Modify /etc/hosts to support tunneling</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;/etc/hosts&quot;</span><span class="p">,</span> <span class="s">&quot;r+&quot;</span><span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;SSH_TUNNEL_IP&quot;</span><span class="p">],</span> <span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;KATELLO_HOST&quot;</span><span class="p">]))</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c"># Replace the katello port with the provided tunneled katello port</span>
+        <span class="c"># In case variable names changed, make noise if we don&#39;t find the expected</span>
+        <span class="c"># variable</span>
+        <span class="k">assert</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;KATELLO_PORT&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;AUDREY_VAR_KATELLO_REGISTER_KATELLO_PORT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;AUDREY_VAR_KATELLO_REGISTER_SSH_TUNNEL_KATELLO_PORT&quot;</span><span class="p">,</span> <span class="s">&quot;8080&quot;</span><span class="p">)</span>
+        <span class="n">configure_rhsm_tunnel</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&#39;Not configuring tunnel&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_setup_releasever"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_setup_releasever">[docs]</a><span class="k">def</span> <span class="nf">test_setup_releasever</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test sets up yum releasever if it&#39;s desired</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+
+<span class="sd">    :raises: KeyError, IOError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;RELEASEVER&quot;</span><span class="p">,</span> <span class="s">&quot;Auto&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;auto&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s">&#39;/etc/yum/vars&#39;</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">&#39;/etc/yum/vars&#39;</span><span class="p">)</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;/etc/yum/vars/releasever&quot;</span><span class="p">,</span> <span class="s">&quot;w+&quot;</span><span class="p">)</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;RELEASEVER&quot;</span><span class="p">])</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&#39;Not customizing yum releasever&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_import_certificate"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_import_certificate">[docs]</a><span class="k">def</span> <span class="nf">test_import_certificate</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test imports Candlepin consumer certificate.</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+
+<span class="sd">    :raises: AssertionError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cert_rpm</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">s_format</span><span class="p">(</span><span class="s">&quot;http://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm&quot;</span><span class="p">,</span> <span class="n">audreyvars</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s">&quot;rpm -ivh </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">cert_rpm</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_tunnel_rhsm"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_tunnel_rhsm">[docs]</a><span class="k">def</span> <span class="nf">test_tunnel_rhsm</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">,</span> <span class="n">subscription_manager_version</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test sets up a RHSM tunnel, if it&#39;s desired.</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+<span class="sd">    :param subscription_manager_version: 2-tuple of major and minor version</span>
+<span class="sd">    :type subscription_manager_version: tuple</span>
+
+<span class="sd">    :raises: AssertionError, IOError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">configure_rhsm_tunnel</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&#39;Not setting up a tunnel&#39;</span><span class="p">)</span>
+    <span class="n">sm_ver_maj</span><span class="p">,</span> <span class="n">sm_ver_min</span> <span class="o">=</span> <span class="n">subscription_manager_version</span>
+    <span class="n">rhsm_baseurl</span> <span class="o">=</span> <span class="s">&quot;https://</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">/pulp/repos&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;KATELLO_HOST&quot;</span><span class="p">],</span> <span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;SSH_TUNNEL_PULP_PORT&quot;</span><span class="p">])</span>
+    <span class="n">server_port</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;SSH_TUNNEL_PULP_PORT&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">sm_ver_maj</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sm_ver_min</span> <span class="o">&lt;</span> <span class="mi">96</span><span class="p">:</span>
+            <span class="n">rhsm_conf</span> <span class="o">=</span> <span class="s">&#39;/etc/rhsm/rhsm.conf&#39;</span>
+            <span class="n">cfg</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">()</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">read</span><span class="p">([</span><span class="n">rhsm_conf</span><span class="p">])</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;rhsm&#39;</span><span class="p">,</span> <span class="s">&#39;baseurl&#39;</span><span class="p">,</span> <span class="n">rhsm_baseurl</span><span class="p">)</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;server&#39;</span><span class="p">,</span> <span class="s">&#39;port&#39;</span><span class="p">,</span> <span class="n">server_port</span><span class="p">)</span>
+            <span class="c"># Save config</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">rhsm_conf</span><span class="p">,</span> <span class="s">&#39;wa+&#39;</span><span class="p">)</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+            <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&#39;subscription-manager config --rhsm.baseurl=</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">rhsm_baseurl</span><span class="p">)</span>
+            <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&#39;subscription-manager config --server.port=</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">server_port</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_disable_rhui"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_disable_rhui">[docs]</a><span class="k">def</span> <span class="nf">test_disable_rhui</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">,</span> <span class="n">ec2_deployment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test disables RHUI, if it&#39;s desired.</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+<span class="sd">    :param ec2_deployment: Whether is this machine in EC2 or not.</span>
+<span class="sd">    :type ec2_deployment: bool</span>
+
+<span class="sd">    :raises: AssertionError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ec2_deployment</span> <span class="ow">and</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;DISABLE_RHUI&quot;</span><span class="p">,</span> <span class="s">&quot;True&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;true&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Disable any yum repoid&#39;s matchin &#39;rhui-*&#39;</span>
+            <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">common</span><span class="o">.</span><span class="n">s_format</span><span class="p">(</span><span class="s">&#39;yum-config-manager --disable &quot;rhui-*&quot;&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c"># Disable all repositories defined in files matching &#39;redhat-*.repo&#39;</span>
+            <span class="k">for</span> <span class="n">repo_file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s">&quot;/etc/yum.repos.d/redhat-*.repo&quot;</span><span class="p">):</span>
+                <span class="n">common</span><span class="o">.</span><span class="n">update_yum_repo</span><span class="p">(</span><span class="n">repo_file</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="c"># Disable the rhui-lb plugin</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">update_yum_plugin</span><span class="p">(</span><span class="s">&#39;rhui-lb.conf&#39;</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&#39;Not disabling RHUI&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_katello_register"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_katello_register">[docs]</a><span class="k">def</span> <span class="nf">test_katello_register</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">,</span> <span class="n">subscription_manager_version</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This test registers system into Katello server.</span>
+
+<span class="sd">    :param audreyvars: Dict of audrey environment variables</span>
+<span class="sd">    :type audreyvars: dict</span>
+<span class="sd">    :param subscription_manager_version: 2-tuple of major and minor version</span>
+<span class="sd">    :type subscription_manager_version: tuple</span>
+
+<span class="sd">    :raises: AssertionError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">org</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;KATELLO_ORG&quot;</span><span class="p">]</span>
+    <span class="n">activation_key</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;ACTIVATION_KEY&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">auto_subscribe</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;AUTO_SUBSCRIBE&quot;</span><span class="p">,</span> <span class="s">&quot;false&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;true&quot;</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;KATELLO_USER&quot;</span><span class="p">]</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;KATELLO_PASS&quot;</span><span class="p">]</span>
+    <span class="n">kat_env</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;KATELLO_ENV&quot;</span><span class="p">]</span>
+    <span class="n">sm_ver_maj</span><span class="p">,</span> <span class="n">sm_ver_min</span> <span class="o">=</span> <span class="n">subscription_manager_version</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s">&quot;subscription-manager register&quot;</span>
+
+    <span class="k">if</span> <span class="n">sm_ver_maj</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sm_ver_min</span> <span class="o">&lt;</span> <span class="mi">96</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">auto_subscribe</span><span class="p">:</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --username=</span><span class="si">%s</span><span class="s"> --password=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --autosubscribe&quot;</span>
+            <span class="k">elif</span> <span class="n">activation_key</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span> <span class="ow">and</span> <span class="n">sm_ver_min</span> <span class="o">&gt;=</span> <span class="mi">95</span><span class="p">:</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --activationkey=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">activation_key</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span> <span class="c"># determine and print error condition to stdout</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --org=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">org</span>
+            <span class="k">if</span> <span class="n">auto_subscribe</span><span class="p">:</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --username=</span><span class="si">%s</span><span class="s"> --password=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --env=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">kat_env</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --autosubscribe&quot;</span>
+            <span class="k">elif</span> <span class="n">activation_key</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --activationkey=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">activation_key</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span> <span class="c"># determine and print error condition to stdout</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="test_verify_katello_registered"><a class="viewcode-back" href="../test_audreyvm01register.html#test_audreyvm01register.test_verify_katello_registered">[docs]</a><span class="k">def</span> <span class="nf">test_verify_katello_registered</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; This test verifies whether the system is registered into Katello.</span>
+
+<span class="sd">    :raises: AssertionError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&#39;subscription-manager refresh&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">CloudForms Application Sanity Test Suite 1.00 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Milan Falesnik (mfalesni at redhat.com).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

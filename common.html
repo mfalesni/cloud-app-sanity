@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>common Module &mdash; CloudForms Application Sanity Test Suite 1.00 documentation</title>
+    
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.00',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="CloudForms Application Sanity Test Suite 1.00 documentation" href="index.html" />
+    <link rel="next" title="conftest Module" href="conftest.html" />
+    <link rel="prev" title="Welcome to CloudForms Application Sanity Test Suite’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="conftest.html" title="conftest Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to CloudForms Application Sanity Test Suite’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">CloudForms Application Sanity Test Suite 1.00 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-common">
+<span id="common-module"></span><h1>common Module<a class="headerlink" href="#module-common" title="Permalink to this headline">¶</a></h1>
+<p>This module contains some functions, which are likely to be shared
+between modules.</p>
+<p>When decide to put a function here?:</p>
+<blockquote>
+<div><ul class="simple">
+<li>When it&#8217;s enough universal to be used with multiple modules</li>
+<li>It can&#8217;t be parameter for py.test</li>
+</ul>
+</div></blockquote>
+<dl class="exception">
+<dt id="common.DownloadException">
+<em class="property">exception </em><tt class="descclassname">common.</tt><tt class="descname">DownloadException</tt><a class="reference internal" href="modules/common.html#DownloadException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.DownloadException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.append_file">
+<tt class="descclassname">common.</tt><tt class="descname">append_file</tt><big>(</big><em>target</em>, <em>fromf</em><big>)</big><a class="reference internal" href="modules/common.html#append_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.append_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function appends one file to another</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target</strong> (<em>str</em>) &#8211; Target file</li>
+<li><strong>target</strong> &#8211; Source file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="common.audrey_service_path">
+<tt class="descclassname">common.</tt><tt class="descname">audrey_service_path</tt><em class="property"> = '/var/audrey/tooling/user'</em><a class="headerlink" href="#common.audrey_service_path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>audrey_service_path</strong> &#8211; Where are all Audrey services from XML located</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.copy">
+<tt class="descclassname">common.</tt><tt class="descname">copy</tt><big>(</big><em>source</em>, <em>destination</em><big>)</big><a class="reference internal" href="modules/common.html#copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="common.download_file">
+<tt class="descclassname">common.</tt><tt class="descname">download_file</tt><big>(</big><em>url</em>, <em>target_file_name</em>, <em>bulletproof=False</em><big>)</big><a class="reference internal" href="modules/common.html#download_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.download_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads file from desired URL. Can be specified as bulletproof,
+if downloading from Gitweb-site</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>url</strong> (<em>str</em>) &#8211; URL where to download from</li>
+<li><strong>target_file_name</strong> (<em>str</em>) &#8211; Target file name</li>
+<li><strong>bulletproof</strong> (<em>bool</em>) &#8211; Whether it has to check if it didn&#8217;t download garbage or not</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.filename_from_url">
+<tt class="descclassname">common.</tt><tt class="descname">filename_from_url</tt><big>(</big><em>url</em><big>)</big><a class="reference internal" href="modules/common.html#filename_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.filename_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the filename from given URL</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>url</strong> (<em>str</em>) &#8211; URL to be used for extraction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">File name from URL</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.install_yum_package_local">
+<tt class="descclassname">common.</tt><tt class="descname">install_yum_package_local</tt><big>(</big><em>package_name</em><big>)</big><a class="reference internal" href="modules/common.html#install_yum_package_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.install_yum_package_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the &#8216;yum install &lt;package&gt;&#8217; command.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package_name</strong> (<em>str</em>) &#8211; Name of the package to install (eg. katello-all)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">AssertionError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.install_yum_package_remote">
+<tt class="descclassname">common.</tt><tt class="descname">install_yum_package_remote</tt><big>(</big><em>server</em>, <em>uuid</em>, <em>login</em>, <em>password</em>, <em>package</em><big>)</big><a class="reference internal" href="modules/common.html#install_yum_package_remote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.install_yum_package_remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function installs package into guest system via Katello request.
+Basically, it tells Katello &#8220;Hey, Katello, install these packages into machine with that UUID&#8221;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>server</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Remote Katello server</li>
+<li><strong>uuid</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Target machine UUID</li>
+<li><strong>login</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login name into Katello server</li>
+<li><strong>password</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login password into Katello server</li>
+<li><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Package to install into system</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">pytest.Failed</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.katello_poll_system_task_state">
+<tt class="descclassname">common.</tt><tt class="descname">katello_poll_system_task_state</tt><big>(</big><em>server</em>, <em>task_uuid</em>, <em>login</em>, <em>password</em><big>)</big><a class="reference internal" href="modules/common.html#katello_poll_system_task_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.katello_poll_system_task_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns state of task with given UUID.
+Useful when polling certain task if finished or not.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>server</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Katello server to poll on.</li>
+<li><strong>task_uuid</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Checked task&#8217;s unique ID</li>
+<li><strong>password</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login password into Katello server</li>
+<li><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Package to install into system</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Reported task state</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">str</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.make_auth_request">
+<tt class="descclassname">common.</tt><tt class="descname">make_auth_request</tt><big>(</big><em>url</em>, <em>login</em>, <em>password</em><big>)</big><a class="reference internal" href="modules/common.html#make_auth_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.make_auth_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates request with basic HTTP authentication</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> (<em>str</em>) &#8211; URL to use for request</li>
+<li><strong>login</strong> (<em>str</em>) &#8211; Login name</li>
+<li><strong>password</strong> (<em>str</em>) &#8211; Login password</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Basic HTTP authenticated request</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">urllib2.Request</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.mkdir">
+<tt class="descclassname">common.</tt><tt class="descname">mkdir</tt><big>(</big><em>directory</em><big>)</big><a class="reference internal" href="modules/common.html#mkdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.mkdir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="common.run">
+<tt class="descclassname">common.</tt><tt class="descname">run</tt><big>(</big><em>cmd</em>, <em>errorcode=0</em><big>)</big><a class="reference internal" href="modules/common.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function runs desired command and checks whether it has failed or not</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cmd</strong> (str or list (<tt class="docutils literal"><span class="pre">shlex</span></tt>-splitted)) &#8211; Command to be run</li>
+<li><strong>errorcode</strong> (<em>int</em>) &#8211; Desired error code of the program. Defaults to 0 (all ok). If set to <tt class="docutils literal"><span class="pre">None</span></tt>, error code won&#8217;t be checked.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><tt class="docutils literal"><span class="pre">STDOUT</span></tt> of called process</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">AssertionError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.s_format">
+<tt class="descclassname">common.</tt><tt class="descname">s_format</tt><big>(</big><em>s</em>, <em>dct</em><big>)</big><a class="reference internal" href="modules/common.html#s_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.s_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the <tt class="docutils literal"><span class="pre">dict</span></tt>-format of string.
+Python-version-proof.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>s</strong> (<em>str</em>) &#8211; Formatting string</li>
+<li><strong>dct</strong> (<em>dict</em>) &#8211; Replacing dictionary</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Formatted string.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.update_yum_config">
+<tt class="descclassname">common.</tt><tt class="descname">update_yum_config</tt><big>(</big><em>repo_file</em>, <em>enabled=True</em><big>)</big><a class="reference internal" href="modules/common.html#update_yum_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.update_yum_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables or disables all sections in Yum config files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>repo_file</strong> (<em>str</em>) &#8211; Config file, which should be processed</li>
+<li><strong>enabled</strong> (<em>bool</em>) &#8211; Whether to enable or disable</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.update_yum_plugin">
+<tt class="descclassname">common.</tt><tt class="descname">update_yum_plugin</tt><big>(</big><em>plugin_conf</em>, <em>enabled=True</em><big>)</big><a class="reference internal" href="modules/common.html#update_yum_plugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.update_yum_plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables or disables all sections in Yum plugin config files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>repo_file</strong> (<em>str</em>) &#8211; Config file, which should be processed</li>
+<li><strong>enabled</strong> (<em>bool</em>) &#8211; Whether to enable or disable</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.update_yum_repo">
+<tt class="descclassname">common.</tt><tt class="descname">update_yum_repo</tt><big>(</big><em>repo_file</em>, <em>enabled=True</em><big>)</big><a class="reference internal" href="modules/common.html#update_yum_repo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.update_yum_repo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables or disables all sections in Yum repository files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>repo_file</strong> (<em>str</em>) &#8211; Repo file, which should be processed</li>
+<li><strong>enabled</strong> (<em>bool</em>) &#8211; Whether to enable or disable</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to CloudForms Application Sanity Test Suite&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="conftest.html"
+                        title="next chapter">conftest Module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/common.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="conftest.html" title="conftest Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to CloudForms Application Sanity Test Suite’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">CloudForms Application Sanity Test Suite 1.00 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Milan Falesnik (mfalesni at redhat.com).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+test_audreyvm11remoteyuminstall Module
+======================================
+
+.. automodule:: test_audreyvm11remoteyuminstall
+    :members:
+    :undoc-members:
+    :show-inheritance:
