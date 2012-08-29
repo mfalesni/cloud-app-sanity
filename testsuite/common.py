@@ -199,7 +199,7 @@ def install_yum_package_remote(server, uuid, login, password, package):
         response = urlopen(request)
     except HTTPError, e:
         if int(e.code) in [202]:
-            response = "\n".join(e.readlines()) # To work in RHEL5
+            response = e # To work in RHEL5
         else:
             pytest.fail(msg="Error when querying installation of package %s with HTTP code %d and reason '%s'!" % (package, int(e.code), e.reason))
     # get the task uuid
