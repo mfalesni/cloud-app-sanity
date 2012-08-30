@@ -36,13 +36,27 @@ Where "some-string" specifies a keyword expression used by py.test to determine 
 Documentation:
 ==============
 
-You can generate documentation from sources:
+The latest (and greatest) version of documentation can be found here:
+<pre>
+http://mfalesni.github.com/cloud-app-sanity/
+</pre>
 
+It's updated usually one time a day (can be more times but I am too lazy to push it :) Maybe I will script it somehow) when documentation changes somehow.
+
+But you can generate documentation from sources, if you want:
+
+At first, you need to change docs/Makefile. Change line:
+<pre>
+BUILDDIR      = /home/mfalesni/git/cloud-app-sanity-docs
+</pre>
+Change it according to your needs
+
+Fire up this command (in base directory, not in docs!):
 <pre>
 make doc_html
 </pre>
 
 This will put the HTML output into
 <pre>
-docs/_build/html
+selected_directory/html
 </pre>
