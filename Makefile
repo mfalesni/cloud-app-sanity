@@ -48,4 +48,4 @@ doc_html: doc_src
 doc: doc_html
 
 doc_git: doc_html
-	cd $(DOCS_BRANCH_ROOT) && (git status --quiet || (git commit -a -m "Doc update" && git pull origin gh-pages && git push origin gh-pages))
+	cd $(DOCS_BRANCH_ROOT) && (git diff --quiet || (git commit -a -m "Doc update" && git pull origin gh-pages && git push origin gh-pages))
