@@ -1,7 +1,0 @@
-conftest Module
-===============
-
-.. automodule:: conftest
-    :members:
-    :undoc-members:
-    :show-inheritance:
