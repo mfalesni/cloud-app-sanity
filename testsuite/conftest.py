@@ -54,7 +54,7 @@ def pytest_funcarg__katello_discoverable(request):
     :param request: py.test.request
 
     :returns: Accesibility of Katello server
-    :rtype: bool
+    :rtype: ``bool``
 
     """
     cmd = "ping -q -c5 %s" % request.getfuncargvalue("audreyvars")["KATELLO_HOST"]
@@ -67,7 +67,7 @@ def pytest_funcarg__tunnel_requested(request):
     :param request: py.test request.
 
     :returns: Whether was tunnel requested.
-    :rtype: bool
+    :rtype: ``bool``
     """
     audreyvars = request.getfuncargvalue("audreyvars")
     ec2_deployment = request.getfuncargvalue("ec2_deployment")
@@ -90,7 +90,7 @@ def pytest_funcarg__ec2_deployment(request):
     :param request: py.test request.
 
     :returns: Whether is this EC2 deployment (cached).
-    :rtype: bool
+    :rtype: ``bool``
     
     """
     return request.cached_setup(setup=setup_ec2_deployment, scope="module")
@@ -100,7 +100,7 @@ def setup_ec2_deployment():
        an ec2 image
 
     :returns: Whether is this EC2 deployment.
-    :rtype: bool
+    :rtype: ``bool``
     """
     cmd = 'curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document'
     print "# %s" % cmd
@@ -131,7 +131,7 @@ def pytest_funcarg__system_uuid(request):
 
     :param request: py.test request
     :returns: System UUID
-    :rtype: str
+    :rtype: ``str``
     """
     facts = common.run("subscription-manager facts --list")
     facts = facts.strip().split("\n")
@@ -139,3 +139,17 @@ def pytest_funcarg__system_uuid(request):
         name, value = fact.split(":", 1)
         if name == "system.uuid":
             return value.lstrip()
+
+def pytest_funcarg__selinux_enabled(request):
+    """ Detects whether is SElinux enabled or not
+
+    :param request: py.test request
+    :returns: SElinux status
+    :rtype: ``bool``
+    """
+    result = True
+    try:
+        common.run("selinuxenabled")
+    except AssertionError:
+        result = False
+    return result
