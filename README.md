@@ -58,5 +58,5 @@ make doc_html
 
 This will put the HTML output into
 <pre>
-selected_directory/html
+$BUILDDIR/html
 </pre>
