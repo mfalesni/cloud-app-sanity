@@ -323,13 +323,22 @@ def update_yum_plugin(plugin_conf, enabled=True):
         plugin_conf = '%s.conf' % plugin_conf
     update_yum_config(plugin_conf, enabled)
 
-def exists_in_path(cmd, actual_directory):
+def exists_in_path(file, actual_directory):
+    """ This function looks whether a file exists in system PATH or actual directory.
+
+    :param file: File to look for
+    :type file: ``str``
+    :param actual_directory: Actual directory we are in
+    :type actual_directory: ``str``
+    :returns: File existence ``True`` or ``False``
+    :rtype: ``bool``
+    """
     # can't search the path if a directory is specified
     extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
     pathdirs = os.environ.get("PATH", "").split(os.pathsep)
     pathdirs.append(actual_directory)
     for directory in pathdirs:
-        base = os.path.join(directory, cmd)
+        base = os.path.join(directory, file)
         options = [base] + [(base + ext) for ext in extensions]
         for filename in options:
             if os.path.exists(filename):

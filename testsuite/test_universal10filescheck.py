@@ -26,7 +26,14 @@ import os
 import stat
 import sys
 
+""" Filesystem checking tests """
+
 def test_check_permissions_and_broken_symlinks():
+    """ This test checks whether there are some files with unwanted props in FS.
+        Looks for broken symlinks and world-writable files.
+
+    :raises: pytest.Failed
+    """
     stack = []  # Used for storing directories to parse
     starting_dir = "/"
     failed = False
