@@ -333,7 +333,6 @@ def exists_in_path(file, actual_directory):
     :returns: File existence ``True`` or ``False``
     :rtype: ``bool``
     """
-    # can't search the path if a directory is specified
     extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
     pathdirs = os.environ.get("PATH", "").split(os.pathsep)
     pathdirs.append(actual_directory)
@@ -344,3 +343,21 @@ def exists_in_path(file, actual_directory):
             if os.path.exists(filename):
                 return True
     return False
+
+def netstat_service_bound_localhost(service):
+    """ This function checks whether certain service is bound only to localhost.
+
+    :param service: Service name
+    :type service: ``str``
+    :returns: ``True`` when it's bound only to localhost, otherwise ``False``
+    :rtype: ``bool``
+    """
+    netstat = run("netstat -t --listen")
+    protocols = ["tcp", "udp"]
+    local_addrs = ["127.0.0.1", "::1", "localhost"]
+    for line in netstat.strip().split("\n"):
+        fields = re.sub(" +", "\t", line).strip().split("\t")
+        if fields[0] in protocols and fields[3].split(":")[-1] == service:
+            address = fields[3].split(":")[0]
+            if address not in local_addrs:
+                pytest.fail(msg="Service '%s' listens to address %s!" % (service, address) )
