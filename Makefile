@@ -7,6 +7,7 @@ DOCS_DIR := docs
 DOCS_TITLE := CloudForms Application Sanity Test Suite
 DOCS_AUTHOR := Milan Falesnik (mfalesni at redhat.com)
 DOCS_VERSION := 1.00
+DOCS_BRANCH_ROOT := ../cloud-app-sanity-docs/html
 
 # Variables to control test execution
 TEST_ARGS ?= -v -l --junitxml="${RESULTS_FILENAME}.xml" --resultlog="${RESULTS_FILENAME}.log"
@@ -45,3 +46,6 @@ doc_html: doc_src
 	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && make html
 
 doc: doc_html
+
+doc_git: doc_html
+	cd $(DOCS_BRANCH_ROOT) && (git status --quiet || (git commit -a -m "Doc update" && git pull origin gh-pages && git push origin gh-pages))
