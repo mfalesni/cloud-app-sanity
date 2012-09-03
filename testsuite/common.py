@@ -361,3 +361,49 @@ def netstat_service_bound_localhost(service):
             address = fields[3].split(":")[0]
             if address not in local_addrs:
                 pytest.fail(msg="Service '%s' listens to address %s!" % (service, address) )
+
+def list_opened_files(pid):
+    """ This function lists opened files of certain process specified by PID
+
+    :param pid: PID of the process
+    :type pid: ``int``
+    """
+    stdout = run("lsof -i 4 -a -p %d" % pid, None)
+    lines = stdout.strip().split("\n")[1:]  # Ignore first line
+    lines = [re.sub("\([^(]*\)$", "", line).rstrip() for line in lines]    # Ignore last parenthesis
+    lines = [re.sub(" +", "\t", line).split("\t") for line in lines]    # Split into fields
+    result = []
+    for line in lines:
+        result.append(line[-1])
+    return result
+
+def rpm_keys_import(keydir="/etc/pki/rpm-gpg"):
+    """ This function imports all keys in directory '/etc/pki/rpm-gpg' by default
+    """
+    file_list = os.listdir(keydir)
+    for key_file in file_list:
+        run("rpm --import %s/%s" % (keydir, key_file))
+
+def rpm_verify_package(package):
+    """ Verifies package in RPM database.
+
+    :param package: Package to check
+    :type package: ``str``
+    :returns: Bool whether verification succeeded
+    :rtype: ``bool``
+    """
+    try:
+        run("rpm -V %s" % package)
+        return True
+    except AssertionError:
+        return False
+
+def rpm_package_problems(package):
+    """ This functions returns reported problems with package
+
+    :param package: Package to check
+    :type package: ``str``
+    :returns: ``STDOUT`` of rpm -V
+    :rtype: ``str``
+    """
+    return run("rpm -V %s" % package, None)

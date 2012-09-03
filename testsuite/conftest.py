@@ -153,3 +153,13 @@ def pytest_funcarg__selinux_enabled(request):
     except AssertionError:
         result = False
     return result
+
+def pytest_funcarg__rpm_package_list(request):
+    """ Returns list of all installed packages in computer.
+
+    :param request: py.test request
+    :returns: List of all installed packages in computer.
+    :rtype: ``list``
+    """
+    raw = common.run("rpm -qa").strip()
+    return [x.strip() for x in raw.split("\n")]

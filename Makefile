@@ -24,7 +24,7 @@ bootstrap: ${BUILD_DIR}
 # Setup virtualenv
 ${BUILD_DIR}:
 	[ -d $(BUILD_DIR) ] || mkdir $(BUILD_DIR)
-	wget -P $(BUILD_DIR) https://raw.github.com/pypa/virtualenv/master/virtualenv.py
+	cp virtualenv.py $(BUILD_DIR)/virtualenv.py
 	python $(BUILD_DIR)/virtualenv.py --system-site-packages $(BUILD_DIR)
 	source $(BUILD_DIR)/bin/activate && easy_install pytest sphinx sphinxtogithub
 
