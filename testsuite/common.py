@@ -435,3 +435,13 @@ def rpm_package_problems(package):
     :rtype: ``str``
     """
     return run("rpm -V %s" % package, None)
+
+def rpm_package_build_host(package):
+    """ Returns build host of the package.
+
+    :param package: Package to check
+    :type package: ``str``
+    :returns: Build host of the package
+    :rtype: ``str``
+    """
+    return run("rpm -q --qf \"%%{BUILDHOST}\" %s" % package).strip()
