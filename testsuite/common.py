@@ -389,6 +389,20 @@ def rpm_keys_import(keydir="/etc/pki/rpm-gpg"):
     for key_file in file_list:
         run("rpm --import %s/%s" % (keydir, key_file))
 
+def rpm_signature_lines(package):
+    """ Returns lines with signature informations of package
+
+    :param package: Package name
+    :type package: ``str``
+
+    :returns: List of lines speaking about signatures
+    :rtype: ``list(str)``
+    """
+    sig = re.compile("[Ss]ignature")
+    for line in run("rpm -qvv %s" % package).strip().split("\n"):
+        if sig.search(line):
+            yield line.split("#", 2)[-1].lstrip()
+
 def rpm_verify_package(package):
     """ Verifies package in RPM database.
 
@@ -397,11 +411,20 @@ def rpm_verify_package(package):
     :returns: Bool whether verification succeeded
     :rtype: ``bool``
     """
-    try:
-        run("rpm -V %s" % package)
-        return True
-    except AssertionError:
-        return False
+    success = True
+    for line in rpm_signature_lines(package):
+        fields = [x.strip() for x in line.rsplit(", key ID", 1)]
+        key_status = None
+        if re.match("^[0-9a-z]+$", fields[1]):
+            # RHEL 5
+            key_status = fields[0].rsplit(":", 1)[1].strip()
+        else:
+            # RHEL 6
+            key_status = fields[1].rsplit(":", 1)[1].strip()
+        print "sig: %s -> %s" % (package, key_status)
+        if not key_status.upper() == "OK":
+            success = False
+    return success
 
 def rpm_package_problems(package):
     """ This functions returns reported problems with package
