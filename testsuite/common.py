@@ -401,7 +401,7 @@ def rpm_signature_lines(package):
     sig = re.compile("[Ss]ignature")
     for line in run("rpm -qvv %s" % package).strip().split("\n"):
         if sig.search(line):
-            yield line.split("#", 2)[-1].lstrip()
+            yield line.split("#", 1)[-1].lstrip()
 
 def rpm_verify_package(package):
     """ Verifies package in RPM database.
