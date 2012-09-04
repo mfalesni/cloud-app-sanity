@@ -102,20 +102,27 @@ def filename_from_url(url):
         url = url[:-1] # Strip the trailing /
     return re.sub("^.*?/([^/]+)$", r"\1", url)
 
-def append_file(target, fromf):
-    """ This function appends one file to another
+def append_file(target, fromf, strip_sep=False):
+    """ This function appends one file to another.
+        It's possible to strip the content from blank characters
+        at beginning and end + separate the contents by \n
 
     :param target: Target file
     :type target: str
     :param target: Source file
     :type target: str
+    :param strip_sep: Whether to strip the contents and separate new file by \n
+    :type strip_sep: ``bool``
 
     :returns: None
     :rtype: None
     """    
     destination = open(target, "a")
     source = open(fromf, "r")
-    destination.write(source.read())
+    data = source.read()
+    if strip_sep:
+        data = "\n%s" % data.strip()
+    destination.write(data)
     source.close()
     destination.close()
 
@@ -421,7 +428,7 @@ def rpm_verify_package(package):
         else:
             # RHEL 6
             key_status = fields[1]
-        key_status = key_status.rsplit(":", 1)[1].strip()
+        key_status = key_status.rsplit(":", 1)[1].strip()   # The key info is on the right side of the colon
         print "sig: %s -> %s" % (package, key_status)
         if not key_status.upper() == "OK":
             success = False
