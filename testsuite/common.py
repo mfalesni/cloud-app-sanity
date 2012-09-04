@@ -417,10 +417,11 @@ def rpm_verify_package(package):
         key_status = None
         if re.match("^[0-9a-z]+$", fields[1]):
             # RHEL 5
-            key_status = fields[0].rsplit(":", 1)[1].strip()
+            key_status = fields[0]
         else:
             # RHEL 6
-            key_status = fields[1].rsplit(":", 1)[1].strip()
+            key_status = fields[1]
+        key_status = key_status.rsplit(":", 1)[1].strip()
         print "sig: %s -> %s" % (package, key_status)
         if not key_status.upper() == "OK":
             success = False
