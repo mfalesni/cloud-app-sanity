@@ -50,6 +50,8 @@ def test_check_permissions_and_broken_symlinks():
         for entry in os.listdir(directory):
             # Stat it
             path = "%s/%s" % (directory, entry)
+            if path.startswith("//"):   # Strip beginning // because of root dir
+                path = path[1:]
             info = os.lstat(path)
             if world_writable(info):
                 # Check its permissions, if wrong, append it
