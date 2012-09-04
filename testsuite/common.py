@@ -434,7 +434,7 @@ def rpm_package_problems(package):
     :returns: ``STDOUT`` of rpm -V
     :rtype: ``str``
     """
-    return run("rpm -V %s" % package, None)
+    return run("rpm -Vvv %s" % package, None)
 
 def rpm_package_build_host(package):
     """ Returns build host of the package.
