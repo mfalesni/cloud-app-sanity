@@ -73,8 +73,11 @@ between modules.</p>
 
 <dl class="function">
 <dt id="common.append_file">
-<tt class="descclassname">common.</tt><tt class="descname">append_file</tt><big>(</big><em>target</em>, <em>fromf</em><big>)</big><a class="reference internal" href="modules/common.html#append_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.append_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function appends one file to another</p>
+<tt class="descclassname">common.</tt><tt class="descname">append_file</tt><big>(</big><em>target</em>, <em>fromf</em>, <em>strip_sep=False</em><big>)</big><a class="reference internal" href="modules/common.html#append_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.append_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function appends one file to another.
+It&#8217;s possible to strip the content from blank characters</p>
+<blockquote>
+<div>at beginning and end + separate the contents by</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -82,6 +85,7 @@ between modules.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>target</strong> (<em>str</em>) &#8211; Target file</li>
 <li><strong>target</strong> &#8211; Source file</li>
+<li><strong>strip_sep</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; Whether to strip the contents and separate new file by</li>
 </ul>
 </td>
 </tr>
@@ -244,6 +248,20 @@ Useful when polling certain task if finished or not.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="common.list_opened_files">
+<tt class="descclassname">common.</tt><tt class="descname">list_opened_files</tt><big>(</big><em>pid</em><big>)</big><a class="headerlink" href="#common.list_opened_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function lists opened files of certain process specified by PID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pid</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; PID of the process</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="common.make_auth_request">
 <tt class="descclassname">common.</tt><tt class="descname">make_auth_request</tt><big>(</big><em>url</em>, <em>login</em>, <em>password</em><big>)</big><a class="reference internal" href="modules/common.html#make_auth_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.make_auth_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates request with basic HTTP authentication</p>
@@ -274,8 +292,104 @@ Useful when polling certain task if finished or not.</p>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="common.netstat_service_bound_localhost">
+<tt class="descclassname">common.</tt><tt class="descname">netstat_service_bound_localhost</tt><big>(</big><em>service</em><big>)</big><a class="headerlink" href="#common.netstat_service_bound_localhost" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function checks whether certain service is bound only to localhost.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>service</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Service name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> when it&#8217;s bound only to localhost, otherwise <tt class="docutils literal"><span class="pre">False</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.rpm_keys_import">
+<tt class="descclassname">common.</tt><tt class="descname">rpm_keys_import</tt><big>(</big><em>keydir='/etc/pki/rpm-gpg'</em><big>)</big><a class="headerlink" href="#common.rpm_keys_import" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function imports all keys in directory &#8216;/etc/pki/rpm-gpg&#8217; by default</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.rpm_package_build_host">
+<tt class="descclassname">common.</tt><tt class="descname">rpm_package_build_host</tt><big>(</big><em>package</em><big>)</big><a class="headerlink" href="#common.rpm_package_build_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns build host of the package.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Package to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Build host of the package</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.rpm_package_problems">
+<tt class="descclassname">common.</tt><tt class="descname">rpm_package_problems</tt><big>(</big><em>package</em><big>)</big><a class="headerlink" href="#common.rpm_package_problems" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functions returns reported problems with package</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Package to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">STDOUT</span></tt> of rpm -V</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.rpm_signature_lines">
+<tt class="descclassname">common.</tt><tt class="descname">rpm_signature_lines</tt><big>(</big><em>package</em><big>)</big><a class="headerlink" href="#common.rpm_signature_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns lines with signature informations of package</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Package name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of lines speaking about signatures</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">list(str)</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.rpm_verify_package">
+<tt class="descclassname">common.</tt><tt class="descname">rpm_verify_package</tt><big>(</big><em>package</em><big>)</big><a class="headerlink" href="#common.rpm_verify_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies package in RPM database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Package to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Bool whether verification succeeded</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="common.run">
-<tt class="descclassname">common.</tt><tt class="descname">run</tt><big>(</big><em>cmd</em>, <em>errorcode=0</em><big>)</big><a class="reference internal" href="modules/common.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.run" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.</tt><tt class="descname">run</tt><big>(</big><em>cmd</em>, <em>errorcode=0</em>, <em>return_stderr=False</em><big>)</big><a class="reference internal" href="modules/common.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function runs desired command and checks whether it has failed or not</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -284,6 +398,7 @@ Useful when polling certain task if finished or not.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cmd</strong> (str or list (<tt class="docutils literal"><span class="pre">shlex</span></tt>-splitted)) &#8211; Command to be run</li>
 <li><strong>errorcode</strong> (<em>int</em>) &#8211; Desired error code of the program. Defaults to 0 (all ok). If set to <tt class="docutils literal"><span class="pre">None</span></tt>, error code won&#8217;t be checked.</li>
+<li><strong>return_stderr</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; Whether return <tt class="docutils literal"><span class="pre">stderr</span></tt> instead of <tt class="docutils literal"><span class="pre">STDOUT</span></tt></li>
 </ul>
 </td>
 </tr>
