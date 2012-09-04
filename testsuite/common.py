@@ -53,16 +53,14 @@ audrey_service_path = '/var/audrey/tooling/user'
 :var audrey_service_path: Where are all Audrey services from XML located
 """
 
-def run(cmd, errorcode=0, return_stderr=False):
+def run(cmd, errorcode=0):
     """This function runs desired command and checks whether it has failed or not
 
     :param cmd: Command to be run
     :type cmd: str or list (``shlex``-splitted)
     :param errorcode: Desired error code of the program. Defaults to 0 (all ok). If set to ``None``, error code won't be checked.
     :type errorcode: int
-    :param return_stderr: Whether return ``stderr`` instead of ``STDOUT``
-    :type return_stderr: ``bool``
-
+    
     :returns: ``STDOUT`` of called process
     :rtype: str
     :raises: AssertionError
@@ -76,11 +74,8 @@ def run(cmd, errorcode=0, return_stderr=False):
     (stdout, stderr) = p_open.communicate()
     if errorcode != None:
         assert p_open.returncode == errorcode
-    if not return_stderr:
-        return stdout
-    else:
-        return stderr
-
+    return stdout
+    
 def copy(source, destination):
     if not os.path.isfile(source):
         pytest.fail(msg="Couldn't find file '%s'" % source)
