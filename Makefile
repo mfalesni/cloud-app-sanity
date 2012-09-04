@@ -30,7 +30,7 @@ ${BUILD_DIR}:
 	source $(BUILD_DIR)/bin/activate && easy_install pytest sphinx sphinxtogithub
 
 clean:
-	rm -f virtualenv.py *.pyc testsuite/*.pyc
+	rm -f *.pyc testsuite/*.pyc
 	rm -rf ${BUILD_DIR} $(DOCS_DIR)/*.rst $(DOCS_DIR)/_* $(DOCS_DIR)/make.bat testsuite/__pycache__
 
 test: bootstrap
