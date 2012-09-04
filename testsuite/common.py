@@ -121,7 +121,7 @@ def append_file(target, fromf, strip_sep=False):
     source = open(fromf, "r")
     data = source.read()
     if strip_sep:
-        data = "\n%s" % data.strip()
+        data = "%s\n" % data.strip()
     destination.write(data)
     source.close()
     destination.close()
