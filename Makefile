@@ -18,7 +18,7 @@ ifneq (,$(TESTNAME))
 TEST_ARGS += -k "$(TESTNAME)"
 endif
 
-.PHONY: bootstrap pack clean doc
+.PHONY: bootstrap pack clean doc doc_src doc_html doc_git
 
 bootstrap: ${BUILD_DIR}
 
