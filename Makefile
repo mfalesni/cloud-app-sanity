@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 BUILD_DIR := build-dir
 RESULTS_FILENAME := results
+RESULTS_DIR := results-dir
 
 # Documentation variables
 DOCS_DIR := docs
@@ -35,7 +36,7 @@ clean:
 test: bootstrap
 	[ -d $(RESULTS_DIR) ] || mkdir -p $(RESULTS_DIR)
 	source "$(BUILD_DIR)/bin/activate" && python "$(BUILD_DIR)/bin/py.test" testsuite $(TEST_ARGS)
-	for SUFFIX in log xml ; do ln -f -s ${RESULTS_FILENAME}.$$SUFFIX ${RESULTS_DIR}/results.$$SUFFIX ; done
+	#for SUFFIX in log xml ; do ln -f -s ${RESULTS_FILENAME}.$$SUFFIX ${RESULTS_DIR}/results.$$SUFFIX ; done
 
 doc_src: bootstrap
 	[ -d $(DOCS_DIR) ] || mkdir -p $(DOCS_DIR)
