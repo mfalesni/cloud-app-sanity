@@ -85,4 +85,4 @@ def test_import_ssh_certificate(audreyvars):
         if not os.path.isfile(authkeys):
             pytest.fail(msg="Importing the key was unsuccessful, file '%s' does not exist" % authkeys)
         # And now for SELinux to work (RHEL5 doesn't matter, but RHEL6 needs this very much)
-        run("restorecon -R -v %s" % JENKINS_SSH_DIR)
+        common.run("restorecon -R -v %s" % JENKINS_SSH_DIR)
