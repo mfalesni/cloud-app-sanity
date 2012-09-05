@@ -367,6 +367,7 @@ def netstat_service_bound_localhost(service):
         if fields[0] in protocols and fields[3].split(":")[-1] == service:
             address = fields[3].split(":")[0]
             if address not in local_addrs:
+                print line
                 pytest.fail(msg="Service '%s' listens to address %s!" % (service, address) )
 
 def list_opened_files(pid):
