@@ -75,9 +75,7 @@ between modules.</p>
 <dt id="common.append_file">
 <tt class="descclassname">common.</tt><tt class="descname">append_file</tt><big>(</big><em>target</em>, <em>fromf</em>, <em>strip_sep=False</em><big>)</big><a class="reference internal" href="modules/common.html#append_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.append_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function appends one file to another.
-It&#8217;s possible to strip the content from blank characters</p>
-<blockquote>
-<div>at beginning and end + separate the contents by</div></blockquote>
+It&#8217;s possible to strip the content from blank characters at beginning and end + separate the contents by</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -389,7 +387,7 @@ Useful when polling certain task if finished or not.</p>
 
 <dl class="function">
 <dt id="common.run">
-<tt class="descclassname">common.</tt><tt class="descname">run</tt><big>(</big><em>cmd</em>, <em>errorcode=0</em>, <em>return_stderr=False</em><big>)</big><a class="reference internal" href="modules/common.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.run" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.</tt><tt class="descname">run</tt><big>(</big><em>cmd</em>, <em>errorcode=0</em><big>)</big><a class="reference internal" href="modules/common.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function runs desired command and checks whether it has failed or not</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -398,7 +396,6 @@ Useful when polling certain task if finished or not.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cmd</strong> (str or list (<tt class="docutils literal"><span class="pre">shlex</span></tt>-splitted)) &#8211; Command to be run</li>
 <li><strong>errorcode</strong> (<em>int</em>) &#8211; Desired error code of the program. Defaults to 0 (all ok). If set to <tt class="docutils literal"><span class="pre">None</span></tt>, error code won&#8217;t be checked.</li>
-<li><strong>return_stderr</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; Whether return <tt class="docutils literal"><span class="pre">stderr</span></tt> instead of <tt class="docutils literal"><span class="pre">STDOUT</span></tt></li>
 </ul>
 </td>
 </tr>
