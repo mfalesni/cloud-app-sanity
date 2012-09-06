@@ -99,8 +99,7 @@ def filename_from_url(url):
 
 def append_file(target, fromf, strip_sep=False):
     """ This function appends one file to another.
-        It's possible to strip the content from blank characters
-        at beginning and end + separate the contents by \n
+        It's possible to strip the content from blank characters at beginning and end + separate the contents by \n
 
     :param target: Target file
     :type target: str

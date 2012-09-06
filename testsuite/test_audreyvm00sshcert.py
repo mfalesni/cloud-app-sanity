@@ -28,8 +28,7 @@ import os
 
 def test_import_ssh_certificate(audreyvars):
     """ Imports SSH certificate from the files, urls, everything.
-        Files are specified in JENKINS_SSH_KEY_LOCATION.
-        If it is None, nothing happens
+        Files are specified in JENKINS_SSH_KEY_LOCATION. If it is None, nothing happens
 
     :param audreyvars: Audrey environment variables
     :type audreyvars: dict
