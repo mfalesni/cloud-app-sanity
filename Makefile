@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 BUILD_DIR := build-dir
-RESULTS_FILENAME := results
-RESULTS_DIR := results-dir
+RESULTS_FILENAME := results.tar.gz
+RESULTS_DIR := ./results-dir
 
 # Documentation variables
 DOCS_DIR := docs
@@ -11,14 +11,37 @@ DOCS_VERSION := 1.00
 DOCS_BRANCH_ROOT := ../cloud-app-sanity-docs/html
 
 # Variables to control test execution
-TEST_ARGS ?= -v -l --junitxml="${RESULTS_FILENAME}.xml" --resultlog="${RESULTS_FILENAME}.log"
+TEST_ARGS ?= -v -l
 TESTNAME ?=
 # If a TESTNAME was provided, update TEST_ARGS
 ifneq (,$(TESTNAME))
 TEST_ARGS += -k "$(TESTNAME)"
 endif
 
-.PHONY: bootstrap pack clean doc doc_src doc_html doc_git
+# Make test file name from date and TESTNAME
+# If no TESTNAME provided, use word default
+ifeq (,$(TESTNAME))
+TESTRESULT :=default
+endif
+
+TESTRESULT:=`(date +"%y%m%d.%H%M%S"; echo ${TESTNAME} | sed -r -e "s/[^a-z-]/_/g") | tr -d '\n'`
+
+TEST_ARGS+=--junitxml="${RESULTS_DIR}/${TESTRESULT}.xml" --resultlog="${RESULTS_DIR}/${TESTRESULT}.log"
+
+# For pushing to remote server
+TESTNAME ?=
+PUSH_TARGET?=
+ifneq (,$(AUDREY_VAR_KATELLO_REGISTER_AEOLUS_SERVER_RESULTS_LOCATION))
+PUSH_TARGET:=$(AUDREY_VAR_KATELLO_REGISTER_AEOLUS_SERVER_RESULTS_LOCATION)
+endif
+
+ifeq (,$(PUSH_TARGET))
+ifneq (,$(TARGET))
+PUSH_TARGET:=$(TARGET)
+endif
+endif
+
+.PHONY: bootstrap pack clean doc doc_src doc_html doc_git push
 
 bootstrap: ${BUILD_DIR}
 
@@ -32,6 +55,9 @@ ${BUILD_DIR}:
 clean:
 	rm -f *.pyc testsuite/*.pyc
 	rm -rf ${BUILD_DIR} $(DOCS_DIR)/*.rst $(DOCS_DIR)/_* $(DOCS_DIR)/make.bat testsuite/__pycache__
+
+clean_all: clean
+	rm -rf "${RESULTS_DIR}/*"
 
 test: bootstrap
 	[ -d $(RESULTS_DIR) ] || mkdir -p $(RESULTS_DIR)
@@ -50,3 +76,11 @@ doc: doc_html
 
 doc_git: doc_html
 	cd $(DOCS_BRANCH_ROOT) && git add * && (git diff --quiet || (git commit -a -m "Doc update" && git pull origin gh-pages && git push origin gh-pages))
+
+${RESULTS_FILENAME}: 
+	cd ${RESULTS_DIR} && tar cfvz "../${RESULTS_FILENAME}" *.log *.xml
+
+push: ${RESULTS_FILENAME}
+	@echo "Pushing to remote server"
+	[ -n "${PUSH_TARGET}" ] && scp "${RESULTS_FILENAME}" "${PUSH_TARGET}"
+
