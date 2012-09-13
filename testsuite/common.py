@@ -53,15 +53,13 @@ audrey_service_path = '/var/audrey/tooling/user'
 :var audrey_service_path: Where are all Audrey services from XML located
 """
 
-def run(cmd, errorcode=0, shell=False):
+def run(cmd, errorcode=0):
     """This function runs desired command and checks whether it has failed or not
 
     :param cmd: Command to be run
     :type cmd: str or list (``shlex``-splitted)
     :param errorcode: Desired error code of the program. Defaults to 0 (all ok). If set to ``None``, error code won't be checked.
     :type errorcode: int
-    :param shell: Whether to launch it in shell
-    :type shell: ``bool``
     
     :returns: ``STDOUT`` of called process
     :rtype: str
@@ -72,12 +70,29 @@ def run(cmd, errorcode=0, shell=False):
         cmd = shlex.split(cmd)
     p_open = subprocess.Popen(cmd,
                     stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    shell=shell)
+                    stderr=subprocess.STDOUT)
     (stdout, stderr) = p_open.communicate()
     if errorcode != None:
         assert p_open.returncode == errorcode
     return stdout
+
+def shellcall(command, errorcode=0):
+    """ Function used for calling shell commands rather than invoking programs.
+
+    :param command: Command to be launched
+    :type command: ``str``
+    :param errorcode: Desired error code. If None, does not check
+    :type errorcode: ``int``
+
+    :returns: ``STDOUT`` of the command
+    :raises: AssertionError
+    """
+    process = subprocess.Popen(command,stdout=subprocess.PIPE, shell=True)
+    (stdout, stderr) = p_open.communicate()
+    if errorcode != None:
+        assert process.returncode == errorcode
+    return stdout
+
     
 def copy(source, destination):
     if not os.path.isfile(source):
@@ -469,6 +484,6 @@ def RHUItests_list():
     :rtype: ``list``
     """
     try:
-        return run("cd ../valid/CloudFormsSanity/ && ./test_list.sh", shell=True).strip().split("\n")
+        return shellcall("cd ../valid/CloudFormsSanity/ && ./test_list.sh").strip().split("\n")
     except AssertionError:
         pytest.fail(msg="Error when gathering list of RHUI bash tests")
