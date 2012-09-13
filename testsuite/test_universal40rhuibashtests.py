@@ -25,7 +25,7 @@ import sys
 import os
 import pytest
 
-@pytest.mark.parametrize(("testname",), common.RHUItests_list())
+@pytest.mark.parametrize("testname", common.RHUItests_list())
 def test_RHUItest(testname, rhel_release):
     """ Launches specific tests from RHUIQE bash test suite
 
