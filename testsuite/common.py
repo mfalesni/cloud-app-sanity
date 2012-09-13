@@ -448,3 +448,13 @@ def rpm_package_build_host(package):
     :rtype: ``str``
     """
     return run("rpm -q --qf \"%%{BUILDHOST}\" %s" % package).strip()
+
+def selinux_setenforce(mode):
+    """ Sets enforcing mode of SElinux
+
+    :param mode: Enforcing mode from [Permissive, Enforcing]
+    :param type: ``str``
+    :raises: pytest.Failed, AssertionError
+    """
+    assert mode in ["Permissive", "Enforcing"]
+    run("/usr/sbin/setenforce %s" % mode)

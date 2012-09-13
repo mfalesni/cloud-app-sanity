@@ -154,6 +154,49 @@ def pytest_funcarg__selinux_enabled(request):
         result = False
     return result
 
+def pytest_funcarg__selinux_getenforce(request):
+    """ Returns current enforcing mode of SELinux
+
+    :param request: py.test request
+    :returns: SElinux enforcing status
+    :rtype: ``str``
+    """
+    return common.run("/usr/sbin/getenforce").strip()
+
+def pytest_funcarg__selinux_getenforce_conf(request):
+    """ Returns current enforcing mode of SELinux from config file
+
+    :param request: py.test request
+    :returns: SElinux enforcing status
+    :rtype: ``str``
+    """
+    f = open("/etc/sysconfig/selinux", "r")
+    lines = []
+    for line in f.readlines():
+        if line.startswith("SELINUX="):
+            lines.append(line)
+    f.close()
+    # Check whether is only one
+    assert len(lines) == 1
+    return lines[0].split("=")[1].strip()
+
+def pytest_funcarg__selinux_type(request):
+    """ Returns current SELINUX type from config file
+
+    :param request: py.test request
+    :returns: SElinux type
+    :rtype: ``str``
+    """
+    f = open("/etc/sysconfig/selinux", "r")
+    lines = []
+    for line in f.readlines():
+        if line.startswith("SELINUXTYPE="):
+            lines.append(line)
+    f.close()
+    # Check whether is only one
+    assert len(lines) == 1
+    return lines[0].split("=")[1].strip()
+
 def pytest_funcarg__rpm_package_list(request):
     """ Returns list of all installed packages in computer.
 
@@ -163,3 +206,4 @@ def pytest_funcarg__rpm_package_list(request):
     """
     raw = common.run("rpm -qa").strip()
     return [x.strip() for x in raw.split("\n")]
+    
