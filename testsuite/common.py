@@ -88,7 +88,7 @@ def shellcall(command, errorcode=0):
     :raises: AssertionError
     """
     process = subprocess.Popen(command,stdout=subprocess.PIPE, shell=True)
-    (stdout, stderr) = p_open.communicate()
+    (stdout, stderr) = process.communicate()
     if errorcode != None:
         assert process.returncode == errorcode
     return stdout
