@@ -469,6 +469,6 @@ def RHUItests_list():
     :rtype: ``list``
     """
     try:
-        return common.run("../valid/CloudFormsSanity/test_list.sh").strip().split("\n")
+        return run("../valid/CloudFormsSanity/test_list.sh").strip().split("\n")
     except AssertionError:
         pytest.fail(msg="Error when gathering list of RHUI bash tests")
