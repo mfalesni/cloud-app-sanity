@@ -206,4 +206,34 @@ def pytest_funcarg__rpm_package_list(request):
     """
     raw = common.run("rpm -qa").strip()
     return [x.strip() for x in raw.split("\n")]
+
+def pytest_funcarg__rpm_package_list_names(request):
+    """ Returns list of all installed packages in computer.
+
+    :param request: py.test request
+    :returns: List of all installed packages in computer.
+    :rtype: ``list``
+    """
+    raw = common.run("rpm -qa --qf \"%{NAME} \"").strip()
+    return raw.split(" ")
+
+def pytest_funcarg__rhel_release(request):
+    """Setups cached variable for RHEL version
+
+    :param request: py.test request.
+
+    :returns: RHEL version (cached).
+    :rtype: ``tuple``
     
+    """
+    return request.cached_setup(setup=setup_rhel_release, scope="module")
+
+def setup_rhel_release():
+    """Returns RHEL version
+
+    :returns: RHEL version
+    :rtype: ``tuple``
+    """
+    redhat_release_content = common.run("cat /etc/redhat-release").strip()
+    redhat_version_field = redhat_release_content.split(" ")[6]
+    return tuple(redhat_version_field.split(".", 1))
