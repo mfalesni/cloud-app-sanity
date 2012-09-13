@@ -34,11 +34,11 @@ def test_RHUItest(testname, rhel_release):
 
     :raises: pytest.Failed
     """
-    common.shellcall("cd ../valid/CloudFormsSanity/ && ./validate.sh %s" % testname)
+    common.shellcall("cd valid/CloudFormsSanity/ && ./validate.sh %s" % testname)
 
 def test_pickup():
     """ Picks up tests results from RHUI QE bash test suite.
 
     :raises: pytest.Failed
     """
-    sys.stderr.write(common.run("cd ../valid/CloudFormsSanity/ && ./test_pickup.sh"))
+    sys.stderr.write(common.run("cd valid/CloudFormsSanity/ && ./test_pickup.sh"))
