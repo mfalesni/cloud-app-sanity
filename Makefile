@@ -49,7 +49,7 @@ endif
 
 .PHONY: bootstrap pack clean doc doc_src doc_html doc_git push
 
-bootstrap: ${BUILD_DIR}
+bootstrap: ${BUILD_DIR} ${VALID_DIR}
 
 # Download "valid" suite
 ${VALID_DIR}:
