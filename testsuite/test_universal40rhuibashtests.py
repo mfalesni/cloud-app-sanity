@@ -41,4 +41,4 @@ def test_pickup():
 
     :raises: pytest.Failed
     """
-    sys.stderr.write(common.run("cd valid/CloudFormsSanity/ && ./test_pickup.sh"))
+    sys.stderr.write(common.shellcall("cd valid/CloudFormsSanity/ && ./test_pickup.sh"))
