@@ -72,6 +72,115 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="test_universal20selinuxenabled.test_selinux_enforcing">
+<tt class="descclassname">test_universal20selinuxenabled.</tt><tt class="descname">test_selinux_enforcing</tt><big>(</big><em>selinux_getenforce</em><big>)</big><a class="headerlink" href="#test_universal20selinuxenabled.test_selinux_enforcing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether SELinux is in &#8216;Enforcing&#8217; state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selinux_getenforce</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Current enforcing status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_universal20selinuxenabled.test_selinux_enforcing_check">
+<tt class="descclassname">test_universal20selinuxenabled.</tt><tt class="descname">test_selinux_enforcing_check</tt><big>(</big><em>selinux_getenforce</em><big>)</big><a class="headerlink" href="#test_universal20selinuxenabled.test_selinux_enforcing_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for success of flip_enforcing test.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selinux_getenforce</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Current enforcing status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_universal20selinuxenabled.test_selinux_enforcing_from_config">
+<tt class="descclassname">test_universal20selinuxenabled.</tt><tt class="descname">test_selinux_enforcing_from_config</tt><big>(</big><em>selinux_getenforce_conf</em><big>)</big><a class="headerlink" href="#test_universal20selinuxenabled.test_selinux_enforcing_from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether SELinux is in &#8216;Enforcing&#8217; state.
+Checks from config file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selinux_getenforce_conf</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Current enforcing status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_universal20selinuxenabled.test_selinux_flip_enforcing">
+<tt class="descclassname">test_universal20selinuxenabled.</tt><tt class="descname">test_selinux_flip_enforcing</tt><big>(</big><big>)</big><a class="headerlink" href="#test_universal20selinuxenabled.test_selinux_flip_enforcing" title="Permalink to this definition">¶</a></dt>
+<dd><p>This test sets SELinux to enforcing mode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_universal20selinuxenabled.test_selinux_flip_permissive">
+<tt class="descclassname">test_universal20selinuxenabled.</tt><tt class="descname">test_selinux_flip_permissive</tt><big>(</big><big>)</big><a class="headerlink" href="#test_universal20selinuxenabled.test_selinux_flip_permissive" title="Permalink to this definition">¶</a></dt>
+<dd><p>This test sets SELinux to permissive mode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_universal20selinuxenabled.test_selinux_is_targeted">
+<tt class="descclassname">test_universal20selinuxenabled.</tt><tt class="descname">test_selinux_is_targeted</tt><big>(</big><em>selinux_type</em><big>)</big><a class="headerlink" href="#test_universal20selinuxenabled.test_selinux_is_targeted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether SELinux is in &#8216;targeted&#8217; mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selinux_type</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; SELinux mode (targeted)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_universal20selinuxenabled.test_selinux_permissive_check">
+<tt class="descclassname">test_universal20selinuxenabled.</tt><tt class="descname">test_selinux_permissive_check</tt><big>(</big><em>selinux_getenforce</em><big>)</big><a class="headerlink" href="#test_universal20selinuxenabled.test_selinux_permissive_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for success of flip_permissive test.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selinux_getenforce</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Current enforcing status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 

@@ -72,6 +72,22 @@ between modules.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="common.RHUItests_list">
+<tt class="descclassname">common.</tt><tt class="descname">RHUItests_list</tt><big>(</big><big>)</big><a class="headerlink" href="#common.RHUItests_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns RHUI tests list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RHUI tests list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">list</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="common.append_file">
 <tt class="descclassname">common.</tt><tt class="descname">append_file</tt><big>(</big><em>target</em>, <em>fromf</em>, <em>strip_sep=False</em><big>)</big><a class="reference internal" href="modules/common.html#append_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.append_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function appends one file to another.
@@ -431,6 +447,51 @@ Python-version-proof.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.selinux_setenforce">
+<tt class="descclassname">common.</tt><tt class="descname">selinux_setenforce</tt><big>(</big><em>mode</em><big>)</big><a class="headerlink" href="#common.selinux_setenforce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets enforcing mode of SElinux</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mode</strong> &#8211; Enforcing mode from [Permissive, Enforcing]</li>
+<li><strong>type</strong> &#8211; <tt class="docutils literal"><span class="pre">str</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">pytest.Failed, AssertionError</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.shellcall">
+<tt class="descclassname">common.</tt><tt class="descname">shellcall</tt><big>(</big><em>command</em>, <em>errorcode=0</em><big>)</big><a class="headerlink" href="#common.shellcall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function used for calling shell commands rather than invoking programs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>command</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Command to be launched</li>
+<li><strong>errorcode</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; Desired error code. If None, does not check</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><tt class="docutils literal"><span class="pre">STDOUT</span></tt> of the command</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">AssertionError</p>
 </td>
 </tr>
 </tbody>

@@ -114,8 +114,42 @@ server is accessible</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="conftest.pytest_funcarg__rhel_release">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rhel_release</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__rhel_release" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns RHEL version</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RHEL version</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">tuple</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="conftest.pytest_funcarg__rpm_package_list">
 <tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rpm_package_list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__rpm_package_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of all installed packages in computer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> &#8211; py.test request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of all installed packages in computer.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">list</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.pytest_funcarg__rpm_package_list_names">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rpm_package_list_names</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__rpm_package_list_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns list of all installed packages in computer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -144,6 +178,60 @@ server is accessible</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SElinux status</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.pytest_funcarg__selinux_getenforce">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_getenforce</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__selinux_getenforce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns current enforcing mode of SELinux</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> &#8211; py.test request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SElinux enforcing status</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.pytest_funcarg__selinux_getenforce_conf">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_getenforce_conf</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__selinux_getenforce_conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns current enforcing mode of SELinux from config file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> &#8211; py.test request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SElinux enforcing status</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.pytest_funcarg__selinux_type">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_type</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__selinux_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns current SELINUX type from config file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> &#8211; py.test request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SElinux type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
 </tr>
 </tbody>
 </table>
