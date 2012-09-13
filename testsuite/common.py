@@ -53,13 +53,15 @@ audrey_service_path = '/var/audrey/tooling/user'
 :var audrey_service_path: Where are all Audrey services from XML located
 """
 
-def run(cmd, errorcode=0):
+def run(cmd, errorcode=0, shell=False):
     """This function runs desired command and checks whether it has failed or not
 
     :param cmd: Command to be run
     :type cmd: str or list (``shlex``-splitted)
     :param errorcode: Desired error code of the program. Defaults to 0 (all ok). If set to ``None``, error code won't be checked.
     :type errorcode: int
+    :param shell: Whether to launch it in shell
+    :type shell: ``bool``
     
     :returns: ``STDOUT`` of called process
     :rtype: str
@@ -70,7 +72,8 @@ def run(cmd, errorcode=0):
         cmd = shlex.split(cmd)
     p_open = subprocess.Popen(cmd,
                     stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT)
+                    stderr=subprocess.STDOUT,
+                    shell=shell)
     (stdout, stderr) = p_open.communicate()
     if errorcode != None:
         assert p_open.returncode == errorcode
@@ -458,3 +461,14 @@ def selinux_setenforce(mode):
     """
     assert mode in ["Permissive", "Enforcing"]
     run("/usr/sbin/setenforce %s" % mode)
+
+def RHUItests_list():
+    """Returns RHUI tests list
+
+    :returns: RHUI tests list
+    :rtype: ``list``
+    """
+    try:
+        return common.run("../valid/CloudFormsSanity/test_list.sh").strip().split("\n")
+    except AssertionError:
+        pytest.fail(msg="Error when gathering list of RHUI bash tests")

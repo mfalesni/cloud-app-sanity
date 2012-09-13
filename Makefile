@@ -3,6 +3,12 @@ BUILD_DIR := build-dir
 RESULTS_FILENAME := results.tar.gz
 RESULTS_DIR := ./results-dir
 
+# RHUI QE valid suite
+VALID_DIR := valid
+VALID_TARBALL_URL := https://github.com/mfalesni/valid/tarball/master
+VALID_TARBALL := valid.tar.gz
+
+
 # Documentation variables
 DOCS_DIR := docs
 DOCS_TITLE := CloudForms Application Sanity Test Suite
@@ -44,6 +50,12 @@ endif
 .PHONY: bootstrap pack clean doc doc_src doc_html doc_git push
 
 bootstrap: ${BUILD_DIR}
+
+# Download "valid" suite
+${VALID_DIR}:
+	mkdir ${VALID_DIR}
+	wget -O "${VALID_DIR}/${VALID_TARBALL}" "${VALID_TARBALL_URL}"
+	cd ${VALID_DIR} && tar xfvz ${VALID_TARBALL} --strip-components=1 && rm ${VALID_TARBALL}
 
 # Setup virtualenv
 ${BUILD_DIR}:

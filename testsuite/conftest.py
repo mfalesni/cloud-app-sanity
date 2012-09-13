@@ -218,17 +218,6 @@ def pytest_funcarg__rpm_package_list_names(request):
     return raw.split(" ")
 
 def pytest_funcarg__rhel_release(request):
-    """Setups cached variable for RHEL version
-
-    :param request: py.test request.
-
-    :returns: RHEL version (cached).
-    :rtype: ``tuple``
-    
-    """
-    return request.cached_setup(setup=setup_rhel_release, scope="module")
-
-def setup_rhel_release():
     """Returns RHEL version
 
     :returns: RHEL version
@@ -237,3 +226,5 @@ def setup_rhel_release():
     redhat_release_content = common.run("cat /etc/redhat-release").strip()
     redhat_version_field = redhat_release_content.split(" ")[6]
     return tuple(redhat_version_field.split(".", 1))
+
+

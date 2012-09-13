@@ -34,21 +34,6 @@ def test_selinux_enabled(selinux_enabled):
     if not selinux_enabled:
         pytest.fail(msg="SElinux is not enabled!")
 
-    # new_test "## /sbin/getenforce ... "
-    # assert "/usr/sbin/getenforce" "Enforcing"
-
-    # new_test "## Verify SELINUX enforcing ... "
-    # assert "grep ^SELINUX= /etc/sysconfig/selinux | cut -d\= -f2" enforcing
-
-    # new_test "## Verify SELINUXTYPE targeted ... "
-    # assert "grep ^SELINUXTYPE= /etc/sysconfig/selinux | cut -d\= -f2" targeted
-
-    # new_test "## Flip Selinux Permissive ... "
-    # assert "/usr/sbin/setenforce Permissive && /usr/sbin/getenforce" Permissive
-
-    # new_test "## Flip Selinux Enforcing ... "
-    # assert "/usr/sbin/setenforce Enforcing && /usr/sbin/getenforce" Enforcing
-
 def test_selinux_enforcing(selinux_getenforce):
     """ Verifies whether SELinux is in 'Enforcing' state.
 
