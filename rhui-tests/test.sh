@@ -16,7 +16,7 @@ echo "Parsing log file $LOGFILE"
 cat $LOGFILE >&2
 FAILED="`cat $LOGFILE | grep \"FAIL\"`"
 SUCCESS="`echo $FAILED | wc -l`"
-if [ $SUCCESS != "0" ] ; then
+if [ $SUCCESS -ne 0 ] ; then
   echo "FAILED: ${1} !"
   exit 1
 else
