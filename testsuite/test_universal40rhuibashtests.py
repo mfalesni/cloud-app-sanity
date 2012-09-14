@@ -35,7 +35,8 @@ def test_RHUItest(testname, rhel_release):
     :raises: pytest.Failed
     """
     result, rc = common.shellcall("cd rhui-tests/ && ./test.sh %s" % testname)
-    if rc != 0:
-        sys.stderr.write(common.shellcall("cd rhui-tests/ && ./collect.sh")[0])
-        common.shellcall("cd rhui-tests/ && rm -f results")
+    sys.stderr.write(result)
+    try:
+        assert rc == 0
+    except AssertionError:
         pytest.fail(msg="Test %s failed!" % testname)

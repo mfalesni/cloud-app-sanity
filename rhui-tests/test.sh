@@ -10,13 +10,10 @@
 
 use lotr x # We are using LOTR executable
 
-# Prepare results file
-touch results
-
 echo "`date`: Running test ${1}"
-./lotr -r -y -v "${1}" | grep "^LOGFILE: " | sed -r -e "s/^LOGFILE: //" >> results
-LOGFILE="`tail -n1 results`"
+LOGFILE="`./lotr -r -y -v "${1}" | grep \"^LOGFILE: \" | sed -r -e \"s/^LOGFILE: //\"`"
 echo "Parsing log file $LOGFILE"
+cat $LOGFILE >&2
 FAILED="`cat $LOGFILE | grep \"FAIL\"`"
 SUCCESS="`echo $FAILED | wc -l`"
 if [ $SUCCESS != "0" ] ; then
