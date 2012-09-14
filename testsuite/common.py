@@ -76,22 +76,18 @@ def run(cmd, errorcode=0):
         assert p_open.returncode == errorcode
     return stdout
 
-def shellcall(command, errorcode=0):
+def shellcall(command):
     """ Function used for calling shell commands rather than invoking programs.
 
     :param command: Command to be launched
     :type command: ``str``
-    :param errorcode: Desired error code. If None, does not check
-    :type errorcode: ``int``
-
-    :returns: ``STDOUT`` of the command
+    
+    :returns: ``tuple`` of ``STDOUT`` and RC of the command
     :raises: AssertionError
     """
     process = subprocess.Popen(command,stdout=subprocess.PIPE, shell=True)
     (stdout, stderr) = process.communicate()
-    if errorcode != None:
-        assert process.returncode == errorcode
-    return stdout
+    return (stdout, process.returncode)
 
     
 def copy(source, destination):
@@ -477,13 +473,13 @@ def selinux_setenforce(mode):
     assert mode in ["Permissive", "Enforcing"]
     run("/usr/sbin/setenforce %s" % mode)
 
-def RHUItests_list():
-    """Returns RHUI tests list
+def RHUItests_list_base():
+    """Returns RHUI base tests list
 
-    :returns: RHUI tests list
+    :returns: RHUI base tests list
     :rtype: ``list``
     """
     try:
-        return shellcall("cd rhui-tests && ./list.sh").strip().split("\n")
+        return shellcall("cd rhui-tests && ./list.sh base.list").strip().split("\n")
     except AssertionError:
         pytest.fail(msg="Error when gathering list of RHUI bash tests")
