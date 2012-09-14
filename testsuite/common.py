@@ -473,15 +473,15 @@ def selinux_setenforce(mode):
     assert mode in ["Permissive", "Enforcing"]
     run("/usr/sbin/setenforce %s" % mode)
 
-def RHUItests_list_base():
-    """Returns RHUI base tests list
+def beaker_list_tests(inputfile):
+    """Returns Beaker tasks list
 
-    :returns: RHUI base tests list
+    :returns: Beaker tasks list
     :rtype: ``list``
     """
     try:
-        result, rc = shellcall("cd rhui-tests && ./list.sh base.list")
+        result, rc = shellcall("cd beaker-tests && ./list.sh %s" % inputfile)
         assert rc == 0
         return result.strip().split("\n")
     except AssertionError:
-        pytest.fail(msg="Error when gathering list of RHUI bash tests")
+        pytest.fail(msg="Error when gathering list of Beaker tasks")

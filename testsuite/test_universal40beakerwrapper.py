@@ -25,16 +25,16 @@ import sys
 import os
 import pytest
 
-@pytest.mark.parametrize("testname", common.RHUItests_list_base())
-def test_RHUItest(testname, rhel_release):
-    """ Launches specific tests from RHUIQE bash test suite
+@pytest.mark.parametrize("testname", common.beaker_list_tests("base.list"))
+def test_beakertask(testname):
+    """ Launches specific Beaker task
 
     :param testname: Test name
     :type testname: ``str``
 
     :raises: pytest.Failed
     """
-    result, rc = common.shellcall("cd rhui-tests/ && ./test.sh %s" % testname)
+    result, rc = common.shellcall("cd beaker-tests/ && ./test.sh %s" % testname)
     sys.stderr.write(result)
     try:
         assert rc == 0
