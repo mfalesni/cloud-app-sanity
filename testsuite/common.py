@@ -480,6 +480,8 @@ def RHUItests_list_base():
     :rtype: ``list``
     """
     try:
-        return shellcall("cd rhui-tests && ./list.sh base.list").strip().split("\n")
+        result, rc = shellcall("cd rhui-tests && ./list.sh base.list")
+        assert rc == 0
+        return result.strip().split("\n")
     except AssertionError:
         pytest.fail(msg="Error when gathering list of RHUI bash tests")
