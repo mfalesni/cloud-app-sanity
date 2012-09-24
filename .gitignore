@@ -5,3 +5,5 @@ epydoc
 results.*
 *.swp
 *.pyc
+services.xml
+services.sh
