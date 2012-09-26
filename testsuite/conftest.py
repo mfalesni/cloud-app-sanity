@@ -223,7 +223,7 @@ def pytest_funcarg__rhel_release(request):
     :returns: RHEL version
     :rtype: ``tuple``
     """
-    redhat_release_content = common.run("cat /etc/redhat-release").strip()
+    redhat_release_content = common.shell.run("cat /etc/redhat-release").strip()
     redhat_version_field = redhat_release_content.split(" ")[6]
     return tuple(redhat_version_field.split(".", 1))
 

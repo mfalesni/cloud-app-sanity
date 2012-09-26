@@ -107,3 +107,34 @@ def package_installed(package):
         return True
     except AssertionError:
         return False
+
+def q(package, qf=None):
+    """ Performs a 'rpm -q' command with optional --qf parameter
+
+    :param package: Package to query
+    :type package: ``str``
+    :param qf: ``--qf`` parameter value
+    :type qf: ``str``
+
+    :returns: Package informations
+    :rtype: ``str``
+    """
+    cmd = "rpm -q "
+    if qf != None:
+        cmd += "--qf \"%s\" " % qf
+    cmd += package
+    return shell.run(cmd)
+
+def qa(qf=None):
+    """ Performs a 'rpm -qa' command with optional --qf parameter
+
+    :param qf: ``--qf`` parameter value
+    :type qf: ``str``
+
+    :returns: Package informations
+    :rtype: ``str``
+    """
+    cmd = "rpm -qa"
+    if qf != None:
+        cmd += " --qf \"%s\"" % qf
+    return shell.run(cmd)

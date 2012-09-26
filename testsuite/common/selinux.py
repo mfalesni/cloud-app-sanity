@@ -33,3 +33,11 @@ def setenforce(mode):
     """
     assert mode in ["Permissive", "Enforcing"]
     shell.run("/usr/sbin/setenforce %s" % mode)
+
+def getenforce():
+    """ Returns enforcing mode of SElinux
+
+    :returns: Enforcing mode of SELinux
+    :rtype: ``str``
+    """
+    return shell.run("/usr/sbin/getenforce")
