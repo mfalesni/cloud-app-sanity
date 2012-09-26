@@ -54,7 +54,7 @@ def test_gpg_key_import_release():
 
     :raises: AssertionError
     """
-    common.run("rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release")
+    common.shell.run("rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release")
 
 def test_gpg_key_import_beta(audreyvars):
     """This test imports redhat-beta GPG certificate if it's wanted (audreyvars[IMPORT_GPG_BETA_KEY]). Otherwise, it's skipped.
@@ -66,7 +66,7 @@ def test_gpg_key_import_beta(audreyvars):
     """
     betakey = audreyvars.get("IMPORT_GPG_BETA_KEY", "false").lower()
     if betakey == "true":
-        common.run("rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta")
+        common.shell.run("rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta")
     else:
         pytest.skip(msg='Not importing beta key')
 
@@ -82,7 +82,7 @@ def test_import_rhel_product_cert(audreyvars, ec2_deployment):
     """
     if ec2_deployment and not os.path.isfile('/etc/pki/product/69.pem'):
         os.chdir('%s/%s' % (common.audrey_service_path, audreyvars.get("RHEL_PRODUCT_CERT_TASK", "RHEL_PRODUCT_CERT")))
-        output = common.run('rpm -qf /etc/redhat-release --qf "%{release}"')
+        output = common.shell.run('rpm -qf /etc/redhat-release --qf "%{release}"')
         (major, minor, garbage) = output.split('.', 2)
         pem_file = '%s.%s-%s.pem' % (major, minor, os.uname()[-1])
         if os.path.isfile(pem_file):
@@ -156,9 +156,9 @@ def test_import_certificate(audreyvars):
 
     :raises: AssertionError
     """
-    cert_rpm = common.s_format("http://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
+    cert_rpm = common.tools.s_format("http://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
     cmd = "rpm -ivh %s" % cert_rpm
-    common.run(cmd)
+    common.shell.run(cmd)
 
 def test_tunnel_rhsm(audreyvars, subscription_manager_version):
     """This test sets up a RHSM tunnel, if it's desired.
@@ -187,8 +187,8 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
             cfg.write(fd)
             fd.close()
         else:
-            common.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
-            common.run('subscription-manager config --server.port=%s' % server_port)
+            common.shell.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
+            common.shell.run('subscription-manager config --server.port=%s' % server_port)
 
 def test_disable_rhui(audreyvars, ec2_deployment):
     """This test disables RHUI, if it's desired.
@@ -203,14 +203,14 @@ def test_disable_rhui(audreyvars, ec2_deployment):
     if ec2_deployment and audreyvars.get("DISABLE_RHUI", "True").lower() == "true":
         try:
             # Disable any yum repoid's matchin 'rhui-*'
-            common.run(common.s_format('yum-config-manager --disable "rhui-*"', os.environ))
+            common.shell.run(common.tools.s_format('yum-config-manager --disable "rhui-*"', os.environ))
         except OSError, e:
             # Disable all repositories defined in files matching 'redhat-*.repo'
             for repo_file in glob.glob("/etc/yum.repos.d/redhat-*.repo"):
-                common.update_yum_repo(repo_file, enabled=False)
+                common.yum.update_repo(repo_file, enabled=False)
 
         # Disable the rhui-lb plugin
-        common.update_yum_plugin('rhui-lb.conf', enabled=False)
+        common.yum.update_plugin('rhui-lb.conf', enabled=False)
     else:
         pytest.skip(msg='Not disabling RHUI')
 
@@ -253,11 +253,11 @@ def test_katello_register(audreyvars, subscription_manager_version):
                 cmd += " --activationkey=%s" % activation_key
             else:
                 pass # determine and print error condition to stdout
-    common.run(cmd)
+    common.shell.run(cmd)
 
 def test_verify_katello_registered():
     """ This test verifies whether the system is registered into Katello.
 
     :raises: AssertionError
     """
-    common.run('subscription-manager refresh')
+    common.shell.run('subscription-manager refresh')

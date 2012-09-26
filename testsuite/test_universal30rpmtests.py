@@ -38,11 +38,11 @@ def test_packages_installed_against_list(rpm_package_list_name, rhel_release):
     try:
         if major == "5":
             # RHEL5 packages
-            packagelist = common.run("cat data/packages_5")
+            packagelist = common.shell.run("cat data/packages_5")
         elif major == "6":
             # RHEL6 packages
             try:
-                packagelist = common.run("cat data/%s" % rhel6pkgfilelist[minor])
+                packagelist = common.shell.run("cat data/%s" % rhel6pkgfilelist[minor])
             except KeyError:
                 pytest.fail("Unknown version of RHEL! (major: %s, minor: %s)" % rhel_release)
     except AssertionError:

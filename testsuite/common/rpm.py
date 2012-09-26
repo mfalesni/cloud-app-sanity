@@ -20,14 +20,20 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-from __init__ import *
+import shell
+import rpm
+
+import pytest
+
+import os
+import re
 
 def keys_import(keydir="/etc/pki/rpm-gpg"):
     """ This function imports all keys in directory '/etc/pki/rpm-gpg' by default
     """
     file_list = os.listdir(keydir)
     for key_file in file_list:
-        run("rpm --import %s/%s" % (keydir, key_file))
+        shell.run("rpm --import %s/%s" % (keydir, key_file))
 
 def signature_lines(package):
     """ Returns lines with signature informations of package
@@ -39,7 +45,7 @@ def signature_lines(package):
     :rtype: ``list(str)``
     """
     sig = re.compile("[Ss]ignature")
-    for line in run("rpm -qvv %s" % package).strip().split("\n"):
+    for line in shell.run("rpm -qvv %s" % package).strip().split("\n"):
         if sig.search(line):
             yield line.split("#", 1)[-1].lstrip()
 
@@ -52,7 +58,7 @@ def verify_package(package):
     :rtype: ``bool``
     """
     success = True
-    for line in rpm_signature_lines(package):
+    for line in rpm.signature_lines(package):
         fields = [x.strip() for x in line.rsplit(", key ID", 1)]
         key_status = None
         if re.match("^[0-9a-z]+$", fields[1]):
@@ -75,7 +81,7 @@ def package_problems(package):
     :returns: ``STDOUT`` of rpm -V
     :rtype: ``str``
     """
-    return run("rpm -Vvv %s" % package, None)
+    return shell.run("rpm -Vvv %s" % package, None)
 
 def package_build_host(package):
     """ Returns build host of the package.
@@ -85,7 +91,7 @@ def package_build_host(package):
     :returns: Build host of the package
     :rtype: ``str``
     """
-    return run("rpm -q --qf \"%%{BUILDHOST}\" %s" % package).strip()
+    return shell.run("rpm -q --qf \"%%{BUILDHOST}\" %s" % package).strip()
 
 def package_installed(package):
     """ Returns whether is package installed or not
@@ -97,7 +103,7 @@ def package_installed(package):
     :rtype: ``bool``
     """
     try:
-        run("rpm -q %s" % package)
+        shell.run("rpm -q %s" % package)
         return True
     except AssertionError:
         return False

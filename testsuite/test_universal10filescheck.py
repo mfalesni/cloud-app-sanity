@@ -64,7 +64,7 @@ def test_check_permissions_and_broken_symlinks():
                 failed = True
             if islnk(info):
                 # Check if it's broken or not
-                if not common.exists_in_path(os.readlink(path), os.path.abspath(directory)):
+                if not common.shell.exists_in_path(os.readlink(path), os.path.abspath(directory)):
                     sys.stderr.write("BS %s\n" % path)
                     failed = True
             elif isdir(info):

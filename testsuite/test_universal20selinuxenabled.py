@@ -80,7 +80,7 @@ def test_selinux_flip_permissive():
     :raises: pytest.Failed
     """
     try:
-        common.selinux_setenforce("Permissive")
+        common.selinux.setenforce("Permissive")
     except AssertionError:
         pytest.fail(msg="Setting SELinux into Permissive mode was not successful")
 
@@ -103,7 +103,7 @@ def test_selinux_flip_enforcing():
     :raises: pytest.Failed
     """
     try:
-        common.selinux_setenforce("Enforcing")
+        common.selinux.setenforce("Enforcing")
     except AssertionError:
         pytest.fail(msg="Setting SELinux into Enforcing mode was not successful")
 

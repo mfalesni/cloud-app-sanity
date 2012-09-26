@@ -122,7 +122,7 @@ def setup_subscription_manager_version():
     :returns: SM version
     :rtype: 2-tuple
     """
-    sm_rpm_ver = common.run("rpm -q --queryformat %{VERSION} subscription-manager")
+    sm_rpm_ver = common.shell.run("rpm -q --queryformat %{VERSION} subscription-manager")
     sm_ver_maj, sm_ver_min, sm_ver_rest = sm_rpm_ver.split(".", 2)
     return int(sm_ver_maj), int(sm_ver_min)
 
@@ -133,7 +133,7 @@ def pytest_funcarg__system_uuid(request):
     :returns: System UUID
     :rtype: ``str``
     """
-    facts = common.run("subscription-manager facts --list")
+    facts = common.shell.run("subscription-manager facts --list")
     facts = facts.strip().split("\n")
     for fact in facts:
         name, value = fact.split(":", 1)
@@ -149,7 +149,7 @@ def pytest_funcarg__selinux_enabled(request):
     """
     result = True
     try:
-        common.run("selinuxenabled")
+        common.shell.run("selinuxenabled")
     except AssertionError:
         result = False
     return result
@@ -161,7 +161,7 @@ def pytest_funcarg__selinux_getenforce(request):
     :returns: SElinux enforcing status
     :rtype: ``str``
     """
-    return common.run("/usr/sbin/getenforce").strip()
+    return common.shell.run("/usr/sbin/getenforce").strip()
 
 def pytest_funcarg__selinux_getenforce_conf(request):
     """ Returns current enforcing mode of SELinux from config file
@@ -204,7 +204,7 @@ def pytest_funcarg__rpm_package_list(request):
     :returns: List of all installed packages in computer.
     :rtype: ``list``
     """
-    raw = common.run("rpm -qa").strip()
+    raw = common.shell.run("rpm -qa").strip()
     return [x.strip() for x in raw.split("\n")]
 
 def pytest_funcarg__rpm_package_list_names(request):
@@ -214,7 +214,7 @@ def pytest_funcarg__rpm_package_list_names(request):
     :returns: List of all installed packages in computer.
     :rtype: ``list``
     """
-    raw = common.run("rpm -qa --qf \"%{NAME} \"").strip()
+    raw = common.shell.run("rpm -qa --qf \"%{NAME} \"").strip()
     return raw.split(" ")
 
 def pytest_funcarg__rhel_release(request):

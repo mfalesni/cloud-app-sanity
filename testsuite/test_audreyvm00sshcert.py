@@ -40,7 +40,7 @@ def test_import_ssh_certificate(audreyvars):
         pytest.skip(msg="SSH key is not present, skipping")
     # Create JENKINS_SSH_DIR
     if not os.path.isdir(JENKINS_SSH_DIR):
-        common.mkdir(JENKINS_SSH_DIR)
+        common.shell.mkdir(JENKINS_SSH_DIR)
     # Split them into array
     locations = JENKINS_SSH_KEY_LOCATION.split("]]]")
     for location in locations:
@@ -56,8 +56,8 @@ def test_import_ssh_certificate(audreyvars):
             if location.startswith("http"):
                 # It's an URL
                 if target == None:
-                    target = "%s/%s" % (JENKINS_SSH_DIR, common.filename_from_url(location))
-                common.download_file(location, target, True)
+                    target = "%s/%s" % (JENKINS_SSH_DIR, common.tools.filename_from_url(location))
+                common.net.download_file(location, target, True)
             else:
                 # Key is file in local directory
                 filename = "%s/KATELLO_REGISTER/%s" % (common.audrey_service_path, location)
@@ -65,23 +65,23 @@ def test_import_ssh_certificate(audreyvars):
                     target = "%s/%s" % (JENKINS_SSH_DIR, location)
                 if not os.path.isfile(filename):
                     pytest.fail(msg="Unable to find file '%s'" % filename)
-                common.copy(filename, target)
+                common.shell.copy(filename, target)
         else:
             # It's a file somewhere in filesystem
             if not os.path.isfile(filename):
                 pytest.fail(msg="Unable to find file '%s'" % filename)
             if target == None:
                 target = "%s/%s" % (JENKINS_SSH_DIR, os.path.basename(location))
-            common.copy(location, target)           
+            common.shell.copy(location, target)           
         # Verify that key is in place
         if not os.path.isfile(target):
             pytest.fail(msg="Importing the key was unsuccessful, key is not present in '%s'" % target)
         # Add the key into authorized keys
         authkeys = "%s/authorized_keys" % JENKINS_SSH_DIR
-        common.append_file(authkeys, target, True)
+        common.tools.append_file(authkeys, target, True)
         # Verify again that the file exists
         # Verify that key is in place
         if not os.path.isfile(authkeys):
             pytest.fail(msg="Importing the key was unsuccessful, file '%s' does not exist" % authkeys)
         # And now for SELinux to work (RHEL5 doesn't matter, but RHEL6 needs this very much)
-        common.run("restorecon -R -v %s" % JENKINS_SSH_DIR)
+        common.shell.run("restorecon -R -v %s" % JENKINS_SSH_DIR)

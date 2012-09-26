@@ -20,7 +20,16 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-from __init__ import *
+import shell
+import net
+
+import pytest
+
+from urllib2 import urlopen, HTTPError, URLError
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 def poll_task_state(server, task_uuid, login, password):
     """ This function returns state of task with given UUID.
@@ -38,7 +47,7 @@ def poll_task_state(server, task_uuid, login, password):
     :returns: Reported task state
     :rtype: ``str``
     """
-    request = make_auth_request("https://%s/katello/api/systems/tasks/%s" % (server, task_uuid), login, password)
+    request = net.make_auth_request("https://%s/katello/api/systems/tasks/%s" % (server, task_uuid), login, password)
     response = urlopen(request)
     data = json.loads("\n".join(response.readlines()))
     return str(data["state"])
@@ -61,7 +70,7 @@ def query_remote_install(server, uuid, login, password, package):
     :raises: pytest.Failed    
     """
     # Prepare the request
-    request = make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
+    request = net.make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
     request.add_header("content-type", "application/json")
     body = json.dumps({"packages": [package]})
     request.add_header("content-length", str(len(body)))
@@ -82,8 +91,8 @@ def query_remote_install(server, uuid, login, password, package):
     # List of allowed states
     ok_states = ["waiting", "running", "finished"]
     while state != "finished":
-        state = katello_poll_system_task_state(server, task_uuid, login, password)
+        state = poll_task_state(server, task_uuid, login, password)
         if state not in ok_states:
             pytest.fail(msg="Installation of package %s failed when task went to state '%s'" % (str(package), state))
     # Package is installed, let's verify it
-    run("rpm -q %s" % package)
+    shell.run("rpm -q %s" % package)

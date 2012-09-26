@@ -1,6 +1,5 @@
 #!/usr/bin/env python2
 #   Author(s): Milan Falesnik <mfalesni@redhat.com>
-#              James Laska <jlaska@redhat.com>
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 #   Copyright (c) 2012 Red Hat, Inc. All rights reserved.
@@ -21,30 +20,16 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-""" This package contains some functions, which are likely to be shared
-    between modules.
-
-    When decide to put a function here?:
-
-        - When it's enough universal to be used with multiple modules
-        - It can't be parameter for py.test
-"""
-
-import beaker
-import katello
-import net
-import rpm
-import selinux
-import yum
-import tools
 import shell
 
+import pytest
 
-audrey_service_path = '/var/audrey/tooling/user'
-"""
-:var audrey_service_path: Where are all Audrey services from XML located
-"""
+def setenforce(mode):
+    """ Sets enforcing mode of SElinux
 
-
-
-
+    :param mode: Enforcing mode from [Permissive, Enforcing]
+    :param type: ``str``
+    :raises: AssertionError
+    """
+    assert mode in ["Permissive", "Enforcing"]
+    shell.run("/usr/sbin/setenforce %s" % mode)

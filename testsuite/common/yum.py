@@ -20,7 +20,11 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-from __init__ import *
+import shell
+
+import pytest
+
+from ConfigParser import ConfigParser
 
 def install(package_name):
     """ Does the 'yum install <package>' command.
@@ -31,6 +35,61 @@ def install(package_name):
     :raises: AssertionError
     """
     # Install it
-    run("yum -y install %s" % (package_name))
+    shell.run("yum -y install %s" % (package_name))
     # Verify it
-    run("rpm -q %s" % (package_name))
+    shell.run("rpm -q %s" % (package_name))
+
+def update_config(repo_file, enabled=True):
+    """Enables or disables all sections in Yum config files
+
+    :param repo_file: Config file, which should be processed
+    :type repo_file: str
+    :param enabled: Whether to enable or disable
+    :type enabled: bool
+
+    """
+    if os.path.isfile(repo_file):
+        cfg = ConfigParser()
+        cfg.read([repo_file])
+        save_changes = False
+        for section in cfg.sections():
+            if cfg.has_option(section, 'enabled'):
+                save_changes = True
+                if enabled:
+                    cfg.set(section, 'enabled', 1)
+                else:
+                    cfg.set(section, 'enabled', 0)
+        if save_changes:
+            fd = open(repo_file, 'rwa+')
+            cfg.write(fd)
+            fd.close()
+    else:
+        pytest.fail(msg="%s was not found!" % repo_file)
+
+def update_repo(repo_file, enabled=True):
+    """Enables or disables all sections in Yum repository files
+
+    :param repo_file: Repo file, which should be processed
+    :type repo_file: str
+    :param enabled: Whether to enable or disable
+    :type enabled: bool
+    """
+    if not repo_file.startswith('/'):
+        repo_file = '/etc/yum.repos.d/%s' % repo_file
+    if not repo_file.endswith('.repo'):
+        repo_file = '%s.repo' % repo_file
+    update_yum_config(repo_file, enabled)
+
+def update_plugin(plugin_conf, enabled=True):
+    """Enables or disables all sections in Yum plugin config files
+
+    :param repo_file: Config file, which should be processed
+    :type repo_file: str
+    :param enabled: Whether to enable or disable
+    :type enabled: bool
+    """
+    if not plugin_conf.startswith('/'):
+        plugin_conf = '/etc/yum/pluginconf.d/%s' % plugin_conf
+    if not plugin_conf.endswith('.conf'):
+        plugin_conf = '%s.conf' % plugin_conf
+    update_yum_config(plugin_conf, enabled)
