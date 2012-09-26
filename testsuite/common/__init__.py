@@ -173,19 +173,6 @@ def download_file(url, target_file_name, bulletproof=False):
     except TypeError:
         pytest.fail(msg="Download unsuccessful")
 
-def install_yum_package_local(package_name):
-    """ Does the 'yum install <package>' command.
-
-    :param package_name: Name of the package to install (eg. katello-all)
-    :type package_name: str
-
-    :raises: AssertionError
-    """
-    # Install it
-    run("yum -y install %s" % (package_name))
-    # Verify it
-    run("rpm -q %s" % (package_name))
-
 def make_auth_request(url, login, password):
     """ Creates request with basic HTTP authentication
 
@@ -201,72 +188,6 @@ def make_auth_request(url, login, password):
     request = Request(url)
     request.add_header("Authorization", "Basic %s" % base64.encodestring('%s:%s' % (login, password))[:-1])
     return request
-
-def install_yum_package_remote(server, uuid, login, password, package):
-    """ This function installs package into guest system via Katello request.
-        Basically, it tells Katello "Hey, Katello, install these packages into machine with that UUID"
-
-    :param server: Remote Katello server
-    :type server: ``str``
-    :param uuid: Target machine UUID
-    :type uuid: ``str``
-    :param login: Login name into Katello server
-    :type login: ``str``
-    :param password: Login password into Katello server
-    :type password: ``str``
-    :param package: Package to install into system
-    :type package: ``str``
-
-    :raises: pytest.Failed    
-    """
-    # Prepare the request
-    request = make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
-    request.add_header("content-type", "application/json")
-    body = json.dumps({"packages": [package]})
-    request.add_header("content-length", str(len(body)))
-    request.add_data(body)
-    # send the request
-    response = None
-    try:
-        response = urlopen(request)
-    except HTTPError, e:
-        if int(e.code) in [202]:
-            response = e # To work in RHEL5
-        else:
-            pytest.fail(msg="Error when querying installation of package %s with HTTP code %d and reason '%s'!" % (package, int(e.code), e.reason))
-    # get the task uuid
-    task_uuid = json.loads("\n".join(response.readlines()))["uuid"]
-    # poll it
-    state = ""
-    # List of allowed states
-    ok_states = ["waiting", "running", "finished"]
-    while state != "finished":
-        state = katello_poll_system_task_state(server, task_uuid, login, password)
-        if state not in ok_states:
-            pytest.fail(msg="Installation of package %s failed when task went to state '%s'" % (str(package), state))
-    # Package is installed, let's verify it
-    run("rpm -q %s" % package)
-
-def katello_poll_system_task_state(server, task_uuid, login, password):
-    """ This function returns state of task with given UUID.
-        Useful when polling certain task if finished or not.
-
-    :param server: Katello server to poll on.
-    :type server: ``str``
-    :param task_uuid: Checked task's unique ID
-    :type task_uuid: ``str``
-    :param password: Login password into Katello server
-    :type password: ``str``
-    :param package: Package to install into system
-    :type package: ``str``
-
-    :returns: Reported task state
-    :rtype: ``str``
-    """
-    request = make_auth_request("https://%s/katello/api/systems/tasks/%s" % (server, task_uuid), login, password)
-    response = urlopen(request)
-    data = json.loads("\n".join(response.readlines()))
-    return str(data["state"])
 
 def s_format(s, dct):
     """ Does the ``dict``-format of string.
@@ -397,86 +318,6 @@ def list_opened_files(pid):
     for line in lines:
         result.append(line[-1])
     return result
-
-def rpm_keys_import(keydir="/etc/pki/rpm-gpg"):
-    """ This function imports all keys in directory '/etc/pki/rpm-gpg' by default
-    """
-    file_list = os.listdir(keydir)
-    for key_file in file_list:
-        run("rpm --import %s/%s" % (keydir, key_file))
-
-def rpm_signature_lines(package):
-    """ Returns lines with signature informations of package
-
-    :param package: Package name
-    :type package: ``str``
-
-    :returns: List of lines speaking about signatures
-    :rtype: ``list(str)``
-    """
-    sig = re.compile("[Ss]ignature")
-    for line in run("rpm -qvv %s" % package).strip().split("\n"):
-        if sig.search(line):
-            yield line.split("#", 1)[-1].lstrip()
-
-def rpm_verify_package(package):
-    """ Verifies package in RPM database.
-
-    :param package: Package to check
-    :type package: ``str``
-    :returns: Bool whether verification succeeded
-    :rtype: ``bool``
-    """
-    success = True
-    for line in rpm_signature_lines(package):
-        fields = [x.strip() for x in line.rsplit(", key ID", 1)]
-        key_status = None
-        if re.match("^[0-9a-z]+$", fields[1]):
-            # RHEL 5
-            key_status = fields[0]
-        else:
-            # RHEL 6
-            key_status = fields[1]
-        key_status = key_status.rsplit(":", 1)[1].strip()   # The key info is on the right side of the colon
-        print "sig: %s -> %s" % (package, key_status)
-        if not key_status.upper() == "OK":
-            success = False
-    return success
-
-def rpm_package_problems(package):
-    """ This functions returns reported problems with package
-
-    :param package: Package to check
-    :type package: ``str``
-    :returns: ``STDOUT`` of rpm -V
-    :rtype: ``str``
-    """
-    return run("rpm -Vvv %s" % package, None)
-
-def rpm_package_build_host(package):
-    """ Returns build host of the package.
-
-    :param package: Package to check
-    :type package: ``str``
-    :returns: Build host of the package
-    :rtype: ``str``
-    """
-    return run("rpm -q --qf \"%%{BUILDHOST}\" %s" % package).strip()
-
-def rpm_package_installed(package):
-    """ Returns whether is package installed or not
-
-    :param package: Package name
-    :type package: ``str``
-
-    :returns: ``True`` when package is installed, otherwise ``False``
-    :rtype: ``bool``
-    """
-    try:
-        run("rpm -q %s" % package)
-        return True
-    except AssertionError:
-        return False
 
 def selinux_setenforce(mode):
     """ Sets enforcing mode of SElinux

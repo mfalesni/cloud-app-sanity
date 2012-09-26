@@ -75,8 +75,8 @@ def test_check_all_packages(rpm_package_list):
     """
     failed = False
     for package in rpm_package_list:
-        if not common.rpm_verify_package(package):
-            sys.stderr.write("Package %s:\n%s" % (package, common.rpm_package_problems(package)))
+        if not common.rpm.verify_package(package):
+            sys.stderr.write("Package %s:\n%s" % (package, common.rpm.package_problems(package)))
             failed = True
     if failed:
         pytest.fail(msg="Some packages had problem!")
@@ -91,7 +91,7 @@ def test_yum_full_test(rhel_release):
     """
     # Package to check
     package = "distribution-ec2-Sanity-yum-full-test"
-    if not common.rpm_package_installed(package):
+    if not common.rpm.package_installed(package):
         pytest.fail(msg="Package %s is not installed!" % package)
-    
+
     

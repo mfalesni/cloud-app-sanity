@@ -20,22 +20,17 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
-import pytest
+from __init__ import *
 
-def test_install_package_locally_from_yum(audreyvars):
-    """ This test does local install of package (by yum command).
-        It takes a list of packages (separated by spaces) and installs them one by one.
+def install(package_name):
+    """ Does the 'yum install <package>' command.
 
-    :param audreyvars: Dict of Audrey environment variables
-    :type audreyvars: dict
+    :param package_name: Name of the package to install (eg. katello-all)
+    :type package_name: str
+
+    :raises: AssertionError
     """
-    packages = audreyvars.get("YUM_LOCAL_INSTALL", "").strip()
-    if packages != "":
-        packages = packages.split(" ")
-    else:
-        pytest.skip(msg="No packages marked for local install")
-    for package in packages:
-        print "Installing package %s" % package
-        common.yum.install(package)
-
+    # Install it
+    run("yum -y install %s" % (package_name))
+    # Verify it
+    run("rpm -q %s" % (package_name))

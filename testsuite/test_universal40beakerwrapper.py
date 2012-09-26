@@ -25,7 +25,7 @@ import sys
 import os
 import pytest
 
-@pytest.mark.parametrize("testname", common.beaker_list_tests("base.list"))
+@pytest.mark.parametrize("testname", common.beaker.list_tests("base.list"))
 def test_beakertask(testname):
     """ Launches specific Beaker task
 

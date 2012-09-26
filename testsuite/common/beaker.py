@@ -20,22 +20,17 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
-import pytest
+from __init__ import *
 
-def test_install_package_locally_from_yum(audreyvars):
-    """ This test does local install of package (by yum command).
-        It takes a list of packages (separated by spaces) and installs them one by one.
+def list_tests(inputfile):
+    """Returns Beaker tasks list
 
-    :param audreyvars: Dict of Audrey environment variables
-    :type audreyvars: dict
+    :returns: Beaker tasks list
+    :rtype: ``list``
     """
-    packages = audreyvars.get("YUM_LOCAL_INSTALL", "").strip()
-    if packages != "":
-        packages = packages.split(" ")
-    else:
-        pytest.skip(msg="No packages marked for local install")
-    for package in packages:
-        print "Installing package %s" % package
-        common.yum.install(package)
-
+    try:
+        result, rc = shellcall("cd beaker-tests && ./list.sh %s" % inputfile)
+        assert rc == 0
+        return result.strip().split("\n")
+    except AssertionError:
+        pytest.fail(msg="Error when gathering list of Beaker tasks")

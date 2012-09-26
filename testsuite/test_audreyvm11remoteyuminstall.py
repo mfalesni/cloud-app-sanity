@@ -47,4 +47,4 @@ def test_install_packages_remote(audreyvars, system_uuid):
     else:
         pytest.skip(msg="No packages marked for remote install")
     for package in packages:
-        common.install_yum_package_remote(server, system_uuid, login, password, package)
+        common.katello.query_remote_install(server, system_uuid, login, password, package)
