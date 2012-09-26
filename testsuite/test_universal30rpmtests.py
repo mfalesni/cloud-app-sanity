@@ -97,12 +97,12 @@ def test_yum_full_test(rhel_release):
     print common.yum.repolist()
     print common.yum.search("zsh")
     print common.yum.install("zsh")
-    assert common.rpm.package_installed("zsh") == True
+    assert common.rpm.package_installed("zsh")
     print common.yum.grouplist()
     print common.yum.groupinstall("Development tools")
     print common.yum.update()
     print common.rpm.e("zsh")
-    assert common.rpm.package_installed("zsh") == False
+    assert not common.rpm.package_installed("zsh")
 
 
 
