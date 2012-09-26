@@ -88,7 +88,7 @@ def test_yum_full_test(rhel_release):
     """
     # Package to check
     pkg = "redhat-release-server"
-    if rhel_release[0] == 5:
+    if int(rhel_release[0]) == 5:
         pkg = "redhat-release"
     if common.yum.check_update(pkg):
         print "Update for %s is available" % pkg
@@ -96,12 +96,12 @@ def test_yum_full_test(rhel_release):
         print "No update available for %s" % pkg
     print common.yum.repolist()
     print common.yum.search("zsh")
-    assert common.rpm.package_installed("zsh")
+    assert common.rpm.package_installed("zsh") == True
     print common.yum.grouplist()
     print common.yum.groupinstall("Development tools")
     print common.yum.update()
     print common.rpm.e("zsh")
-    assert not common.rpm.package_installed("zsh")
+    assert common.rpm.package_installed("zsh") == False
 
 
 

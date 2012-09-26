@@ -55,7 +55,7 @@ def test_check_permissions_and_broken_symlinks():
             if path.startswith("//"):   # Strip beginning // because of root dir
                 path = path[1:]
             for pattern in ignored_patterns:
-                if pattern.search(path):
+                if pattern.search(path) != None:
                     continue    # Skip this file/dir, has the wrong pattern
             info = os.lstat(path)
             if world_writable(info):
