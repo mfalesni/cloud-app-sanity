@@ -96,6 +96,7 @@ def test_yum_full_test(rhel_release):
         print "No update available for %s" % pkg
     print common.yum.repolist()
     print common.yum.search("zsh")
+    print common.yum.install("zsh")
     assert common.rpm.package_installed("zsh") == True
     print common.yum.grouplist()
     print common.yum.groupinstall("Development tools")
