@@ -24,11 +24,11 @@ import common
 import pytest
 import sys
 
-def test_packages_installed_against_list(rpm_package_list_name, rhel_release):
+def test_packages_installed_against_list(rpm_package_list_names, rhel_release):
     """ Tests whether there are only exact packages installed in the system.
 
-    :param rpm_package_list_name: Package list with names only
-    :param rpm_package_list_name: ``list``
+    :param rpm_package_list_names: Package list with names only
+    :param rpm_package_list_names: ``list``
 
     :raises: pytest.Failed
     """
@@ -52,15 +52,15 @@ def test_packages_installed_against_list(rpm_package_list_name, rhel_release):
     while len(packagelist) > 0:
         # Pop out checked packages
         pkg = packagelist.pop()
-        if pkg not in rpm_package_list_name:
+        if pkg not in rpm_package_list_names:
             not_installed_packages.append(pkg)
         else:
-            del rpm_package_list_name[rpm_package_list_name.index(pkg)]
+            del rpm_package_list_names[rpm_package_list_names.index(pkg)]
     if len(not_installed_packages) > 0:
         pytest.fail(msg="Some packages, which should have been installed weren't installed: %s" % str(not_installed_packages))
 
-    if len(rpm_package_list_name) > 0:
-        pytest.fail(msg="There are packages in this system, which aren't supposed to be installed: %s" % str(rpm_package_list_name))
+    if len(rpm_package_list_names) > 0:
+        pytest.fail(msg="There are packages in this system, which aren't supposed to be installed: %s" % str(rpm_package_list_names))
     
 
 
@@ -90,8 +90,6 @@ def test_yum_full_test(rhel_release):
     :raises: pytest.Failed
     """
     # Package to check
-    package = "distribution-ec2-Sanity-yum-full-test"
-    if not common.rpm.package_installed(package):
-        pytest.fail(msg="Package %s is not installed!" % package)
+    pass
 
     

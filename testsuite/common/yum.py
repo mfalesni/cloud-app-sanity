@@ -39,6 +39,19 @@ def install(package_name):
     # Verify it
     shell.run("rpm -q %s" % (package_name))
 
+def remove(package_name):
+    """ Does the 'yum remove <package>' command.
+
+    :param package_name: Name of the package to be removed (eg. katello-all)
+    :type package_name: str
+
+    :raises: AssertionError
+    """
+    # Remove it
+    shell.run("yum -y remove %s" % (package_name))
+    # Verify it
+    shell.run("rpm -q %s" % (package_name), errorcode=1)
+
 def update_config(repo_file, enabled=True):
     """Enables or disables all sections in Yum config files
 
