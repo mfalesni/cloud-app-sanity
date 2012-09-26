@@ -25,7 +25,6 @@ import pytest
 import os
 import stat
 import sys
-from re import compile as _
 
 """ Filesystem checking tests """
 
@@ -37,7 +36,7 @@ def test_check_permissions_and_broken_symlinks():
     """
     stack = []  # Used for storing directories to parse
     starting_dir = "/"
-    ignored_patterns = [_("^/proc")]    # List of all ignored patterns ... use _ as re.compile
+    ignored_patterns = ["/proc"]    # List of all ignored patterns ...
     failed = False
     # Helper functions
     isdir = lambda x: stat.S_ISDIR( x.st_mode)
@@ -54,9 +53,12 @@ def test_check_permissions_and_broken_symlinks():
             path = "%s/%s" % (directory, entry)
             if path.startswith("//"):   # Strip beginning // because of root dir
                 path = path[1:]
+            cnt = False
             for pattern in ignored_patterns:
-                if pattern.search(path) != None:
-                    continue    # Skip this file/dir, has the wrong pattern
+                if path.startswith(pattern) != None:
+                    cnt = True    # Skip this file/dir, has the wrong pattern
+            if cnt:
+                continue
             info = os.lstat(path)
             if world_writable(info):
                 # Check its permissions, if wrong, append it
