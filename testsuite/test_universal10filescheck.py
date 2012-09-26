@@ -55,7 +55,7 @@ def test_check_permissions_and_broken_symlinks():
                 path = path[1:]
             cnt = False
             for pattern in ignored_patterns:
-                if path.startswith(pattern) != None:
+                if path.startswith(pattern):
                     cnt = True    # Skip this file/dir, has the wrong pattern
             if cnt:
                 continue
