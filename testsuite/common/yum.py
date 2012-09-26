@@ -21,6 +21,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 import shell
+import rpm
 
 import pytest
 
@@ -35,9 +36,22 @@ def install(package_name):
     :raises: AssertionError
     """
     # Install it
-    shell.run("yum -y install %s" % (package_name))
+    text = shell.run("yum -y install %s" % (package_name))
     # Verify it
     shell.run("rpm -q %s" % (package_name))
+    return rpm.check_for_errors(text)
+
+def groupinstall(group):
+    """ Does the 'yum groupinstall <package>' command.
+
+    :param package_name: Name of the group to install (eg. katello-all)
+    :type package_name: str
+
+    :raises: AssertionError
+    """
+    # Install it
+    text = shell.run("yum -y groupinstall %s" % (group))
+    return rpm.check_for_errors(text)
 
 def remove(package_name):
     """ Does the 'yum remove <package>' command.
@@ -48,14 +62,16 @@ def remove(package_name):
     :raises: AssertionError
     """
     # Remove it
-    shell.run("yum -y remove %s" % (package_name))
+    text = shell.run("yum -y remove %s" % (package_name))
     # Verify it
     shell.run("rpm -q %s" % (package_name), errorcode=1)
+
+    return text
 
 def check_update(package_name):
     """ Does the 'yum check-update <package>' command.
 
-    :param package_name: Name of the package to be removed (eg. katello-all)
+    :param package_name: Name of the package to be checked for update (eg. katello-all)
     :type package_name: str
 
     :raises: AssertionError
@@ -73,6 +89,22 @@ def repolist():
     """
     # Check for update
     return shell.run("yum repolist")
+
+def grouplist():
+    """ Does the 'yum grouplist' command.
+
+    :raises: AssertionError
+    """
+    # Check for update
+    return shell.run("yum grouplist")
+
+def update():
+    """ Does the 'yum update' command.
+
+    :raises: AssertionError
+    """
+    # Update
+    return shell.run("yum -y update")
 
 def search(package_name):
     """ Does the 'yum search <package>' command.

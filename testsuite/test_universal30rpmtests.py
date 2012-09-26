@@ -62,9 +62,6 @@ def test_packages_installed_against_list(rpm_package_list_names, rhel_release):
     if len(rpm_package_list_names) > 0:
         pytest.fail(msg="There are packages in this system, which aren't supposed to be installed: %s" % str(rpm_package_list_names))
     
-
-
-
 def test_check_all_packages(rpm_package_list):
     """ This test checks all packages in system.
 
@@ -97,9 +94,15 @@ def test_yum_full_test(rhel_release):
         print "Update for %s is available" % pkg
     else:
         print "No update available for %s" % pkg
-    common.yum.repolist()
-    common.yum.search("zsh")
-    
+    print common.yum.repolist()
+    print common.yum.search("zsh")
+    assert common.rpm.package_installed("zsh")
+    print common.yum.grouplist()
+    print common.yum.groupinstall("Development tools")
+    print common.yum.update()
+    print common.rpm.e("zsh")
+    assert not common.rpm.package_installed("zsh")
+
 
 
 

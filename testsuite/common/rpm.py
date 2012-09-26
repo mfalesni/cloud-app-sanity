@@ -28,6 +28,27 @@ import pytest
 import os
 import re
 
+class RPMPackageFailure(Exception):
+    pass
+
+class RPMScriptletFailure(Exception):
+    pass
+
+def check_for_errors(text):
+    """ This function checks for errors in text and returns text unchanged
+
+    :param text: text to be checked
+    :type text: ``str``
+
+    :returns: text
+    :rtype: ``str``
+    """
+    errors = {'failure in rpm package': RPMPackageFailure, 'scriptlet failed, exit status 1': RPMScriptletFailure}
+    for error in errors.keys():
+        if error in text:
+            raise errors.keys()[error](text)
+    return text
+
 def keys_import(keydir="/etc/pki/rpm-gpg"):
     """ This function imports all keys in directory '/etc/pki/rpm-gpg' by default
     """
@@ -138,3 +159,11 @@ def qa(qf=None):
     if qf != None:
         cmd += " --qf \"%s\"" % qf
     return shell.run(cmd)
+
+def e(package):
+    """ Performs a 'rpm -e' command
+
+    :param package: Package to be removed
+    :type package: ``str``
+    """
+    return shell.run("rpm -e %s" % package)
