@@ -52,6 +52,39 @@ def remove(package_name):
     # Verify it
     shell.run("rpm -q %s" % (package_name), errorcode=1)
 
+def check_update(package_name):
+    """ Does the 'yum check-update <package>' command.
+
+    :param package_name: Name of the package to be removed (eg. katello-all)
+    :type package_name: str
+
+    :raises: AssertionError
+    """
+    # Check for update
+    result_good = [0, 100]
+    result_map = {0: False, 100: True}
+    result = shell.run("yum check-update %s" % (package_name), result_good)
+    return result_map[result]
+
+def repolist():
+    """ Does the 'yum repolist' command.
+
+    :raises: AssertionError
+    """
+    # Check for update
+    return shell.run("yum repolist")
+
+def search(package_name):
+    """ Does the 'yum search <package>' command.
+
+    :param package_name: Name of the package to install (eg. katello-all)
+    :type package_name: str
+
+    :raises: AssertionError
+    """
+    # Install it
+    return shell.run("yum search %s" % (package_name))
+
 def update_config(repo_file, enabled=True):
     """Enables or disables all sections in Yum config files
 

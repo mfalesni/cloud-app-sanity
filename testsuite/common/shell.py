@@ -32,11 +32,11 @@ def run(cmd, errorcode=0):
 
     :param cmd: Command to be run
     :type cmd: str or list (``shlex``-splitted)
-    :param errorcode: Desired error code of the program. Defaults to 0 (all ok). If set to ``None``, error code won't be checked.
-    :type errorcode: int
+    :param errorcode: Desired error code of the program. Defaults to 0 (all ok). If set to ``None``, error code won't be checked. If it is list, then it checks whether program ended with errorcode specified in list and returns the error code
+    :type errorcode: int, list, None
     
-    :returns: ``STDOUT`` of called process
-    :rtype: str
+    :returns: ``STDOUT`` of called process or return code in case of ``errorcode`` specified as list
+    :rtype: ``str``, ``int``
     :raises: AssertionError
     """
     print "# %s" % cmd
@@ -47,7 +47,13 @@ def run(cmd, errorcode=0):
                     stderr=subprocess.STDOUT)
     (stdout, stderr) = p_open.communicate()
     if errorcode != None:
-        assert p_open.returncode == errorcode
+        if type(errorcode) != list:
+            assert p_open.returncode == errorcode
+        else: # Is list
+            if p_open.returncode in errorcode:
+                return p_open.returncode
+            else:
+                pytest.fail(msg="Process '%s' failed with unexpected error code %d" % (cmd, p_open.returncode))
     return stdout
 
 def command(command):

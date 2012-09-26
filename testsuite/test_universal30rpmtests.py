@@ -90,6 +90,17 @@ def test_yum_full_test(rhel_release):
     :raises: pytest.Failed
     """
     # Package to check
-    pass
+    pkg = "redhat-release-server"
+    if rhel_release[0] == 5:
+        pkg = "redhat-release"
+    if common.yum.check_update(pkg):
+        print "Update for %s is available" % pkg
+    else:
+        print "No update available for %s" % pkg
+    common.yum.repolist()
+    common.yum.search("zsh")
+    
+
+
 
     
