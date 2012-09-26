@@ -80,3 +80,18 @@ def test_check_all_packages(rpm_package_list):
             failed = True
     if failed:
         pytest.fail(msg="Some packages had problem!")
+
+def test_yum_full_test(rhel_release):
+    """ This test tests yum thoroughly
+
+    :param rhel_release: Version release of RHEL
+    :type rhel_release: ``tuple``
+
+    :raises: pytest.Failed
+    """
+    # Package to check
+    package = "distribution-ec2-Sanity-yum-full-test"
+    if not common.rpm_package_installed(package):
+        pytest.fail(msg="Package %s is not installed!" % package)
+    
+    

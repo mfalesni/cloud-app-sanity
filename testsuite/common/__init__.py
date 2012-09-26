@@ -463,6 +463,21 @@ def rpm_package_build_host(package):
     """
     return run("rpm -q --qf \"%%{BUILDHOST}\" %s" % package).strip()
 
+def rpm_package_installed(package):
+    """ Returns whether is package installed or not
+
+    :param package: Package name
+    :type package: ``str``
+
+    :returns: ``True`` when package is installed, otherwise ``False``
+    :rtype: ``bool``
+    """
+    try:
+        run("rpm -q %s" % package)
+        return True
+    except AssertionError:
+        return False
+
 def selinux_setenforce(mode):
     """ Sets enforcing mode of SElinux
 
