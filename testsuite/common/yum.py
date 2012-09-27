@@ -104,7 +104,7 @@ def update():
     :raises: AssertionError
     """
     # Update
-    return shell.run("yum -y update")
+    return rpm.check_for_errors(shell.run("yum -y update"))
 
 def search(package_name):
     """ Does the 'yum search <package>' command.
