@@ -11,6 +11,7 @@ cd $SUITE_DIR && {
     cd results-dir
     touch result
     for f in *.log
+    do
         echo "[$f]" > result
         cat $f > result
         echo "" > result
