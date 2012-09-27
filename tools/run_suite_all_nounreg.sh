@@ -12,9 +12,9 @@ cd $SUITE_DIR && {
     touch result
     for f in *.log
     do
-        echo "[$f]" > result
-        cat $f > result
-        echo "" > result
+        echo "[$f]" >> result
+        cat $f >> result
+        echo "" >> result
     done
     cat result | mail -s "task finished on $HOSTNAME" "$AUDREY_VAR_KATELLO_REGISTER_NOTIFY_EMAIL"
     rm -f result
