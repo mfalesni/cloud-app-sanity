@@ -1,7 +1,7 @@
-test_universal40rhuibashtests Module
+test_universal40beakerwrapper Module
 ====================================
 
-.. automodule:: test_universal40rhuibashtests
+.. automodule:: test_universal40beakerwrapper
     :members:
     :undoc-members:
     :show-inheritance:

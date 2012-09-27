@@ -26,7 +26,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="CloudForms Application Sanity Test Suite 1.00 documentation" href="index.html" />
-    <link rel="next" title="test_universal40rhuibashtests Module" href="test_universal40rhuibashtests.html" />
+    <link rel="next" title="test_universal40beakerwrapper Module" href="test_universal40beakerwrapper.html" />
     <link rel="prev" title="test_universal20selinuxenabled Module" href="test_universal20selinuxenabled.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="test_universal40rhuibashtests.html" title="test_universal40rhuibashtests Module"
+          <a href="test_universal40beakerwrapper.html" title="test_universal40beakerwrapper Module"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="test_universal20selinuxenabled.html" title="test_universal20selinuxenabled Module"
@@ -74,20 +74,36 @@
 
 <dl class="function">
 <dt id="test_universal30rpmtests.test_packages_installed_against_list">
-<tt class="descclassname">test_universal30rpmtests.</tt><tt class="descname">test_packages_installed_against_list</tt><big>(</big><em>rpm_package_list_name</em>, <em>rhel_release</em><big>)</big><a class="headerlink" href="#test_universal30rpmtests.test_packages_installed_against_list" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">test_universal30rpmtests.</tt><tt class="descname">test_packages_installed_against_list</tt><big>(</big><em>rpm_package_list_names</em>, <em>rhel_release</em><big>)</big><a class="headerlink" href="#test_universal30rpmtests.test_packages_installed_against_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests whether there are only exact packages installed in the system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>rpm_package_list_name</strong> &#8211; Package list with names only</li>
-<li><strong>rpm_package_list_name</strong> &#8211; <tt class="docutils literal"><span class="pre">list</span></tt></li>
+<li><strong>rpm_package_list_names</strong> &#8211; Package list with names only</li>
+<li><strong>rpm_package_list_names</strong> &#8211; <tt class="docutils literal"><span class="pre">list</span></tt></li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">pytest.Failed</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_universal30rpmtests.test_yum_full_test">
+<tt class="descclassname">test_universal30rpmtests.</tt><tt class="descname">test_yum_full_test</tt><big>(</big><em>rhel_release</em><big>)</big><a class="headerlink" href="#test_universal30rpmtests.test_yum_full_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>This test tests yum thoroughly</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rhel_release</strong> (<tt class="docutils literal"><span class="pre">tuple</span></tt>) &#8211; Version release of RHEL</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
 </tr>
 </tbody>
 </table>
@@ -105,8 +121,8 @@
   <p class="topless"><a href="test_universal20selinuxenabled.html"
                         title="previous chapter">test_universal20selinuxenabled Module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="test_universal40rhuibashtests.html"
-                        title="next chapter">test_universal40rhuibashtests Module</a></p>
+  <p class="topless"><a href="test_universal40beakerwrapper.html"
+                        title="next chapter">test_universal40beakerwrapper Module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="sources/test_universal30rpmtests.txt"
@@ -139,7 +155,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="test_universal40rhuibashtests.html" title="test_universal40rhuibashtests Module"
+          <a href="test_universal40beakerwrapper.html" title="test_universal40beakerwrapper Module"
              >next</a> |</li>
         <li class="right" >
           <a href="test_universal20selinuxenabled.html" title="test_universal20selinuxenabled Module"

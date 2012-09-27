@@ -1,7 +1,75 @@
-common Module
-=============
+common Package
+==============
+
+:mod:`common` Package
+---------------------
 
 .. automodule:: common
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`beaker` Module
+--------------------
+
+.. automodule:: common.beaker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`katello` Module
+---------------------
+
+.. automodule:: common.katello
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`net` Module
+-----------------
+
+.. automodule:: common.net
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`rpm` Module
+-----------------
+
+.. automodule:: common.rpm
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`selinux` Module
+---------------------
+
+.. automodule:: common.selinux
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`shell` Module
+-------------------
+
+.. automodule:: common.shell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`tools` Module
+-------------------
+
+.. automodule:: common.tools
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`yum` Module
+-----------------
+
+.. automodule:: common.yum
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
