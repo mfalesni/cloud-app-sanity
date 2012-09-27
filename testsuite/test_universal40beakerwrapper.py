@@ -34,7 +34,7 @@ def test_beakertask(testname):
 
     :raises: pytest.Failed
     """
-    result, rc = common.shellcall("cd beaker-tests/ && ./test.sh %s" % testname)
+    result, rc = common.shell.command("cd beaker-tests/ && ./test.sh %s" % testname)
     sys.stderr.write(result)
     try:
         assert rc == 0
