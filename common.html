@@ -100,6 +100,61 @@ between modules.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-common.elf">
+<span id="elf-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">elf</span></tt> Module<a class="headerlink" href="#module-common.elf" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="common.elf.fortify_find_dangerous">
+<tt class="descclassname">common.elf.</tt><tt class="descname">fortify_find_dangerous</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="modules/common/elf.html#fortify_find_dangerous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.elf.fortify_find_dangerous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds potentially dangerous func-calls in desired file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; File to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">list</span></tt> of the potentially dangerous func-calls</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.elf.is_elf">
+<tt class="descclassname">common.elf.</tt><tt class="descname">is_elf</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="modules/common/elf.html#is_elf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.elf.is_elf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether file is ELF executable</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; file name to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Whether file is ELF executable</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.elf.readelf">
+<tt class="descclassname">common.elf.</tt><tt class="descname">readelf</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="modules/common/elf.html#readelf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.elf.readelf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns content of the <tt class="docutils literal"><span class="pre">readelf</span> <span class="pre">--all</span></tt> call.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; File to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Content of the ELF analysis</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-common.katello">
 <span id="katello-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">katello</span></tt> Module<a class="headerlink" href="#module-common.katello" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -384,6 +439,20 @@ if downloading from Gitweb-site</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Package informations</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.rpm.ql">
+<tt class="descclassname">common.rpm.</tt><tt class="descname">ql</tt><big>(</big><em>package</em><big>)</big><a class="headerlink" href="#common.rpm.ql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a &#8216;rpm -ql&#8217; command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Package to be listed</td>
 </tr>
 </tbody>
 </table>
@@ -812,6 +881,7 @@ Python-version-proof.</p>
 <li><a class="reference internal" href="#">common Package</a><ul>
 <li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">common</span></tt> Package</a></li>
 <li><a class="reference internal" href="#module-common.beaker"><tt class="docutils literal"><span class="pre">beaker</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-common.elf"><tt class="docutils literal"><span class="pre">elf</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-common.katello"><tt class="docutils literal"><span class="pre">katello</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-common.net"><tt class="docutils literal"><span class="pre">net</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-common.rpm"><tt class="docutils literal"><span class="pre">rpm</span></tt> Module</a></li>

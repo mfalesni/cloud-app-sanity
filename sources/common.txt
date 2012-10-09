@@ -17,6 +17,14 @@ common Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`elf` Module
+-----------------
+
+.. automodule:: common.elf
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`katello` Module
 ---------------------
 
