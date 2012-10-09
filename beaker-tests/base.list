@@ -4,10 +4,10 @@
 /distribution/ec2/Sanity/rhel-version
 #/distribution/ec2/Sanity/fetch-host-details
 #/distribution/ec2/Sanity/disk-size-format
-/distribution/ec2/Sanity/selinux
+#/distribution/ec2/Sanity/selinux
 /distribution/ec2/Sanity/package-set
 /distribution/ec2/Sanity/verify-rpms
-/distribution/ec2/Sanity/yum-full-test
+#/distribution/ec2/Sanity/yum-full-test
 /distribution/ec2/Sanity/yum-general-test
 /distribution/ec2/Sanity/bash-history
 /distribution/ec2/Sanity/swap-file
