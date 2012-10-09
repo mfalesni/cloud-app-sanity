@@ -13,3 +13,5 @@
     rm -f result
     cd ..
     }
+
+make results.tar.gz
