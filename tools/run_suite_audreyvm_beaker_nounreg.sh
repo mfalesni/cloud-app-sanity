@@ -6,4 +6,5 @@ curl https://raw.github.com/mfalesni/cloud-app-sanity/master/tools/download_suit
 cd $SUITE_DIR && {
   TESTNAME="audreyvm -unregister" make test  # Do the dirty stuff
   TESTNAME="beaker" make test # Test the beaker tests
+  . ./mailer.sh
 }

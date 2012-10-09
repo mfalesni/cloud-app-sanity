@@ -5,4 +5,5 @@ export SUITE_DIR="cloud-app-sanity"
 curl https://raw.github.com/mfalesni/cloud-app-sanity/master/tools/download_suite.sh | bash
 cd $SUITE_DIR && {
   make test  # Do the dirty stuff
+  . ./mailer.sh
 }
