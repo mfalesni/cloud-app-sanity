@@ -227,4 +227,10 @@ def pytest_funcarg__rhel_release(request):
     redhat_version_field = redhat_release_content.split(" ")[6]
     return tuple(redhat_version_field.split(".", 1))
 
+def pytest_funcarg__PATH(request):
+    """ PATH environment variable
 
+    :returns: List of directories in $PATH
+    :rtype: ``list``
+    """
+    return os.environ["PATH"].split(":")
