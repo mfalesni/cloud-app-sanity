@@ -38,6 +38,7 @@ import selinux
 import yum
 import tools
 import shell
+import elf
 
 
 audrey_service_path = '/var/audrey/tooling/user'

@@ -167,3 +167,11 @@ def e(package):
     :type package: ``str``
     """
     return shell.run("rpm -e %s" % package)
+
+def ql(package):
+    """ Performs a 'rpm -ql' command
+
+    :param package: Package to be listed
+    :type package: ``str``
+    """
+    return shell.run("rpm -ql %s" % package)

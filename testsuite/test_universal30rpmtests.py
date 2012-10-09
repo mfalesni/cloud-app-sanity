@@ -78,6 +78,23 @@ def test_check_all_packages(rpm_package_list):
     if failed:
         pytest.fail(msg="Some packages had problem!")
 
+@pytest.mark.parametrize("package", common.rpm.qa().strip().split("\n"))
+def test_check_all_packages_files_fortified(package):
+    """ This test checks whether are all compiled files in package fortified
+
+    :param package: Package name
+    :type package: ``list``
+
+    :raises: pytest.Failed
+    """
+    files = common.rpm.ql(package).strip().split("\n")
+    for f in files:
+        if common.elf.is_elf(f):
+            dangerous = common.elf.fortify_find_dangerous(f)
+            for function in dangerous:
+                if not function.endswith("_chk") and not function.endswith("__chk_fail"):
+                    pytest.fail(msg="File %s: Symbol '%s' found! All relevant symbols in file: %s" % (f, function, dangerous))
+
 def test_yum_full_test(rhel_release):
     """ This test tests yum thoroughly
 
