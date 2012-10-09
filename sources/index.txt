@@ -1,5 +1,5 @@
 .. CloudForms Application Sanity Test Suite documentation master file, created by
-   sphinx-quickstart on Tue Oct  9 11:24:32 2012.
+   sphinx-quickstart on Tue Oct  9 19:01:47 2012.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
@@ -19,6 +19,7 @@ Contents:
    test_audreyvm11remoteyuminstall
    test_audreyvm99unregister
    test_universal10filescheck
+   test_universal11environment
    test_universal20selinuxenabled
    test_universal30rpmtests
    test_universal40beakerwrapper

@@ -1,7 +1,0 @@
-test_audreyvm10localyuminstall Module
-=====================================
-
-.. automodule:: test_audreyvm10localyuminstall
-    :members:
-    :undoc-members:
-    :show-inheritance:

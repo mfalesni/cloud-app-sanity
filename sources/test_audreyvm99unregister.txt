@@ -1,7 +1,0 @@
-test_audreyvm99unregister Module
-================================
-
-.. automodule:: test_audreyvm99unregister
-    :members:
-    :undoc-members:
-    :show-inheritance:
