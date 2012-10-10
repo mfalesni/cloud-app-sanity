@@ -75,21 +75,17 @@ def test_gpg_check(gpgcheck_enabled):
     except AssertionError:
         pytest.fail(msg="GPG check is not enabled")
 
-def test_check_all_packages(rpm_package_list):
+@pytest.mark.parametrize("package", common.rpm.qa().strip().split("\n"))
+def test_check_all_packages(package):
     """ This test checks all packages in system.
 
-    :param rpm_package_list: List of all packages installed in system
-    :type rpm_package_list: ``list``
+    :param package: package to be checked
+    :type package: ``str``
 
     :raises: pytest.Failed
     """
-    failed = False
-    for package in rpm_package_list:
-        if not common.rpm.verify_package(package):
-            sys.stderr.write("Package %s:\n%s" % (package, common.rpm.package_problems(package)))
-            failed = True
-    if failed:
-        pytest.fail(msg="Some packages had problem!")
+    if not common.rpm.verify_package(package):
+        pytest.fail(msg="Package had problem: '%s'" % common.rpm.package_problems(package))
 
 @pytest.mark.parametrize("package", common.rpm.qa().strip().split("\n"))
 def test_check_all_packages_files_fortified(package):
