@@ -34,3 +34,5 @@ def test_ntpd_enabled(chkconfig_list):
         assert chkconfig_list["ntpd"][5] == True
     except AssertionError:
         pytest.fail(msg="ntpd is not enabled")
+    except KeyError:
+        pytest.fail(msg="ntpd is not present in chkconfig, is it even installed???")
