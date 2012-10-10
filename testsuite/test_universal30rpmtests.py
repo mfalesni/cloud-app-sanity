@@ -61,7 +61,20 @@ def test_packages_installed_against_list(rpm_package_list_names, rhel_release):
 
     if len(rpm_package_list_names) > 0:
         pytest.fail(msg="There are packages in this system, which aren't supposed to be installed: %s" % str(rpm_package_list_names))
-    
+
+def test_gpg_check(gpgcheck_enabled):
+    """ Tests whether is GPG check enabled in YUM
+
+    :param gpgcheck_enabled: Whether is GPG check active
+    :type gpgcheck_enabled: ``bool``
+
+    :raises: pytest.Failed
+    """
+    try:
+        assert gpgcheck_enabled == True
+    except AssertionError:
+        pytest.fail(msg="GPG check is not enabled")
+
 def test_check_all_packages(rpm_package_list):
     """ This test checks all packages in system.
 

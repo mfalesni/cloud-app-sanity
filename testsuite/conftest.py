@@ -31,6 +31,8 @@ import re
 import subprocess
 import common
 
+from ConfigParser import ConfigParser
+
 def pytest_funcarg__audreyvars(request):
     """Setups variables for testing
 
@@ -234,3 +236,39 @@ def pytest_funcarg__PATH(request):
     :rtype: ``list``
     """
     return os.environ["PATH"].split(":")
+
+def pytest_funcarg__gpgcheck_enabled(request):
+    """ Whether is GPG check enabled in yum
+
+    :returns: GPG check status
+    :rtype: ``bool``
+    """
+    config = ConfigParser()
+    cfg.read(["/etc/yum.conf"])
+    return int(cfg.get("main", "gpgcheck")) == 1
+
+def pytest_funcarg__chkconfig_list(request):
+    """ Returns list of all services with enablement in each runlevel
+
+    :returns: All services.
+    :rtype: ``dict``
+    """
+    result = {}
+    stdout = common.shell.run("chkconfig --list").strip()
+    for line in stdout.split("\n"):
+        line = re.sub("[[:blank:]]+", "\t", line)
+        fields = line.split("\t")
+        servicename = fields[0].strip()
+        fields = fields[1:]
+        result[servicename] = {}
+        for field in fields:
+            (runlevel, status) = field.split(":")
+            runlevel = int(runlevel)
+            if status.lower() == "on":
+                status = True
+            elif status.lower() == "off":
+                status = False
+            else:
+                pytest.fail(msg="Bad parsing of chkconfig --list")
+            result[servicename][runlevel] = status
+    return result
