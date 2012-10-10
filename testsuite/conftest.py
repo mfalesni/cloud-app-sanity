@@ -243,7 +243,7 @@ def pytest_funcarg__gpgcheck_enabled(request):
     :returns: GPG check status
     :rtype: ``bool``
     """
-    config = ConfigParser()
+    cfg = ConfigParser()
     cfg.read(["/etc/yum.conf"])
     return int(cfg.get("main", "gpgcheck")) == 1
 
