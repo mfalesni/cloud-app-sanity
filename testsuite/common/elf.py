@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python2
 #   Author(s): Milan Falesnik <mfalesni@redhat.com>
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #

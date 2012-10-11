@@ -1,6 +1,5 @@
 #!/usr/bin/env python2
 #   Author(s): Milan Falesnik <mfalesni@redhat.com>
-#              James Laska <jlaska@redhat.com>
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 #   Copyright (c) 2012 Red Hat, Inc. All rights reserved.
@@ -21,32 +20,29 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-""" This package contains some functions, which are likely to be shared
-    between modules.
+import common
+import pytest
 
-    When decide to put a function here?:
+def test_default_key_strength():
+    """ Checks for SSL certificate generation strength
 
-        - When it's enough universal to be used with multiple modules
-        - It can't be parameter for py.test
-"""
+    :raises: pytest.Failed
+    """
+    config = common.ssl.openssl_config_get_section("req")
+    bits = int(config["default_bits"])
+    try:
+        assert bits >= 2048
+    except AssertionError:
+        pytest.fail(msg="Default bit length of certificate is insufficient")
 
-import beaker
-import katello
-import net
-import rpm
-import selinux
-import yum
-import tools
-import shell
-import elf
-import ssl
+def test_default_hash_function():
+    """ tests for insufficient hashing functions in config
 
-
-audrey_service_path = '/var/audrey/tooling/user'
-"""
-:var audrey_service_path: Where are all Audrey services from XML located
-"""
-
-
-
-
+    :raises: pytest.Failed
+    """
+    config = common.ssl.openssl_config_get_section("req")
+    hashf = config["default_md"]
+    try:
+        assert hashf.lower() not in ["md5"]
+    except AssertionError:
+        pytest.fail(msg="Bad message digest function!")
