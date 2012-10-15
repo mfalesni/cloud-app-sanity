@@ -127,6 +127,7 @@ def test_setup_tunnel(audreyvars, katello_discoverable, tunnel_requested):
         # variable
         assert audreyvars.has_key("KATELLO_PORT")
         os.environ["AUDREY_VAR_KATELLO_REGISTER_KATELLO_PORT"] = os.environ.get("AUDREY_VAR_KATELLO_REGISTER_SSH_TUNNEL_KATELLO_PORT", "8080")
+        global configure_rhsm_tunnel
         configure_rhsm_tunnel = True
     else:
         pytest.skip(msg='Not configuring tunnel')
