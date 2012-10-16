@@ -194,7 +194,8 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
             common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
 
 def test_tunnel_goferd(audreyvars):
-    """This test sets up a GoferD tunnel, if it's desired.
+    """This test sets up a GoferD tunnel, if it's desired.  The test will
+    modify the gofer katello plugin configuration, and restart goferd.
 
     :param audreyvars: Dict of audrey environment variables
     :type audreyvars: dict
@@ -205,13 +206,23 @@ def test_tunnel_goferd(audreyvars):
         pytest.skip(msg='Not setting up a tunnel')
     else:
         plugin_conf = '/etc/gofer/plugins/katelloplugin.conf'
-        assert os.path.isfile(plugin_conf)
+        assert os.path.isfile(plugin_conf), "Gofer plugin config not found: %s" % plugin_conf
+
+        # Track whether changes were made
+        is_tunnelled = False
+
+        # Scan plugin_conf for necesary adjustments
         for line in fileinput.input(plugin_conf, inplace=1):
             line = line.rstrip('\n')
             if line.startswith("url=") and line.endswith(":5671"):
-                print line.replace(":5671", ":5674")
+                is_tunnelled = True
+                print line.replace(":5671", ":%s" % audreyvars.get("SSH_TUNNEL_GOFER_PORT", "5674"))
             else:
                 print line
+
+        # If changes were made, restart service
+        assert is_tunnelled, "No adjustments made to gofer plugin: %s" % plugin_conf
+        common.shell.run('service goferd restart')
 
 def test_disable_rhui(audreyvars, ec2_deployment):
     """This test disables RHUI, if it's desired.
