@@ -156,7 +156,7 @@ def update_repo(repo_file, enabled=True):
         repo_file = '/etc/yum.repos.d/%s' % repo_file
     if not repo_file.endswith('.repo'):
         repo_file = '%s.repo' % repo_file
-    update_yum_config(repo_file, enabled)
+    update_config(repo_file, enabled)
 
 def update_plugin(plugin_conf, enabled=True):
     """Enables or disables all sections in Yum plugin config files
@@ -170,4 +170,4 @@ def update_plugin(plugin_conf, enabled=True):
         plugin_conf = '/etc/yum/pluginconf.d/%s' % plugin_conf
     if not plugin_conf.endswith('.conf'):
         plugin_conf = '%s.conf' % plugin_conf
-    update_yum_config(plugin_conf, enabled)
+    update_config(plugin_conf, enabled)
