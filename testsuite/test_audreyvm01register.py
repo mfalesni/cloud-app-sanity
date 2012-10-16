@@ -191,6 +191,7 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
         else:
             common.shell.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
             common.shell.run('subscription-manager config --server.port=%s' % server_port)
+            common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
 
 def test_tunnel_goferd(audreyvars):
     """This test sets up a GoferD tunnel, if it's desired.
@@ -207,7 +208,7 @@ def test_tunnel_goferd(audreyvars):
         assert os.path.isfile(plugin_conf)
         for line in fileinput.input(plugin_conf, inplace=1):
             line = line.rstrip('\n')
-            if line.startswith("url=") and line.endswith(":5674"):
+            if line.startswith("url=") and line.endswith(":5671"):
                 print line.replace(":5671", ":5674")
             else:
                 print line
