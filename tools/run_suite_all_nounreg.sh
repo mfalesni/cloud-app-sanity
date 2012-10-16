@@ -7,5 +7,5 @@ cd $SUITE_DIR && {
   TESTNAME="audreyvm -unregister" make test  # Do the dirty stuff
   TESTNAME="universal -beaker" make test  # Do the dirty stuff
   make results.tar.gz
-  . ./mailer.sh
+  . tools/mailer.sh
 }

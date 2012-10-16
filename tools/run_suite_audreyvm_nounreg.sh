@@ -5,5 +5,5 @@ export SUITE_DIR="cloud-app-sanity"
 curl https://raw.github.com/mfalesni/cloud-app-sanity/master/tools/download_suite.sh | bash
 cd $SUITE_DIR && {
   TESTNAME="audreyvm -unregister" make test  # Do the dirty stuff
-  . ./mailer.sh
+  . tools/mailer.sh
 }
