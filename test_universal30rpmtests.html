@@ -58,13 +58,13 @@
 <span id="test-universal30rpmtests-module"></span><h1>test_universal30rpmtests Module<a class="headerlink" href="#module-test_universal30rpmtests" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="test_universal30rpmtests.test_check_all_packages">
-<tt class="descclassname">test_universal30rpmtests.</tt><tt class="descname">test_check_all_packages</tt><big>(</big><em>rpm_package_list</em><big>)</big><a class="reference internal" href="modules/test_universal30rpmtests.html#test_check_all_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_universal30rpmtests.test_check_all_packages" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">test_universal30rpmtests.</tt><tt class="descname">test_check_all_packages</tt><big>(</big><em>package</em><big>)</big><a class="reference internal" href="modules/test_universal30rpmtests.html#test_check_all_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_universal30rpmtests.test_check_all_packages" title="Permalink to this definition">¶</a></dt>
 <dd><p>This test checks all packages in system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rpm_package_list</strong> (<tt class="docutils literal"><span class="pre">list</span></tt>) &#8211; List of all packages installed in system</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; package to be checked</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
 </tr>
@@ -81,6 +81,22 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package</strong> (<tt class="docutils literal"><span class="pre">list</span></tt>) &#8211; Package name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="test_universal30rpmtests.test_gpg_check">
+<tt class="descclassname">test_universal30rpmtests.</tt><tt class="descname">test_gpg_check</tt><big>(</big><em>gpgcheck_enabled</em><big>)</big><a class="headerlink" href="#test_universal30rpmtests.test_gpg_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether is GPG check enabled in YUM</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gpgcheck_enabled</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; Whether is GPG check active</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body">pytest.Failed</td>
 </tr>

@@ -1,0 +1,7 @@
+test_audreyvm01register Module
+==============================
+
+.. automodule:: test_audreyvm01register
+    :members:
+    :undoc-members:
+    :show-inheritance:

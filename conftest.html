@@ -93,6 +93,22 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="conftest.pytest_funcarg__chkconfig_list">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__chkconfig_list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__chkconfig_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of all services with enablement in each runlevel</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All services.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">dict</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="conftest.pytest_funcarg__ec2_deployment">
 <tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__ec2_deployment</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__ec2_deployment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__ec2_deployment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setups cached variable whether it&#8217;s ec2 deployment or not.</p>
@@ -105,6 +121,22 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Whether is this EC2 deployment (cached).</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.pytest_funcarg__gpgcheck_enabled">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__gpgcheck_enabled</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__gpgcheck_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether is GPG check enabled in yum</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">GPG check status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
 </tr>
 </tbody>
 </table>
