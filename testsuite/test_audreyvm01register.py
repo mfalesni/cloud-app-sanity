@@ -41,14 +41,24 @@ cwd = os.getcwd()
 """
 
 def test_audreyvars(audreyvars):
-    """This test checks for presence of audrey environment variables.
+    """This test checks for presence of audrey environment variables.  Any
+       audrey environment variables are saves to a local file to aid later
+       debugging.
 
     :param audreyvars: Dict of audrey environment variables
     :type audreyvars: dict
 
     :raises: AssertionError
     """
-    assert len(audreyvars) > 0
+    assert len(audreyvars) > 0, "No audrey environment variables found"
+
+    # TODO - this shouldn't live in a test, but in some setup_method()
+    fd = open('env.sh', 'w')
+    fd.write('#!/bin/sh\n\n')
+    for key,val in audreyvars.items():
+        fd.write('AUDREY_VAR_KATELLO_REGISTER_%s="%s"\n' % (key, val))
+    fd.close()
+
 
 def test_gpg_key_import_release():
     """This test imports redhat-release GPG certificate
