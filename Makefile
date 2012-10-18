@@ -11,7 +11,7 @@ DOCS_VERSION := 1.00
 DOCS_BRANCH_ROOT := ../cloud-app-sanity-docs/html
 
 # Variables to control test execution parameters
-TEST_ARGS ?= -v -l
+TEST_ARGS ?= -v -l --tb=short
 TESTNAME ?=
 # If a TESTNAME was provided, update TEST_ARGS
 ifneq (,$(TESTNAME))
