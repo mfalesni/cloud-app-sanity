@@ -177,6 +177,7 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
     sm_ver_maj, sm_ver_min = subscription_manager_version
     rhsm_baseurl = "https://%s:%s/pulp/repos" % (audreyvars["KATELLO_HOST"], audreyvars["SSH_TUNNEL_PULP_PORT"])
     server_port = audreyvars["SSH_TUNNEL_PULP_PORT"]
+    server_prefix = audreyvars.get("KATELLO_PREFIX", "/katello/api")
     if sm_ver_maj <= 0:
         if sm_ver_min < 96:
             rhsm_conf = '/etc/rhsm/rhsm.conf'
@@ -191,7 +192,9 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
         else:
             common.shell.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
             common.shell.run('subscription-manager config --server.port=%s' % server_port)
-            common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
+            # If a non-whitespace server_prefix was provided ... use it
+            if server_prefix.strip() != "":
+                common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix
 
 def test_tunnel_goferd(audreyvars):
     """This test sets up a GoferD tunnel, if it's desired.  The test will
