@@ -6,5 +6,4 @@ curl https://raw.github.com/jlaska/cloud-app-sanity/master/tools/download_suite.
 cd $SUITE_DIR && {
   TESTNAME="audreyvm -unregister" make test  # Do the dirty stuff
   TESTNAME="beaker" make test # Test the beaker tests
-  . tools/mailer.sh
 }
