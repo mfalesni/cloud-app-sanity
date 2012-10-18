@@ -194,7 +194,7 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
             common.shell.run('subscription-manager config --server.port=%s' % server_port)
             # If a non-whitespace server_prefix was provided ... use it
             if server_prefix.strip() != "":
-                common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix
+                common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
 
 def test_tunnel_goferd(audreyvars):
     """This test sets up a GoferD tunnel, if it's desired.  The test will
