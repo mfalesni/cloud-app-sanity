@@ -67,7 +67,7 @@ def query_remote_install(server, uuid, login, password, package):
     :param package: Package to install into system
     :type package: ``str``
 
-    :raises: pytest.Failed    
+    :raises: pytest.Failed
     """
     # Prepare the request
     request = net.make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
@@ -83,7 +83,7 @@ def query_remote_install(server, uuid, login, password, package):
         if int(e.code) in [202]:
             response = e # To work in RHEL5
         else:
-            pytest.fail(msg="Error when querying installation of package %s with HTTP code %d and reason '%s'!" % (package, int(e.code), e.reason))
+            pytest.fail(msg="Error when querying installation of package %s with HTTP code %d: %s" % (package, int(e.code), e))
     # get the task uuid
     task_uuid = json.loads("\n".join(response.readlines()))["uuid"]
     # poll it
