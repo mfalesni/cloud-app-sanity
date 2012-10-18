@@ -27,7 +27,7 @@
 import common
 import pytest
 
-def test_install_packages_remote(audreyvars, system_uuid):
+def test_install_packages_remote(audreyvars, system_uuid, tunnel_requested):
     """ Installs packages specified in YUM_REMOTE_INSTALL into this system via
         remote request through Katello server to check whether there aren't any issues.
 
@@ -35,6 +35,8 @@ def test_install_packages_remote(audreyvars, system_uuid):
     :type audreyvars: ``dict``
     :param system_uuid: This system's unique ID for Katello
     :type system_uuid: ``str``
+    :param tunnel_requested: Whether was tunnel requested or not
+    :type tunnel_requested: bool
 
     :raises: pytest.Skipped, pytest.Failed
     """
@@ -42,9 +44,19 @@ def test_install_packages_remote(audreyvars, system_uuid):
     server = audreyvars["KATELLO_HOST"]
     login = audreyvars.get("KATELLO_USER", "admin")
     password = audreyvars.get("KATELLO_PASS", "admin")
+
+    # If using a tunnel to access ec2, an alternative port is needed
+    if tunnel_requested:
+        port = audreyvars.get("SSH_TUNNEL_PULP_PORT", 1443)
+    else:
+        port = audreyvars.get("KATELLO_PORT", 443)
+
+    # Were packages requested for install?
     if packages != "":
         packages = packages.split(" ")
     else:
         pytest.skip(msg="No packages marked for remote install")
+
+    # Initiate remote install for requested packages
     for package in packages:
-        common.katello.query_remote_install(server, system_uuid, login, password, package)
+        common.katello.query_remote_install(server, port, system_uuid, login, password, package)
