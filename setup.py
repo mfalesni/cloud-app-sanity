@@ -6,7 +6,7 @@ from setuptools.command.test import test as TestCommand
 
 results_dir = 'results'
 results_timestamp = time.strftime("%s", time.localtime())
-default_args = '-v -l --tb=short --junitxml=%s/%s.xml --resultlog=%s/%s.log' % \
+default_args = '-v -l --tb=native --junitxml=%s/%s.xml --resultlog=%s/%s.log' % \
     (results_dir, results_timestamp, results_dir, results_timestamp)
 
 class PyTest(TestCommand):
