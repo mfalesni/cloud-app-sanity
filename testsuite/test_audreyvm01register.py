@@ -56,7 +56,7 @@ def test_audreyvars(audreyvars):
     fd = open('env.sh', 'w')
     fd.write('#!/bin/sh\n\n')
     for key,val in audreyvars.items():
-        fd.write('AUDREY_VAR_KATELLO_REGISTER_%s="%s"\n' % (key, val))
+        fd.write('export AUDREY_VAR_KATELLO_REGISTER_%s="%s"\n' % (key, val))
     fd.close()
 
 
