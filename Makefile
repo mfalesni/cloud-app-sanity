@@ -65,10 +65,9 @@ clean:
 clean_all: clean
 	rm -rf "${RESULTS_DIR}/*"
 
-test: bootstrap
+test:
 	[ -d $(RESULTS_DIR) ] || mkdir -p $(RESULTS_DIR)
-	source "$(BUILD_DIR)/bin/activate" && python "$(BUILD_DIR)/bin/py.test" testsuite $(TEST_ARGS)
-	#for SUFFIX in log xml ; do ln -f -s ${RESULTS_FILENAME}.$$SUFFIX ${RESULTS_DIR}/results.$$SUFFIX ; done
+	PY_KEYWORDEXPR="${TESTNAME}" PY_ARGS="${TEST_ARGS}" python setup.py test
 
 doc_src: bootstrap
 	[ -d $(DOCS_DIR) ] || mkdir -p $(DOCS_DIR)
