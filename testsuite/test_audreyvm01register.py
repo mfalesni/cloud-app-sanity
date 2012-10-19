@@ -137,7 +137,7 @@ def test_setup_tunnel(audreyvars, katello_discoverable, tunnel_requested):
         # In case variable names changed, make noise if we don't find the expected
         # variable
         assert audreyvars.has_key("KATELLO_PORT")
-        os.environ["AUDREY_VAR_KATELLO_REGISTER_KATELLO_PORT"] = os.environ.get("AUDREY_VAR_KATELLO_REGISTER_SSH_TUNNEL_KATELLO_PORT", "8080")
+        os.environ["AUDREY_VAR_KATELLO_REGISTER_KATELLO_PORT"] = os.environ.get("AUDREY_VAR_KATELLO_REGISTER_SSH_TUNNEL_KATELLO_PORT", "1443")
         global configure_rhsm_tunnel
         configure_rhsm_tunnel = True
     else:
@@ -168,8 +168,10 @@ def test_import_certificate(audreyvars):
 
     :raises: AssertionError
     """
-    cert_rpm = common.tools.s_format("http://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
-    cmd = "rpm -ivh %s" % cert_rpm
+    cert_rpm = common.tools.s_format("https://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
+    cmd = "curl -O -k \"%s\"" % cert_rpm
+    common.shell.run(cmd)
+    cmd = "rpm -ivh %s" % os.path.basename(cert_rpm)
     common.shell.run(cmd)
 
 def test_tunnel_rhsm(audreyvars, subscription_manager_version):
@@ -185,8 +187,8 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
     if not configure_rhsm_tunnel:
         pytest.skip(msg='Not setting up a tunnel')
     sm_ver_maj, sm_ver_min = subscription_manager_version
-    rhsm_baseurl = "https://%s:%s/pulp/repos" % (audreyvars["KATELLO_HOST"], audreyvars["SSH_TUNNEL_PULP_PORT"])
-    server_port = audreyvars["SSH_TUNNEL_PULP_PORT"]
+    rhsm_baseurl = "https://%s:%s/pulp/repos" % (audreyvars["KATELLO_HOST"], audreyvars["SSH_TUNNEL_KATELLO_PORT"])
+    server_port = audreyvars["SSH_TUNNEL_KATELLO_PORT"]
     server_prefix = audreyvars.get("KATELLO_PREFIX", "/katello/api")
     if sm_ver_maj <= 0:
         if sm_ver_min < 96:

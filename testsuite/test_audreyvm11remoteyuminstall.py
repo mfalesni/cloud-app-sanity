@@ -47,7 +47,7 @@ def test_install_packages_remote(audreyvars, system_uuid, tunnel_requested):
 
     # If using a tunnel to access ec2, an alternative port is needed
     if tunnel_requested:
-        port = audreyvars.get("SSH_TUNNEL_PULP_PORT", 1443)
+        port = audreyvars.get("SSH_TUNNEL_KATELLO_PORT", 1443)
     else:
         port = audreyvars.get("KATELLO_PORT", 443)
 
