@@ -32,7 +32,7 @@ class PyTest(TestCommand):
 setup(
     #...,
     name="cloud-app-sanity",
-    tests_require=['pytest', 'sphinx', 'sphinxtogithub'],
+    tests_require=['pytest',],
     cmdclass = {'test': PyTest,}
                 # 'build_sphinx': BuildSphinx},
     )
