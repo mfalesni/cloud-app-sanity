@@ -18,16 +18,6 @@ ifneq (,$(TESTNAME))
 TEST_ARGS += -k "$(TESTNAME)"
 endif
 
-# Make test file name from date and TESTNAME
-# If no TESTNAME provided, use word default
-ifeq (,$(TESTNAME))
-TESTRESULT :=default
-endif
-
-TESTRESULT:=`(date +"%y%m%d.%H%M%S"; echo ${TESTNAME} | sed -r -e "s/[^a-z-]/_/g") | tr -d '\n'`
-
-TEST_ARGS+=--junitxml="${RESULTS_DIR}/${TESTRESULT}.xml" --resultlog="${RESULTS_DIR}/${TESTRESULT}.log"
-
 # MAIL_TO variable is used to provide a valid email address to send test
 # results
 MAIL_TO?=
