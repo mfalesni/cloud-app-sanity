@@ -1,7 +1,9 @@
 import os
+import glob
+import shutil
 import shlex
 import time
-from setuptools import setup
+from setuptools import setup,Command
 from setuptools.command.test import test as TestCommand
 
 results_dir = 'results'
@@ -29,11 +31,32 @@ class PyTest(TestCommand):
         print "Running: pytest %s" % " ".join(self.test_args)
         pytest.main(self.test_args)
 
+class CleanCommand(Command):
+    description = "Custom clean command that forcefully removes dist/build directories"
+    user_options = []
+    def initialize_options(self):
+        self.cwd = None
+    def finalize_options(self):
+        self.cwd = os.getcwd()
+    def run(self):
+        assert os.getcwd() == self.cwd, 'Must be in package root: %s' % self.cwd
+        # Remove all .pyc files
+        for root, dirs, files in os.walk(self.cwd, topdown=False):
+            for fname in files:
+                if fname.endswith('.pyc') and os.path.isfile(os.path.join(root, fname)):
+                    if self.verbose: print 'removing: %s' % os.path.join(root, fname)
+                    if not self.dry_run: os.remove(os.path.join(root, fname))
+        # Remove egg's
+        for egg_dir in glob.glob('*.egg') + \
+                       glob.glob('*egg-info'):
+            if self.verbose: print "Removing '%s' ..." % egg_dir
+            if not self.dry_run: shutil.rmtree(egg_dir)
 setup(
-    #...,
     name="cloud-app-sanity",
     tests_require=['pytest',],
-    cmdclass = {'test': PyTest,}
+    cmdclass = {'test': PyTest,
+                'clean': CleanCommand,
                 # 'build_sphinx': BuildSphinx},
+               }
     )
 
