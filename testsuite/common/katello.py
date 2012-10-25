@@ -31,12 +31,14 @@ try:
 except ImportError:
     import simplejson as json
 
-def poll_task_state(server, task_uuid, login, password):
+def poll_task_state(server, port, task_uuid, login, password):
     """ This function returns state of task with given UUID.
         Useful when polling certain task if finished or not.
 
     :param server: Katello server to poll on.
     :type server: ``str``
+    :param port: Katello port to poll on.
+    :type port: ``str``
     :param task_uuid: Checked task's unique ID
     :type task_uuid: ``str``
     :param password: Login password into Katello server
@@ -47,17 +49,19 @@ def poll_task_state(server, task_uuid, login, password):
     :returns: Reported task state
     :rtype: ``str``
     """
-    request = net.make_auth_request("https://%s/katello/api/systems/tasks/%s" % (server, task_uuid), login, password)
+    request = net.make_auth_request("https://%s:%s/katello/api/systems/tasks/%s" % (server, port, task_uuid), login, password)
     response = urlopen(request)
     data = json.loads("\n".join(response.readlines()))
     return str(data["state"])
 
-def query_remote_install(server, uuid, login, password, package):
+def query_remote_install(server, port, uuid, login, password, package):
     """ This function installs package into guest system via Katello request.
         Basically, it tells Katello "Hey, Katello, install these packages into machine with that UUID"
 
     :param server: Remote Katello server
     :type server: ``str``
+    :param port: Remote Katello port
+    :type port: ``str``
     :param uuid: Target machine UUID
     :type uuid: ``str``
     :param login: Login name into Katello server
@@ -67,10 +71,10 @@ def query_remote_install(server, uuid, login, password, package):
     :param package: Package to install into system
     :type package: ``str``
 
-    :raises: pytest.Failed    
+    :raises: pytest.Failed
     """
     # Prepare the request
-    request = net.make_auth_request("https://%s/katello/api/systems/%s/packages" % (server, uuid), login, password)
+    request = net.make_auth_request("https://%s:%s/katello/api/systems/%s/packages" % (server, port, uuid), login, password)
     request.add_header("content-type", "application/json")
     body = json.dumps({"packages": [package]})
     request.add_header("content-length", str(len(body)))
@@ -83,7 +87,7 @@ def query_remote_install(server, uuid, login, password, package):
         if int(e.code) in [202]:
             response = e # To work in RHEL5
         else:
-            pytest.fail(msg="Error when querying installation of package %s with HTTP code %d and reason '%s'!" % (package, int(e.code), e.reason))
+            pytest.fail(msg="Error when querying installation of package %s with HTTP code %d: %s" % (package, int(e.code), e))
     # get the task uuid
     task_uuid = json.loads("\n".join(response.readlines()))["uuid"]
     # poll it
@@ -91,7 +95,7 @@ def query_remote_install(server, uuid, login, password, package):
     # List of allowed states
     ok_states = ["waiting", "running", "finished"]
     while state != "finished":
-        state = poll_task_state(server, task_uuid, login, password)
+        state = poll_task_state(server, port, task_uuid, login, password)
         if state not in ok_states:
             pytest.fail(msg="Installation of package %s failed when task went to state '%s'" % (str(package), state))
     # Package is installed, let's verify it

@@ -41,14 +41,24 @@ cwd = os.getcwd()
 """
 
 def test_audreyvars(audreyvars):
-    """This test checks for presence of audrey environment variables.
+    """This test checks for presence of audrey environment variables.  Any
+       audrey environment variables are saves to a local file to aid later
+       debugging.
 
     :param audreyvars: Dict of audrey environment variables
     :type audreyvars: dict
 
     :raises: AssertionError
     """
-    assert len(audreyvars) > 0
+    assert len(audreyvars) > 0, "No audrey environment variables found"
+
+    # TODO - this shouldn't live in a test, but in some setup_method()
+    fd = open('env.sh', 'w')
+    fd.write('#!/bin/sh\n\n')
+    for key,val in audreyvars.items():
+        fd.write('export AUDREY_VAR_KATELLO_REGISTER_%s="%s"\n' % (key, val))
+    fd.close()
+
 
 def test_gpg_key_import_release():
     """This test imports redhat-release GPG certificate
@@ -127,7 +137,7 @@ def test_setup_tunnel(audreyvars, katello_discoverable, tunnel_requested):
         # In case variable names changed, make noise if we don't find the expected
         # variable
         assert audreyvars.has_key("KATELLO_PORT")
-        os.environ["AUDREY_VAR_KATELLO_REGISTER_KATELLO_PORT"] = os.environ.get("AUDREY_VAR_KATELLO_REGISTER_SSH_TUNNEL_KATELLO_PORT", "8080")
+        os.environ["AUDREY_VAR_KATELLO_REGISTER_KATELLO_PORT"] = os.environ.get("AUDREY_VAR_KATELLO_REGISTER_SSH_TUNNEL_KATELLO_PORT", "1443")
         global configure_rhsm_tunnel
         configure_rhsm_tunnel = True
     else:
@@ -158,8 +168,10 @@ def test_import_certificate(audreyvars):
 
     :raises: AssertionError
     """
-    cert_rpm = common.tools.s_format("http://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
-    cmd = "rpm -ivh %s" % cert_rpm
+    cert_rpm = common.tools.s_format("https://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
+    cmd = "curl -O -k \"%s\"" % cert_rpm
+    common.shell.run(cmd)
+    cmd = "rpm -ivh %s" % os.path.basename(cert_rpm)
     common.shell.run(cmd)
 
 def test_tunnel_rhsm(audreyvars, subscription_manager_version):
@@ -175,8 +187,9 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
     if not configure_rhsm_tunnel:
         pytest.skip(msg='Not setting up a tunnel')
     sm_ver_maj, sm_ver_min = subscription_manager_version
-    rhsm_baseurl = "https://%s:%s/pulp/repos" % (audreyvars["KATELLO_HOST"], audreyvars["SSH_TUNNEL_PULP_PORT"])
-    server_port = audreyvars["SSH_TUNNEL_PULP_PORT"]
+    rhsm_baseurl = "https://%s:%s/pulp/repos" % (audreyvars["KATELLO_HOST"], audreyvars["SSH_TUNNEL_KATELLO_PORT"])
+    server_port = audreyvars["SSH_TUNNEL_KATELLO_PORT"]
+    server_prefix = audreyvars.get("KATELLO_PREFIX", "").strip()
     if sm_ver_maj <= 0:
         if sm_ver_min < 96:
             rhsm_conf = '/etc/rhsm/rhsm.conf'
@@ -191,9 +204,13 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
         else:
             common.shell.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
             common.shell.run('subscription-manager config --server.port=%s' % server_port)
+            # If a non-whitespace server_prefix was provided ... use it
+            if server_prefix.strip() != "":
+                common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
 
 def test_tunnel_goferd(audreyvars):
-    """This test sets up a GoferD tunnel, if it's desired.
+    """This test sets up a GoferD tunnel, if it's desired.  The test will
+    modify the gofer katello plugin configuration, and restart goferd.
 
     :param audreyvars: Dict of audrey environment variables
     :type audreyvars: dict
@@ -204,13 +221,23 @@ def test_tunnel_goferd(audreyvars):
         pytest.skip(msg='Not setting up a tunnel')
     else:
         plugin_conf = '/etc/gofer/plugins/katelloplugin.conf'
-        assert os.path.isfile(plugin_conf)
+        assert os.path.isfile(plugin_conf), "Gofer plugin config not found: %s" % plugin_conf
+
+        # Track whether changes were made
+        is_tunnelled = False
+
+        # Scan plugin_conf for necesary adjustments
         for line in fileinput.input(plugin_conf, inplace=1):
             line = line.rstrip('\n')
-            if line.startswith("url=") and line.endswith(":5674"):
-                print line.replace(":5671", ":5674")
+            if line.startswith("url=") and line.endswith(":5671"):
+                is_tunnelled = True
+                print line.replace(":5671", ":%s" % audreyvars.get("SSH_TUNNEL_GOFER_PORT", "5674"))
             else:
                 print line
+
+        # If changes were made, restart service
+        assert is_tunnelled, "No adjustments made to gofer plugin: %s" % plugin_conf
+        common.shell.run('service goferd restart')
 
 def test_disable_rhui(audreyvars, ec2_deployment):
     """This test disables RHUI, if it's desired.

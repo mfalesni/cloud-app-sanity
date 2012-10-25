@@ -2,8 +2,10 @@ bootstrap.py
 build-dir
 docs
 epydoc
-results.*
+results*
 *.swp
 *.pyc
 services.xml
 services.sh
+*.egg
+*.egg-info
