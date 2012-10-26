@@ -53,7 +53,7 @@ class CleanCommand(Command):
             if not self.dry_run: shutil.rmtree(egg_dir)
 setup(
     name="cloud-app-sanity",
-    tests_require=['pytest',],
+    tests_require=open('requirements.txt', 'r').readlines(),
     cmdclass = {'test': PyTest,
                 'clean': CleanCommand,
                 # 'build_sphinx': BuildSphinx},
