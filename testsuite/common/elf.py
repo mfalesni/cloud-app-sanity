@@ -20,10 +20,9 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import shell
-
-import pytest
 import re
+import pytest
+import common.shell
 
 def is_elf(filename):
     """ Checks whether file is ELF executable
@@ -34,7 +33,7 @@ def is_elf(filename):
     :returns: Whether file is ELF executable
     """
     try:
-        shell.run("readelf -h %s" % filename)
+        common.shell.run("readelf -h %s" % filename)
         return True
     except AssertionError:
         return False
@@ -48,7 +47,7 @@ def readelf(filename):
     :returns: Content of the ELF analysis
     :rtype: ``str``
     """
-    return shell.run("readelf --all %s" % filename)
+    return common.shell.run("readelf --all %s" % filename)
 
 def fortify_find_dangerous(filename):
     """ Finds potentially dangerous func-calls in desired file

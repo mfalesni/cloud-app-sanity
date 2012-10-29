@@ -20,9 +20,12 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
-import pytest
 import sys
+import pytest
+import common.elf
+import common.rpm
+import common.shell
+import common.yum
 
 def test_packages_installed_against_list(rpm_package_list_names, rhel_release):
     """ Tests whether there are only exact packages installed in the system.

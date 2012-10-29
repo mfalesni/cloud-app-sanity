@@ -20,7 +20,6 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
 import pytest
 
 def test_ntpd_enabled(chkconfig_list):

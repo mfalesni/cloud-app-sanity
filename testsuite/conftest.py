@@ -29,7 +29,7 @@
 import os
 import re
 import subprocess
-import common
+import common.shell
 
 from ConfigParser import ConfigParser
 

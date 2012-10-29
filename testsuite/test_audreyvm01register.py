@@ -21,15 +21,18 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
-import pytest
-import shutil
 import os
 from ConfigParser import ConfigParser
 import glob
 import re
 import subprocess
 import fileinput
+import shutil
+import pytest
+import common
+import common.shell
+import common.tools
+import common.yum
 
 configure_rhsm_tunnel = False
 """
@@ -152,11 +155,7 @@ def test_setup_releasever(audreyvars):
     :raises: KeyError, IOError
     """
     if not audreyvars.get("RELEASEVER", "Auto").lower() in ["", "auto"]:
-        if not os.path.isdir('/etc/yum/vars'):
-            os.mkdir('/etc/yum/vars')
-        fp = open("/etc/yum/vars/releasever", "w+")
-        fp.write(audreyvars["RELEASEVER"])
-        fp.close()
+        common.yum.set_yum_variable('releasever', audreyvars["RELEASEVER"])
     else:
         pytest.skip(msg='Not customizing yum releasever')
 

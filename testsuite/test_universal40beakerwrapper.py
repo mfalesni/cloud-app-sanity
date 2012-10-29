@@ -20,10 +20,11 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
-import sys
 import os
+import sys
 import pytest
+import common.beaker
+import common.shell
 
 @pytest.mark.parametrize("testname", common.beaker.list_tests("base.list"))
 def test_beakertask(testname):

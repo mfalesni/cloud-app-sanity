@@ -20,13 +20,11 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import shell
-import rpm
-
-import pytest
-
 import os
 import re
+import pytest
+import common.shell
+import common.rpm
 
 class RPMPackageFailure(Exception):
     pass
@@ -54,7 +52,7 @@ def keys_import(keydir="/etc/pki/rpm-gpg"):
     """
     file_list = os.listdir(keydir)
     for key_file in file_list:
-        shell.run("rpm --import %s/%s" % (keydir, key_file))
+        common.shell.run("rpm --import %s/%s" % (keydir, key_file))
 
 def signature_lines(package):
     """ Returns lines with signature informations of package
@@ -66,7 +64,7 @@ def signature_lines(package):
     :rtype: ``list(str)``
     """
     sig = re.compile("[Ss]ignature")
-    for line in shell.run("rpm -qvv %s" % package).strip().split("\n"):
+    for line in common.shell.run("rpm -qvv %s" % package).strip().split("\n"):
         if sig.search(line):
             yield line.split("#", 1)[-1].lstrip()
 
@@ -79,7 +77,7 @@ def verify_package(package):
     :rtype: ``bool``
     """
     success = True
-    for line in rpm.signature_lines(package):
+    for line in common.rpm.signature_lines(package):
         fields = [x.strip() for x in line.rsplit(", key ID", 1)]
         key_status = None
         if re.match("^[0-9a-z]+$", fields[1]):
@@ -102,7 +100,7 @@ def package_problems(package):
     :returns: ``STDOUT`` of rpm -V
     :rtype: ``str``
     """
-    return shell.run("rpm -Vvv %s" % package, None)
+    return common.shell.run("rpm -Vvv %s" % package, None)
 
 def package_build_host(package):
     """ Returns build host of the package.
@@ -112,7 +110,7 @@ def package_build_host(package):
     :returns: Build host of the package
     :rtype: ``str``
     """
-    return shell.run("rpm -q --qf \"%%{BUILDHOST}\" %s" % package).strip()
+    return common.shell.run("rpm -q --qf \"%%{BUILDHOST}\" %s" % package).strip()
 
 def package_installed(package):
     """ Returns whether is package installed or not
@@ -124,7 +122,7 @@ def package_installed(package):
     :rtype: ``bool``
     """
     try:
-        shell.run("rpm -q %s" % package)
+        common.shell.run("rpm -q %s" % package)
         return True
     except AssertionError:
         return False
@@ -144,7 +142,7 @@ def q(package, qf=None):
     if qf != None:
         cmd += "--qf \"%s\" " % qf
     cmd += package
-    return shell.run(cmd)
+    return common.shell.run(cmd)
 
 def qa(qf=None):
     """ Performs a 'rpm -qa' command with optional --qf parameter
@@ -158,7 +156,7 @@ def qa(qf=None):
     cmd = "rpm -qa"
     if qf != None:
         cmd += " --qf \"%s\"" % qf
-    return shell.run(cmd)
+    return common.shell.run(cmd)
 
 def e(package):
     """ Performs a 'rpm -e' command
@@ -166,7 +164,7 @@ def e(package):
     :param package: Package to be removed
     :type package: ``str``
     """
-    return shell.run("rpm -e %s" % package)
+    return common.shell.run("rpm -e %s" % package)
 
 def ql(package):
     """ Performs a 'rpm -ql' command
@@ -174,4 +172,4 @@ def ql(package):
     :param package: Package to be listed
     :type package: ``str``
     """
-    return shell.run("rpm -ql %s" % package)
+    return common.shell.run("rpm -ql %s" % package)

@@ -20,9 +20,8 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import shell
-
 import pytest
+import common.shell
 
 def list_tests(inputfile):
     """Returns Beaker tasks list
@@ -31,7 +30,7 @@ def list_tests(inputfile):
     :rtype: ``list``
     """
     try:
-        result, rc = shell.command("cd beaker-tests && ./list.sh %s" % inputfile)
+        result, rc = common.shell.command("cd beaker-tests && ./list.sh %s" % inputfile)
         assert rc == 0
         return result.strip().split("\n")
     except AssertionError:

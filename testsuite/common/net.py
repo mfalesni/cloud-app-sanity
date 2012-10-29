@@ -20,12 +20,10 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import shell
-
-import pytest
-
 import re
+import pytest
 import base64
+import common.shell
 from urllib2 import urlopen, HTTPError, URLError, Request
 
 class DownloadException(Exception):
@@ -39,7 +37,7 @@ def service_bound_localhost(service):
     :returns: ``True`` when it's bound only to localhost, otherwise ``False``
     :rtype: ``bool``
     """
-    netstat = shell.run("netstat -t --listen")
+    netstat = common.shell.run("netstat -t --listen")
     protocols = ["tcp", "udp"]
     local_addrs = ["127.0.0.1", "::1", "localhost"]
     for line in netstat.strip().split("\n"):
@@ -111,7 +109,7 @@ def list_opened_files(pid):
     :param pid: PID of the process
     :type pid: ``int``
     """
-    stdout = shell.run("lsof -i 4 -a -p %d" % pid, None)
+    stdout = common.shell.run("lsof -i 4 -a -p %d" % pid, None)
     lines = stdout.strip().split("\n")[1:]  # Ignore first line
     lines = [re.sub("\([^(]*\)$", "", line).rstrip() for line in lines]    # Ignore last parenthesis
     lines = [re.sub(" +", "\t", line).split("\t") for line in lines]    # Split into fields

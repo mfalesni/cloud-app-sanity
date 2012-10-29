@@ -20,8 +20,8 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
 import pytest
+import common.ssl
 
 def test_default_key_strength():
     """ Checks for SSL certificate generation strength

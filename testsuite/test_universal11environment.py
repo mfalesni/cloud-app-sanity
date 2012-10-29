@@ -20,9 +20,7 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
 import pytest
-
 
 def test_check_path(PATH):
     """ Checks whether aren't dangerous entries in $PATH

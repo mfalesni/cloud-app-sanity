@@ -25,7 +25,8 @@
 
 """
 
-import common
+import common.shell
+import common.tools
 
 def test_audreyvars(audreyvars):
     """ This test checks for presence of audrey environment variables.

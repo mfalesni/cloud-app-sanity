@@ -20,11 +20,11 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
-import pytest
 import os
 import stat
 import sys
+import pytest
+import common.shell
 
 """ Filesystem checking tests """
 

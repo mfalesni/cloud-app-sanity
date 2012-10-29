@@ -20,12 +20,8 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import shell
-
-import pytest
-
 import re
-
+import pytest
 
 def openssl_config():
     """ Returns content of the /etc/pki/tls/openssl.cnf file

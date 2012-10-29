@@ -20,11 +20,12 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
-import pytest
 import os
-
-
+import pytest
+import common
+import common.shell
+import common.tools
+import common.net
 
 def test_import_ssh_certificate(audreyvars):
     """ Imports SSH certificate from the files, urls, everything.

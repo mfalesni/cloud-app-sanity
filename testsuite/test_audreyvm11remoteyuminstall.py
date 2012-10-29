@@ -24,8 +24,8 @@
     Katello -> guest computer
 """
 
-import common
 import pytest
+import common.katello
 
 def test_install_packages_remote(audreyvars, system_uuid, tunnel_requested):
     """ Installs packages specified in YUM_REMOTE_INSTALL into this system via

@@ -20,8 +20,8 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
 import pytest
+import common.yum
 
 def test_install_package_locally_from_yum(audreyvars):
     """ This test does local install of package (by yum command).

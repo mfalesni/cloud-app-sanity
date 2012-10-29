@@ -20,8 +20,8 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common
 import pytest
+import common.selinux
 
 def test_selinux_enabled(selinux_enabled):
     """ Tests whether is SElinux enabled.
