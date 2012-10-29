@@ -79,7 +79,8 @@ def test_system_group_create(audreyvars, tunnel_requested):
     # Create a group for the current system platform (aka $basearch)
     yum_basearch = common.yum.get_yum_variable('basearch')
     # Create a group for the current system release (aka $releasever)
-    yum_releasever = common.yum.get_yum_variable('releasever')
+    # Per katello rules, replace any non-alpha-numeric character with a '_'
+    yum_releasever = re.sub(r'\W', '_', common.yum.get_yum_variable('releasever'))
 
     # Determine whether groups were created
     new_group_ids = []
@@ -118,7 +119,8 @@ def test_system_group_add_system(audreyvars, system_uuid, tunnel_requested):
     # Query system for the system platform (aka $basearch)
     yum_basearch = common.yum.get_yum_variable('basearch')
     # Query system for the system release (aka $releasever)
-    yum_releasever = common.yum.get_yum_variable('releasever')
+    # Per katello rules, replace any non-alpha-numeric character with a '_'
+    yum_releasever = re.sub(r'\W', '_', common.yum.get_yum_variable('releasever'))
 
     # Locate existing system groups, and add system
     for group_name in [yum_basearch, yum_releasever]:
