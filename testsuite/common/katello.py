@@ -23,7 +23,8 @@
 import pytest
 import common.shell
 import common.net
-from urllib2 import urlopen, quote, HTTPError, URLError
+from urllib import quote
+from urllib2 import urlopen, HTTPError, URLError
 
 try:
     import json
