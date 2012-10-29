@@ -30,18 +30,6 @@
         - It can't be parameter for py.test
 """
 
-import beaker
-import katello
-import net
-import rpm
-import selinux
-import yum
-import tools
-import shell
-import elf
-import ssl
-
-
 audrey_service_path = '/var/audrey/tooling/user'
 """
 :var audrey_service_path: Where are all Audrey services from XML located
