@@ -21,12 +21,29 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 import os
-import shell
-import rpm
-
+import sys
 import pytest
-
+import common.shell
+import common.rpm
 from ConfigParser import ConfigParser
+
+def set_yum_variable(key, value):
+    if not os.path.isdir('/etc/yum/vars'):
+        os.mkdir('/etc/yum/vars')
+    fp = open("/etc/yum/vars/%s" % key, "w+")
+    fp.write(value)
+    fp.close()
+
+def get_yum_variable(key):
+    # FIXME ... should we also look in /etc/yum/vars/releasever ?
+
+    # Bypass namespace collision on the 'yum' module
+    #import yum
+    # yb = yum.YumBase()
+    yb = __import__('yum').YumBase()
+
+    yb.conf
+    return yb.yumvar.get(key)
 
 def install(package_name):
     """ Does the 'yum install <package>' command.
@@ -37,10 +54,10 @@ def install(package_name):
     :raises: AssertionError
     """
     # Install it
-    text = shell.run("yum -y install %s" % (package_name))
+    text = common.shell.run("yum -y install %s" % (package_name))
     # Verify it
-    shell.run("rpm -q %s" % (package_name))
-    return rpm.check_for_errors(text)
+    common.shell.run("rpm -q %s" % (package_name))
+    return common.rpm.check_for_errors(text)
 
 def groupinstall(group):
     """ Does the 'yum groupinstall <package>' command.
@@ -51,8 +68,8 @@ def groupinstall(group):
     :raises: AssertionError
     """
     # Install it
-    text = shell.run("yum -y groupinstall %s" % (group))
-    return rpm.check_for_errors(text)
+    text = common.shell.run("yum -y groupinstall %s" % (group))
+    return common.rpm.check_for_errors(text)
 
 def remove(package_name):
     """ Does the 'yum remove <package>' command.
@@ -63,9 +80,9 @@ def remove(package_name):
     :raises: AssertionError
     """
     # Remove it
-    text = shell.run("yum -y remove %s" % (package_name))
+    text = common.shell.run("yum -y remove %s" % (package_name))
     # Verify it
-    shell.run("rpm -q %s" % (package_name), errorcode=1)
+    common.shell.run("rpm -q %s" % (package_name), errorcode=1)
 
     return text
 
@@ -80,7 +97,7 @@ def check_update(package_name):
     # Check for update
     result_good = [0, 100]
     result_map = {0: False, 100: True}
-    result = shell.run("yum check-update %s" % (package_name), result_good)
+    result = common.shell.run("yum check-update %s" % (package_name), result_good)
     return result_map[result]
 
 def repolist():
@@ -89,7 +106,7 @@ def repolist():
     :raises: AssertionError
     """
     # Check for update
-    return shell.run("yum repolist")
+    return common.shell.run("yum repolist")
 
 def grouplist():
     """ Does the 'yum grouplist' command.
@@ -97,7 +114,7 @@ def grouplist():
     :raises: AssertionError
     """
     # Check for update
-    return shell.run("yum grouplist")
+    return common.shell.run("yum grouplist")
 
 def update():
     """ Does the 'yum update' command.
@@ -105,7 +122,7 @@ def update():
     :raises: AssertionError
     """
     # Update
-    return rpm.check_for_errors(shell.run("yum -y update"))
+    return common.rpm.check_for_errors(shell.run("yum -y update"))
 
 def search(package_name):
     """ Does the 'yum search <package>' command.
@@ -116,7 +133,7 @@ def search(package_name):
     :raises: AssertionError
     """
     # Install it
-    return shell.run("yum search %s" % (package_name))
+    return common.shell.run("yum search %s" % (package_name))
 
 def update_config(repo_file, enabled=True):
     """Enables or disables all sections in Yum config files
