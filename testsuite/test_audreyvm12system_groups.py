@@ -24,6 +24,7 @@
     Katello -> guest computer
 """
 
+import re
 import pytest
 import common.yum
 import common.katello
