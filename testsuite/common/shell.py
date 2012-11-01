@@ -35,7 +35,7 @@ def run(cmd, errorcode=0):
     :param errorcode: Desired error code of the program. Defaults to 0 (all ok). If set to ``None``, error code won't be checked. If it is list, then it checks whether program ended with errorcode specified in list and returns the error code
     :type errorcode: int, list, None
     
-    :returns: ``STDOUT`` of called process or return code in case of ``errorcode`` specified as list
+    :returns: ``STDOUT`` of called process
     :rtype: ``str``, ``int``
     :raises: AssertionError
     """
@@ -46,14 +46,12 @@ def run(cmd, errorcode=0):
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT)
     (stdout, stderr) = p_open.communicate()
-    if errorcode != None:
-        if type(errorcode) != list:
-            assert p_open.returncode == errorcode
-        else: # Is list
-            if p_open.returncode in errorcode:
-                return p_open.returncode
-            else:
-                pytest.fail(msg="Process '%s' failed with unexpected error code %d" % (cmd, p_open.returncode))
+    if errorcode is not None:
+        # Force errorcode to be a list
+        if not isinstance(errorcode, list):
+            errorcode = [errorcode]
+        if p_open.returncode not in errorcode:
+            pytest.fail(msg="Command failed with unexpected error code: %d != %s\n\s" % (p_open.returncode, errorcode, stdout))
     return stdout
 
 def command(command):
