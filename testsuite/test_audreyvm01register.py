@@ -189,23 +189,22 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
     rhsm_baseurl = "https://%s:%s/pulp/repos" % (audreyvars["KATELLO_HOST"], audreyvars["SSH_TUNNEL_KATELLO_PORT"])
     server_port = audreyvars["SSH_TUNNEL_KATELLO_PORT"]
     server_prefix = audreyvars.get("KATELLO_PREFIX", "").strip()
-    if sm_ver_maj <= 0:
-        if sm_ver_min < 96:
-            rhsm_conf = '/etc/rhsm/rhsm.conf'
-            cfg = ConfigParser()
-            cfg.read([rhsm_conf])
-            cfg.set('rhsm', 'baseurl', rhsm_baseurl)
-            cfg.set('server', 'port', server_port)
-            # Save config
-            fd = open(rhsm_conf, 'wa+')
-            cfg.write(fd)
-            fd.close()
-        else:
-            common.shell.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
-            common.shell.run('subscription-manager config --server.port=%s' % server_port)
-            # If a non-whitespace server_prefix was provided ... use it
-            if server_prefix.strip() != "":
-                common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
+    if sm_ver_maj <= 0 and sm_ver_min < 96:
+        rhsm_conf = '/etc/rhsm/rhsm.conf'
+        cfg = ConfigParser()
+        cfg.read([rhsm_conf])
+        cfg.set('rhsm', 'baseurl', rhsm_baseurl)
+        cfg.set('server', 'port', server_port)
+        # Save config
+        fd = open(rhsm_conf, 'wa+')
+        cfg.write(fd)
+        fd.close()
+    else:
+        common.shell.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
+        common.shell.run('subscription-manager config --server.port=%s' % server_port)
+        # If a non-whitespace server_prefix was provided ... use it
+        if server_prefix.strip() != "":
+            common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
 
 def test_tunnel_goferd(audreyvars):
     """This test sets up a GoferD tunnel, if it's desired.  The test will
@@ -282,25 +281,24 @@ def test_katello_register(audreyvars, subscription_manager_version):
 
     cmd = "subscription-manager register"
 
-    if sm_ver_maj <= 0:
-        if sm_ver_min < 96:
-            if auto_subscribe:
-                cmd += " --username=%s --password=%s" % (username, password)
-                cmd += " --autosubscribe"
-            elif activation_key != "" and sm_ver_min >= 95:
-                cmd += " --activationkey=%s" % activation_key
-            else:
-                pass # determine and print error condition to stdout
+    if sm_ver_maj <= 0 and sm_ver_min < 96:
+        if auto_subscribe:
+            cmd += " --username=%s --password=%s" % (username, password)
+            cmd += " --autosubscribe"
+        elif activation_key != "" and sm_ver_min >= 95:
+            cmd += " --activationkey=%s" % activation_key
         else:
-            cmd += " --org=%s" % org
-            if auto_subscribe:
-                cmd += " --username=%s --password=%s" % (username, password)
-                cmd += " --env=%s" % kat_env
-                cmd += " --autosubscribe"
-            elif activation_key != "":
-                cmd += " --activationkey=%s" % activation_key
-            else:
-                pass # determine and print error condition to stdout
+            pass # determine and print error condition to stdout
+    else:
+        cmd += " --org=%s" % org
+        if auto_subscribe:
+            cmd += " --username=%s --password=%s" % (username, password)
+            cmd += " --env=%s" % kat_env
+            cmd += " --autosubscribe"
+        elif activation_key != "":
+            cmd += " --activationkey=%s" % activation_key
+        else:
+            pass # determine and print error condition to stdout
     common.shell.run(cmd)
 
 def test_verify_katello_registered():
