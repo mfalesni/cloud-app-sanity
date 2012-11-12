@@ -1,3 +1,7 @@
-py == 1.4.10
-pytest == 2.3.1
+# Workaround issue#209 -
+# https://bitbucket.org/hpk42/pytest/issue/209/valueerror-compile-unrecognised-flags
+# py == 1.4.10
+# pytest == 2.3.1
 # setuptools >= 0.6c11
+py
+pytest
