@@ -39,9 +39,13 @@ def test_check_permissions_and_broken_symlinks():
     ignored_patterns = ["/proc"]    # List of all ignored patterns ...
     failed = False
     # Helper functions
-    isdir = lambda x: stat.S_ISDIR( x.st_mode)
-    islnk = lambda x: stat.S_ISLNK(x.st_mode)
-    world_writable = lambda x: stat.S_IWOTH & x.st_mode
+    is_dir = lambda x: stat.S_ISDIR( x.st_mode)
+    is_lnk = lambda x: stat.S_ISLNK(x.st_mode)
+    is_sock = lambda x: stat.S_ISSOCK(x.st_mode)
+    is_chr = lambda x: stat.S_ISCHR(x.st_mode)
+    is_blk = lambda x: stat.S_ISBLK(x.st_mode)
+    is_reg = lambda x: stat.S_ISREG(x.st_mode)
+    is_world_writable = lambda x: stat.S_IWOTH & x.st_mode
     # Start it up
     stack.append(starting_dir)
     while len(stack) > 0:
@@ -60,17 +64,24 @@ def test_check_permissions_and_broken_symlinks():
             if cnt:
                 continue
             info = os.lstat(path)
-            if world_writable(info):
-                # Check its permissions, if wrong, append it
-                sys.stderr.write("WW %s\n" % path)
-                failed = True
-            if islnk(info):
+            if is_lnk(info):
                 # Check if it's broken or not
                 if not common.shell.exists_in_path(os.readlink(path), os.path.abspath(directory)):
-                    sys.stderr.write("BS %s\n" % path)
+                    sys.stderr.write("[broken-symlink] %s\n" % path)
                     failed = True
-            elif isdir(info):
+            elif is_dir(info):
                 stack.append(path)
+            elif is_sock(info):
+                '''Any sock-specific tests?'''
+            elif is_chr(info):
+                '''Any chr-device specific tests?'''
+            elif is_blk(info):
+                '''Any blk-device specific tests?'''
+            elif is_reg(info):
+                if is_world_writable(info):
+                    # Check its permissions, if wrong, append it
+                    sys.stderr.write("[world-writable] %s\n" % path)
+                    failed = True
     if failed:
         pytest.fail(msg="Test failed")
-        
+
