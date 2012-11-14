@@ -23,7 +23,7 @@
 import pytest
 
 def test_check_path(PATH):
-    """ Checks whether aren't dangerous entries in $PATH
+    """ Checks whether potentially dangerous entries exist in $PATH
 
     :param PATH: $PATH environment variable
     :type PATH: ``list``
