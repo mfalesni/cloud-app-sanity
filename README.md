@@ -5,7 +5,9 @@ Test suite for validating deployed CloudForms applications.
 
 Prerequisities:
 ===============
-* <pre>make</pre>
+* 'python'
+* 'python-setuptools'
+* 'make' - For creating documentation
 
 Usage:
 ======
@@ -24,11 +26,11 @@ cd cloud-app-sanity
 </pre>
 3. Prepare the environment and run the test suite. You can run all tests with this command:
 <pre>
-make test
+python setup.py test
 </pre>
 if you want to run only some tests matching a particular expression, you can use this command:
 <pre>
-TESTNAME="some-string" make test
+PY_KEYWORDEXPR="some-string" python setup.py test
 </pre>
 Where "some-string" specifies a keyword expression used by py.test to determine which tests to run.  For more information, consult the ''-k KEYWORDEXPR'' parameter to py.test.
 
