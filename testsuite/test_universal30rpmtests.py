@@ -99,6 +99,11 @@ def test_check_all_packages_files_fortified(package):
 
     :raises: pytest.Failed
     """
+
+    # FIXME - Review rpm-chksec
+    # (http://people.redhat.com/sgrubb/files/rpm-chksec) coverage to determine
+    # whether adjustments/enhancements are needed
+
     files = common.rpm.ql(package).strip().split("\n")
     for f in files:
         if common.elf.is_elf(f):
