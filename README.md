@@ -5,9 +5,9 @@ Test suite for validating deployed CloudForms applications.
 
 Prerequisities:
 ===============
-* 'python'
-* 'python-setuptools'
-* 'make' - For creating documentation
+* <code>python</code>
+* <code>python-setuptools</code>
+* <code>make</code> - For creating documentation
 
 Usage:
 ======
