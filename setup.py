@@ -23,7 +23,7 @@ class PyTest(TestCommand):
         if os.environ.has_key('PY_KEYWORDEXPR'):
             self.test_args += ' -k "%s"' % os.environ.get('PY_KEYWORDEXPR')
 
-        self.test_args += os.environ.get('PY_TESTS', 'testsuite')
+        self.test_args += " %s" % os.environ.get('PY_TESTS', 'testsuite')
 
     def run_tests(self):
         #import here, cause outside the eggs aren't loaded elsewhere
