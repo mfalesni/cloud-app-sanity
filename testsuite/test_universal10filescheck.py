@@ -66,7 +66,7 @@ def test_check_permissions_and_broken_symlinks():
     failed = False
 
     # List of all ignored patterns ...
-    ignored_patterns = '''
+    ignore_patterns = '''
 /proc
 /selinux
 /dev/.udev
