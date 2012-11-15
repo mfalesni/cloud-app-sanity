@@ -87,18 +87,21 @@ def remove(package_name):
     return text
 
 def check_update(package_name):
-    """ Does the 'yum check-update <package>' command.
+    """ Using the 'yum check-update <package>' command, determines whether an
+    update is available for the provided package.
 
     :param package_name: Name of the package to be checked for update (eg. katello-all)
     :type package_name: str
 
     :raises: AssertionError
     """
-    # Check for update
-    result_good = [0, 100]
-    result_map = {0: False, 100: True}
-    result = common.shell.run("yum check-update %s" % (package_name), result_good)
-    return result_map[result]
+    # Check for update - error code 100 means an update is available, anything
+    # else is considered a failure
+    try:
+        common.shell.run("yum check-update %s" % (package_name), 100)
+    except AssertionError:
+        return False
+    return True
 
 def repolist():
     """ Does the 'yum repolist' command.
