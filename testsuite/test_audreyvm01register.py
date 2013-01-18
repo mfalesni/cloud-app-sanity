@@ -170,8 +170,13 @@ def test_import_certificate(audreyvars):
     cert_rpm = common.tools.s_format("https://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
     cmd = "curl -O -k \"%s\"" % cert_rpm
     common.shell.run(cmd)
-    cmd = "rpm -ivh %s" % os.path.basename(cert_rpm)
-    common.shell.run(cmd)
+    cert_rpm_local = os.path.basename(cert_rpm)
+    cert_rpm_nvr = common.shell.run("rpm -qp --qf '%%{name}-%%{version}-%%{release}\n' %s" % cert_rpm_local)
+    if not common.rpm.package_installed(cert_rpm_nvr):
+        cmd = "rpm -ivh %s" % cert_rpm_local
+        common.shell.run(cmd)
+    else:
+        pytest.skip(msg='Cert package (%s) already installed' % cert_rpm_nvr)
 
 def test_tunnel_rhsm(audreyvars, subscription_manager_version):
     """This test sets up a RHSM tunnel, if it's desired.
