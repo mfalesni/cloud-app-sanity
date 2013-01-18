@@ -104,7 +104,9 @@ def setup_ec2_deployment():
     :returns: Whether is this EC2 deployment.
     :rtype: ``bool``
     """
-    cmd = 'curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document'
+    # The --fail curl argument will cause curl to exit with rc=22 if a server
+    # failure occurs (e.g. 403 or 404)
+    cmd = 'curl --fail http://169.254.169.254/latest/dynamic/instance-identity/document'
     print "# %s" % cmd
     return subprocess.call(cmd.split()) == 0
 
