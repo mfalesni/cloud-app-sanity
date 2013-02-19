@@ -88,6 +88,33 @@ def pytest_funcarg__tunnel_requested(request):
     # Otherwise, it wasn't requested
     return False
 
+def pytest_funcarg__system_groups(request):
+    """Determine applicable system groups for the current system
+
+    :param request: py.test request
+
+    :returns: All Audrey-relevant environment variables.
+    :rtype: dict
+    """
+    group_names = []
+
+    # A group for the current system platform (aka $basearch)
+    group_names.append(common.yum.get_yum_variable('basearch'))
+
+    # A group for the current system release (aka $releasever)
+    # Per katello rules, replace any non-alpha-numeric character with a '_'
+    group_names.append(re.sub(r'\W', '_', common.yum.get_yum_variable('releasever')))
+
+    # A group to indicate which provider the instance is deployed to
+    if request.cached_setup(setup=setup_rhev_deployment, scope="module"):
+        group_names.append('provider_rhev')
+    if request.cached_setup(setup=setup_vsphere_deployment, scope="module"):
+        group_names.append('provider_vsphere')
+    if request.cached_setup(setup=setup_ec2_deployment, scope="module"):
+        group_names.append('provider_ec2')
+
+    return group_names
+
 def pytest_funcarg__is_rhev_deployment(request):
     """Setups cached variable whether it's ec2 deployment or not.
 
