@@ -22,7 +22,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """ This module contains generator functions for variable injecting of py.test framework.
-    
+
     Some of them are cached, some not. I don't know how to make multi-level dependency yet.
 """
 
@@ -34,6 +34,11 @@ import common.yum
 import common.rpm
 
 from ConfigParser import ConfigParser
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 def pytest_funcarg__audreyvars(request):
     """Setups variables for testing
@@ -112,6 +117,12 @@ def pytest_funcarg__system_groups(request):
         group_names.append('provider_vsphere')
     if setup_ec2_deployment():
         group_names.append('provider_ec2')
+        # Add a group name for the ec2 region
+        (buf, rc) = common.shell.command('curl --fail http://169.254.169.254/latest/dynamic/instance-identity/document')
+        if rc == 0:
+            ec2_data = json.loads(buf)
+            if ec2_data.has_key('region'):
+                group_names.append('ec2-%s' % ec2_data.get('region'))
 
     return group_names
 
