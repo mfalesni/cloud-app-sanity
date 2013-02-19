@@ -30,6 +30,8 @@ import os
 import re
 import subprocess
 import common.shell
+import common.yum
+import common.rpm
 
 from ConfigParser import ConfigParser
 
@@ -86,6 +88,48 @@ def pytest_funcarg__tunnel_requested(request):
     # Otherwise, it wasn't requested
     return False
 
+def pytest_funcarg__is_rhev_deployment(request):
+    """Setups cached variable whether it's ec2 deployment or not.
+
+    :param request: py.test request.
+
+    :returns: Whether is this EC2 deployment (cached).
+    :rtype: ``bool``
+
+    """
+    return request.cached_setup(setup=setup_rhev_deployment, scope="module")
+
+def setup_rhev_deployment():
+    """Returns boolean True of False to indicate whether the current system is
+       an rhev image
+
+    :returns: Whether is this RHEV deployment.
+    :rtype: ``bool``
+    """
+    return common.rpm.package_installed('rhev-agent') or \
+        common.shell.command("grep -qi rhev /sys/class/virtio-ports/*/name")[1] == 0
+
+def pytest_funcarg__is_vsphere_deployment(request):
+    """Setups cached variable whether it's vsphere deployment or not.
+
+    :param request: py.test request.
+
+    :returns: Whether is this vsphere deployment (cached).
+    :rtype: ``bool``
+
+    """
+    return request.cached_setup(setup=setup_vsphere_deployment, scope="module")
+
+def setup_vsphere_deployment():
+    """Returns boolean True of False to indicate whether the current system is
+       an vsphere image
+
+    :returns: Whether is this RHEV deployment.
+    :rtype: ``bool``
+    """
+    return common.rpm.package_installed('open-vm-tools') or \
+        common.shell.command("grep -qi vmware /sys/bus/scsi/devices/*/vendor")[1] == 0
+
 def pytest_funcarg__ec2_deployment(request):
     """Setups cached variable whether it's ec2 deployment or not.
 
@@ -93,7 +137,7 @@ def pytest_funcarg__ec2_deployment(request):
 
     :returns: Whether is this EC2 deployment (cached).
     :rtype: ``bool``
-    
+
     """
     return request.cached_setup(setup=setup_ec2_deployment, scope="module")
 
