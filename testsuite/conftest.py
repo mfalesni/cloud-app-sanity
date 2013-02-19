@@ -106,11 +106,11 @@ def pytest_funcarg__system_groups(request):
     group_names.append(re.sub(r'\W', '_', common.yum.get_yum_variable('releasever')))
 
     # A group to indicate which provider the instance is deployed to
-    if request.cached_setup(setup=setup_rhev_deployment, scope="module"):
+    if setup_rhev_deployment():
         group_names.append('provider_rhev')
-    if request.cached_setup(setup=setup_vsphere_deployment, scope="module"):
+    if setup_vsphere_deployment():
         group_names.append('provider_vsphere')
-    if request.cached_setup(setup=setup_ec2_deployment, scope="module"):
+    if setup_ec2_deployment():
         group_names.append('provider_ec2')
 
     return group_names
