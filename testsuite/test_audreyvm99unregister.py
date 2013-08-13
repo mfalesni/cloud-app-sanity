@@ -27,7 +27,9 @@
 
 import common.shell
 import common.tools
+import pytest
 
+@pytest.mark.skipif("True")
 def test_audreyvars(audreyvars):
     """ This test checks for presence of audrey environment variables.
         It's checked here again because of possibility to invoke tests separately.
@@ -40,6 +42,7 @@ def test_audreyvars(audreyvars):
     assert len(audreyvars) > 0
 
 
+@pytest.mark.skipif("True")
 def test_unregister():
     """This test unregisters system from Katello.
 
@@ -47,6 +50,7 @@ def test_unregister():
     """
     common.shell.run("subscription-manager unregister")
 
+@pytest.mark.skipif("True")
 def test_verify_unregistered():
     """This test verifies that the system was unregistered from Katello.
 
@@ -54,6 +58,7 @@ def test_verify_unregistered():
     """
     common.shell.run("subscription-manager unregister", 1)    # SM unreg. returns 1 when not registered
 
+@pytest.mark.skipif("True")
 def test_uninstall_cert(audreyvars):
     """This test uninstalls Candlepin customer certificate.
 
