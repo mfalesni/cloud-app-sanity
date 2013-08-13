@@ -29,6 +29,7 @@ import pytest
 import common.yum
 import common.katello
 
+@pytest.mark.skipif("True")
 def test_system_group_query(audreyvars, tunnel_requested):
     """ Tests whether katello is capable of exporting available system groups
         via the API.
@@ -53,6 +54,7 @@ def test_system_group_query(audreyvars, tunnel_requested):
 
     common.katello.system_group_query(server, port, org, login, password)
 
+@pytest.mark.skipif("True")
 def test_system_group_create(audreyvars, tunnel_requested, system_groups):
     """ Installs packages specified in YUM_REMOTE_INSTALL into this system via
         remote request through Katello server to check whether there aren't any issues.
@@ -90,6 +92,7 @@ def test_system_group_create(audreyvars, tunnel_requested, system_groups):
     if len(new_group_ids) == 0:
         pytest.skip(msg="System groups already exist, no groups created")
 
+@pytest.mark.skipif("True")
 def test_system_group_add_system(audreyvars, system_uuid, tunnel_requested, system_groups):
     """ Installs packages specified in YUM_REMOTE_INSTALL into this system via
         remote request through Katello server to check whether there aren't any issues.

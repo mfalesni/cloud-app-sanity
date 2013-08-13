@@ -27,6 +27,7 @@ import common.shell
 import common.tools
 import common.net
 
+@pytest.mark.skipif("True")
 def test_import_ssh_certificate(audreyvars):
     """ Imports SSH certificate from the files, urls, everything.
         Files are specified in JENKINS_SSH_KEY_LOCATION. If it is None, nothing happens
