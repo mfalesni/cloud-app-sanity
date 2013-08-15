@@ -71,25 +71,156 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
-<span class="kn">import</span> <span class="nn">common</span>
-<span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">common.elf</span>
+<span class="kn">import</span> <span class="nn">common.rpm</span>
+<span class="kn">import</span> <span class="nn">common.shell</span>
+<span class="kn">import</span> <span class="nn">common.yum</span>
 
-<div class="viewcode-block" id="test_check_all_packages"><a class="viewcode-back" href="../test_universal30rpmtests.html#test_universal30rpmtests.test_check_all_packages">[docs]</a><span class="k">def</span> <span class="nf">test_check_all_packages</span><span class="p">(</span><span class="n">rpm_package_list</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; This test checks all packages in system.</span>
+<span class="kn">import</span> <span class="nn">yum</span><span class="o">,</span> <span class="nn">rpm</span>
 
-<span class="sd">    :param rpm_package_list: List of all packages installed in system</span>
-<span class="sd">    :type rpm_package_list: ``list``</span>
+<div class="viewcode-block" id="test_packages_installed_against_list"><a class="viewcode-back" href="../test_universal30rpmtests.html#test_universal30rpmtests.test_packages_installed_against_list">[docs]</a><span class="k">def</span> <span class="nf">test_packages_installed_against_list</span><span class="p">(</span><span class="n">rpm_package_list_names</span><span class="p">,</span> <span class="n">rhel_release</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Tests whether there are only exact packages installed in the system.</span>
+
+<span class="sd">    :param rpm_package_list_names: Package list with names only</span>
+<span class="sd">    :param rpm_package_list_names: ``list``</span>
 
 <span class="sd">    :raises: pytest.Failed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">failed</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">rpm_package_list</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm_verify_package</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Package </span><span class="si">%s</span><span class="s">:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm_package_problems</span><span class="p">(</span><span class="n">package</span><span class="p">)))</span>
-            <span class="n">failed</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="k">if</span> <span class="n">failed</span><span class="p">:</span>
-        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;Some packages had problem!&quot;</span><span class="p">)</span></div>
+    <span class="n">major</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="n">rhel_release</span>
+    <span class="n">rhel6pkgfilelist</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;0&quot;</span><span class="p">:</span> <span class="s">&quot;packages_6&quot;</span><span class="p">,</span><span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="s">&quot;packages_61&quot;</span><span class="p">,</span><span class="s">&quot;2&quot;</span><span class="p">:</span> <span class="s">&quot;packages_62&quot;</span><span class="p">,</span><span class="s">&quot;3&quot;</span><span class="p">:</span> <span class="s">&quot;packages_63&quot;</span><span class="p">}</span>
+    <span class="n">packagelist</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">major</span> <span class="o">==</span> <span class="s">&quot;5&quot;</span><span class="p">:</span>
+            <span class="c"># RHEL5 packages</span>
+            <span class="n">packagelist</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;cat data/packages_5&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">major</span> <span class="o">==</span> <span class="s">&quot;6&quot;</span><span class="p">:</span>
+            <span class="c"># RHEL6 packages</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">packagelist</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;cat data/</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">rhel6pkgfilelist</span><span class="p">[</span><span class="n">minor</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="s">&quot;Unknown version of RHEL! (major: </span><span class="si">%s</span><span class="s">, minor: </span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="n">rhel_release</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;Unable to find file according to your RHEL version (major: </span><span class="si">%s</span><span class="s"> minor: </span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="n">rhel_release</span><span class="p">)</span>
+    <span class="n">packagelist</span> <span class="o">=</span> <span class="n">packagelist</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="n">not_installed_packages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">packagelist</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c"># Pop out checked packages</span>
+        <span class="n">pkg</span> <span class="o">=</span> <span class="n">packagelist</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">pkg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rpm_package_list_names</span><span class="p">:</span>
+            <span class="n">not_installed_packages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">rpm_package_list_names</span><span class="p">[</span><span class="n">rpm_package_list_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pkg</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">not_installed_packages</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;Some packages, which should have been installed weren&#39;t installed: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">not_installed_packages</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rpm_package_list_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;There are packages in this system, which aren&#39;t supposed to be installed: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">rpm_package_list_names</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="test_packages_installed_against_available"><a class="viewcode-back" href="../test_universal30rpmtests.html#test_universal30rpmtests.test_packages_installed_against_available">[docs]</a><span class="k">def</span> <span class="nf">test_packages_installed_against_available</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Tests whether the installed packages are up to date when compared with the available packages.</span>
+
+<span class="sd">    :raises: pytest.Failed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">yb</span> <span class="o">=</span> <span class="n">yum</span><span class="o">.</span><span class="n">YumBase</span><span class="p">()</span>
+    <span class="n">yb</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">installed_packages</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">rpmdb</span><span class="o">.</span><span class="n">returnPackages</span><span class="p">()</span>
+    <span class="n">available_packages</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">pkgSack</span><span class="o">.</span><span class="n">returnPackages</span><span class="p">()</span>
+
+    <span class="n">diff</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">installed</span> <span class="ow">in</span> <span class="n">installed_packages</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">available_packages</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">installed</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">available</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">rpm</span><span class="o">.</span><span class="n">labelCompare</span><span class="p">((</span><span class="n">installed</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="n">installed</span><span class="o">.</span><span class="n">ver</span><span class="p">,</span> <span class="n">installed</span><span class="o">.</span><span class="n">rel</span><span class="p">),</span> <span class="p">(</span><span class="n">available</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="n">available</span><span class="o">.</span><span class="n">ver</span><span class="p">,</span> <span class="n">available</span><span class="o">.</span><span class="n">rel</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">diff</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">installed</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">installed</span><span class="o">.</span><span class="n">ver</span><span class="p">,</span> <span class="n">installed</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="n">installed</span><span class="o">.</span><span class="n">arch</span><span class="p">,</span> <span class="n">installed</span><span class="o">.</span><span class="n">repoid</span><span class="p">,</span> <span class="n">available</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">available</span><span class="o">.</span><span class="n">ver</span><span class="p">,</span> <span class="n">available</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="n">available</span><span class="o">.</span><span class="n">arch</span><span class="p">,</span> <span class="n">available</span><span class="o">.</span><span class="n">repoid</span><span class="p">))</span>
+
+    <span class="c">#%{name}-%{version}-%{release}.%{arch}</span>
+    <span class="k">if</span> <span class="n">diff</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="test_gpg_check"><a class="viewcode-back" href="../test_universal30rpmtests.html#test_universal30rpmtests.test_gpg_check">[docs]</a><span class="k">def</span> <span class="nf">test_gpg_check</span><span class="p">(</span><span class="n">gpgcheck_enabled</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Tests whether is GPG check enabled in YUM</span>
+
+<span class="sd">    :param gpgcheck_enabled: Whether is GPG check active</span>
+<span class="sd">    :type gpgcheck_enabled: ``bool``</span>
+
+<span class="sd">    :raises: pytest.Failed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">gpgcheck_enabled</span> <span class="o">==</span> <span class="bp">True</span>
+    <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;GPG check is not enabled&quot;</span><span class="p">)</span>
+</div>
+<span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">qa</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">))</span>
+<div class="viewcode-block" id="test_check_all_packages"><a class="viewcode-back" href="../test_universal30rpmtests.html#test_universal30rpmtests.test_check_all_packages">[docs]</a><span class="k">def</span> <span class="nf">test_check_all_packages</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This test checks all packages in system.</span>
+
+<span class="sd">    :param package: package to be checked</span>
+<span class="sd">    :type package: ``str``</span>
+
+<span class="sd">    :raises: pytest.Failed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">verify_package</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;Package had problem: &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">package_problems</span><span class="p">(</span><span class="n">package</span><span class="p">))</span>
+</div>
+<span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">qa</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">))</span>
+<div class="viewcode-block" id="test_check_all_packages_files_fortified"><a class="viewcode-back" href="../test_universal30rpmtests.html#test_universal30rpmtests.test_check_all_packages_files_fortified">[docs]</a><span class="k">def</span> <span class="nf">test_check_all_packages_files_fortified</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This test checks whether are all compiled files in package fortified</span>
+
+<span class="sd">    :param package: Package name</span>
+<span class="sd">    :type package: ``list``</span>
+
+<span class="sd">    :raises: pytest.Failed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># FIXME - Review rpm-chksec</span>
+    <span class="c"># (http://people.redhat.com/sgrubb/files/rpm-chksec) coverage to determine</span>
+    <span class="c"># whether adjustments/enhancements are needed</span>
+
+    <span class="n">files</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">ql</span><span class="p">(</span><span class="n">package</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">common</span><span class="o">.</span><span class="n">elf</span><span class="o">.</span><span class="n">is_elf</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="n">dangerous</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">elf</span><span class="o">.</span><span class="n">fortify_find_dangerous</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">dangerous</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">function</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;_chk&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">function</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;__chk_fail&quot;</span><span class="p">):</span>
+                    <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;File </span><span class="si">%s</span><span class="s">: Symbol &#39;</span><span class="si">%s</span><span class="s">&#39; found! All relevant symbols in file: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">dangerous</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="test_yum_full_test"><a class="viewcode-back" href="../test_universal30rpmtests.html#test_universal30rpmtests.test_yum_full_test">[docs]</a><span class="k">def</span> <span class="nf">test_yum_full_test</span><span class="p">(</span><span class="n">rhel_release</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This test tests yum thoroughly</span>
+
+<span class="sd">    :param rhel_release: Version release of RHEL</span>
+<span class="sd">    :type rhel_release: ``tuple``</span>
+
+<span class="sd">    :raises: pytest.Failed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Package to check</span>
+    <span class="n">pkg</span> <span class="o">=</span> <span class="s">&quot;redhat-release-server&quot;</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">rhel_release</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">pkg</span> <span class="o">=</span> <span class="s">&quot;redhat-release&quot;</span>
+    <span class="k">if</span> <span class="n">common</span><span class="o">.</span><span class="n">yum</span><span class="o">.</span><span class="n">check_update</span><span class="p">(</span><span class="n">pkg</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;Update for </span><span class="si">%s</span><span class="s"> is available&quot;</span> <span class="o">%</span> <span class="n">pkg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;No update available for </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">pkg</span>
+    <span class="k">print</span> <span class="n">common</span><span class="o">.</span><span class="n">yum</span><span class="o">.</span><span class="n">repolist</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">common</span><span class="o">.</span><span class="n">yum</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&quot;zsh&quot;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">common</span><span class="o">.</span><span class="n">yum</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="s">&quot;zsh&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">package_installed</span><span class="p">(</span><span class="s">&quot;zsh&quot;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">common</span><span class="o">.</span><span class="n">yum</span><span class="o">.</span><span class="n">grouplist</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">common</span><span class="o">.</span><span class="n">yum</span><span class="o">.</span><span class="n">groupinstall</span><span class="p">(</span><span class="s">&quot;Development tools&quot;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">common</span><span class="o">.</span><span class="n">yum</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">e</span><span class="p">(</span><span class="s">&quot;zsh&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">package_installed</span><span class="p">(</span><span class="s">&quot;zsh&quot;</span><span class="p">)</span>
+
+
+
+
+    </div>
 </pre></div>
 
           </div>

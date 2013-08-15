@@ -72,20 +72,39 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
-<span class="kn">import</span> <span class="nn">shell</span>
-<span class="kn">import</span> <span class="nn">rpm</span>
-
-<span class="kn">import</span> <span class="nn">pytest</span>
-
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">common.shell</span>
+<span class="kn">import</span> <span class="nn">common.rpm</span>
 
+<div class="viewcode-block" id="RPMPackageFailure"><a class="viewcode-back" href="../../common.html#common.rpm.RPMPackageFailure">[docs]</a><span class="k">class</span> <span class="nc">RPMPackageFailure</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="RPMScriptletFailure"><a class="viewcode-back" href="../../common.html#common.rpm.RPMScriptletFailure">[docs]</a><span class="k">class</span> <span class="nc">RPMScriptletFailure</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="check_for_errors"><a class="viewcode-back" href="../../common.html#common.rpm.check_for_errors">[docs]</a><span class="k">def</span> <span class="nf">check_for_errors</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This function checks for errors in text and returns text unchanged</span>
+
+<span class="sd">    :param text: text to be checked</span>
+<span class="sd">    :type text: ``str``</span>
+
+<span class="sd">    :returns: text</span>
+<span class="sd">    :rtype: ``str``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;failure in rpm package&#39;</span><span class="p">:</span> <span class="n">RPMPackageFailure</span><span class="p">,</span> <span class="s">&#39;scriptlet failed, exit status 1&#39;</span><span class="p">:</span> <span class="n">RPMScriptletFailure</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="n">error</span><span class="p">](</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+</div>
 <div class="viewcode-block" id="keys_import"><a class="viewcode-back" href="../../common.html#common.rpm.keys_import">[docs]</a><span class="k">def</span> <span class="nf">keys_import</span><span class="p">(</span><span class="n">keydir</span><span class="o">=</span><span class="s">&quot;/etc/pki/rpm-gpg&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This function imports all keys in directory &#39;/etc/pki/rpm-gpg&#39; by default</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">file_list</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">keydir</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key_file</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
-        <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm --import </span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">keydir</span><span class="p">,</span> <span class="n">key_file</span><span class="p">))</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm --import </span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">keydir</span><span class="p">,</span> <span class="n">key_file</span><span class="p">))</span>
 </div>
 <div class="viewcode-block" id="signature_lines"><a class="viewcode-back" href="../../common.html#common.rpm.signature_lines">[docs]</a><span class="k">def</span> <span class="nf">signature_lines</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns lines with signature informations of package</span>
@@ -97,7 +116,7 @@
 <span class="sd">    :rtype: ``list(str)``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;[Ss]ignature&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -qvv </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -qvv </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;#&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
 </div>
@@ -110,7 +129,7 @@
 <span class="sd">    :rtype: ``bool``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">success</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">rpm</span><span class="o">.</span><span class="n">signature_lines</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">signature_lines</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s">&quot;, key ID&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
         <span class="n">key_status</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">&quot;^[0-9a-z]+$&quot;</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
@@ -133,7 +152,7 @@
 <span class="sd">    :returns: ``STDOUT`` of rpm -V</span>
 <span class="sd">    :rtype: ``str``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -Vvv </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -Vvv </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="package_build_host"><a class="viewcode-back" href="../../common.html#common.rpm.package_build_host">[docs]</a><span class="k">def</span> <span class="nf">package_build_host</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns build host of the package.</span>
@@ -143,7 +162,7 @@
 <span class="sd">    :returns: Build host of the package</span>
 <span class="sd">    :rtype: ``str``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -q --qf </span><span class="se">\&quot;</span><span class="si">%%</span><span class="s">{BUILDHOST}</span><span class="se">\&quot;</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -q --qf </span><span class="se">\&quot;</span><span class="si">%%</span><span class="s">{BUILDHOST}</span><span class="se">\&quot;</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="package_installed"><a class="viewcode-back" href="../../common.html#common.rpm.package_installed">[docs]</a><span class="k">def</span> <span class="nf">package_installed</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns whether is package installed or not</span>
@@ -155,7 +174,7 @@
 <span class="sd">    :rtype: ``bool``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -q </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -q </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">True</span>
     <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span>
@@ -175,7 +194,7 @@
     <span class="k">if</span> <span class="n">qf</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot;--qf </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">qf</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="n">package</span>
-    <span class="k">return</span> <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="qa"><a class="viewcode-back" href="../../common.html#common.rpm.qa">[docs]</a><span class="k">def</span> <span class="nf">qa</span><span class="p">(</span><span class="n">qf</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Performs a &#39;rpm -qa&#39; command with optional --qf parameter</span>
@@ -189,7 +208,23 @@
     <span class="n">cmd</span> <span class="o">=</span> <span class="s">&quot;rpm -qa&quot;</span>
     <span class="k">if</span> <span class="n">qf</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s">&quot; --qf </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">qf</span>
-    <span class="k">return</span> <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="e"><a class="viewcode-back" href="../../common.html#common.rpm.e">[docs]</a><span class="k">def</span> <span class="nf">e</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Performs a &#39;rpm -e&#39; command</span>
+
+<span class="sd">    :param package: Package to be removed</span>
+<span class="sd">    :type package: ``str``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -e </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ql"><a class="viewcode-back" href="../../common.html#common.rpm.ql">[docs]</a><span class="k">def</span> <span class="nf">ql</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Performs a &#39;rpm -ql&#39; command</span>
+
+<span class="sd">    :param package: Package to be listed</span>
+<span class="sd">    :type package: ``str``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -ql </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

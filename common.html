@@ -159,7 +159,7 @@ between modules.</p>
 <span id="katello-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">katello</span></tt> Module<a class="headerlink" href="#module-common.katello" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="common.katello.poll_task_state">
-<tt class="descclassname">common.katello.</tt><tt class="descname">poll_task_state</tt><big>(</big><em>server</em>, <em>task_uuid</em>, <em>login</em>, <em>password</em><big>)</big><a class="reference internal" href="modules/common/katello.html#poll_task_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.katello.poll_task_state" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.katello.</tt><tt class="descname">poll_task_state</tt><big>(</big><em>server</em>, <em>port</em>, <em>task_uuid</em>, <em>login</em>, <em>password</em><big>)</big><a class="reference internal" href="modules/common/katello.html#poll_task_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.katello.poll_task_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns state of task with given UUID.
 Useful when polling certain task if finished or not.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -168,6 +168,7 @@ Useful when polling certain task if finished or not.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>server</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Katello server to poll on.</li>
+<li><strong>port</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Katello port to poll on.</li>
 <li><strong>task_uuid</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Checked task&#8217;s unique ID</li>
 <li><strong>password</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login password into Katello server</li>
 <li><strong>package</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Package to install into system</li>
@@ -186,7 +187,7 @@ Useful when polling certain task if finished or not.</p>
 
 <dl class="function">
 <dt id="common.katello.query_remote_install">
-<tt class="descclassname">common.katello.</tt><tt class="descname">query_remote_install</tt><big>(</big><em>server</em>, <em>uuid</em>, <em>login</em>, <em>password</em>, <em>package</em><big>)</big><a class="reference internal" href="modules/common/katello.html#query_remote_install"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.katello.query_remote_install" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.katello.</tt><tt class="descname">query_remote_install</tt><big>(</big><em>server</em>, <em>port</em>, <em>uuid</em>, <em>login</em>, <em>password</em>, <em>package</em><big>)</big><a class="reference internal" href="modules/common/katello.html#query_remote_install"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.katello.query_remote_install" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function installs package into guest system via Katello request.
 Basically, it tells Katello &#8220;Hey, Katello, install these packages into machine with that UUID&#8221;</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -195,6 +196,7 @@ Basically, it tells Katello &#8220;Hey, Katello, install these packages into mac
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>server</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Remote Katello server</li>
+<li><strong>port</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Remote Katello port</li>
 <li><strong>uuid</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Target machine UUID</li>
 <li><strong>login</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login name into Katello server</li>
 <li><strong>password</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login password into Katello server</li>
@@ -208,6 +210,62 @@ Basically, it tells Katello &#8220;Hey, Katello, install these packages into mac
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="common.katello.system_group_add_system">
+<tt class="descclassname">common.katello.</tt><tt class="descname">system_group_add_system</tt><big>(</big><em>server</em>, <em>port</em>, <em>org</em>, <em>uuid</em>, <em>login</em>, <em>password</em>, <em>group_id</em><big>)</big><a class="reference internal" href="modules/common/katello.html#system_group_add_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.katello.system_group_add_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function adds a system to a specified system group</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>server</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Remote Katello server</li>
+<li><strong>port</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Remote Katello port</li>
+<li><strong>org</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Katello organization</li>
+<li><strong>uuid</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Target machine UUID</li>
+<li><strong>login</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login name into Katello server</li>
+<li><strong>password</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login password into Katello server</li>
+<li><strong>group_id</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Id of the system group to create</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">pytest.Failed</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.katello.system_group_create">
+<tt class="descclassname">common.katello.</tt><tt class="descname">system_group_create</tt><big>(</big><em>server</em>, <em>port</em>, <em>org</em>, <em>login</em>, <em>password</em>, <em>group_name</em><big>)</big><a class="reference internal" href="modules/common/katello.html#system_group_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.katello.system_group_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a system group via a katello API request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>server</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Remote Katello server</li>
+<li><strong>port</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Remote Katello port</li>
+<li><strong>org</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Katello organization</li>
+<li><strong>login</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login name into Katello server</li>
+<li><strong>password</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Login password into Katello server</li>
+<li><strong>group_name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; Name of the system group to create</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">pytest.Failed</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="common.katello.system_group_query">
+<tt class="descclassname">common.katello.</tt><tt class="descname">system_group_query</tt><big>(</big><em>server</em>, <em>port</em>, <em>org</em>, <em>login</em>, <em>password</em>, <em>query_name=None</em><big>)</big><a class="reference internal" href="modules/common/katello.html#system_group_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.katello.system_group_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-common.net">
@@ -300,19 +358,19 @@ if downloading from Gitweb-site</p>
 <span id="rpm-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">rpm</span></tt> Module<a class="headerlink" href="#module-common.rpm" title="Permalink to this headline">¶</a></h2>
 <dl class="exception">
 <dt id="common.rpm.RPMPackageFailure">
-<em class="property">exception </em><tt class="descclassname">common.rpm.</tt><tt class="descname">RPMPackageFailure</tt><a class="headerlink" href="#common.rpm.RPMPackageFailure" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><tt class="descclassname">common.rpm.</tt><tt class="descname">RPMPackageFailure</tt><a class="reference internal" href="modules/common/rpm.html#RPMPackageFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.rpm.RPMPackageFailure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="common.rpm.RPMScriptletFailure">
-<em class="property">exception </em><tt class="descclassname">common.rpm.</tt><tt class="descname">RPMScriptletFailure</tt><a class="headerlink" href="#common.rpm.RPMScriptletFailure" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><tt class="descclassname">common.rpm.</tt><tt class="descname">RPMScriptletFailure</tt><a class="reference internal" href="modules/common/rpm.html#RPMScriptletFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.rpm.RPMScriptletFailure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="common.rpm.check_for_errors">
-<tt class="descclassname">common.rpm.</tt><tt class="descname">check_for_errors</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#common.rpm.check_for_errors" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.rpm.</tt><tt class="descname">check_for_errors</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="modules/common/rpm.html#check_for_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.rpm.check_for_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function checks for errors in text and returns text unchanged</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -330,7 +388,7 @@ if downloading from Gitweb-site</p>
 
 <dl class="function">
 <dt id="common.rpm.e">
-<tt class="descclassname">common.rpm.</tt><tt class="descname">e</tt><big>(</big><em>package</em><big>)</big><a class="headerlink" href="#common.rpm.e" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.rpm.</tt><tt class="descname">e</tt><big>(</big><em>package</em><big>)</big><a class="reference internal" href="modules/common/rpm.html#e"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.rpm.e" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs a &#8216;rpm -e&#8217; command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -446,7 +504,7 @@ if downloading from Gitweb-site</p>
 
 <dl class="function">
 <dt id="common.rpm.ql">
-<tt class="descclassname">common.rpm.</tt><tt class="descname">ql</tt><big>(</big><em>package</em><big>)</big><a class="headerlink" href="#common.rpm.ql" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.rpm.</tt><tt class="descname">ql</tt><big>(</big><em>package</em><big>)</big><a class="reference internal" href="modules/common/rpm.html#ql"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.rpm.ql" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs a &#8216;rpm -ql&#8217; command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -603,7 +661,7 @@ if downloading from Gitweb-site</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><tt class="docutils literal"><span class="pre">STDOUT</span></tt> of called process or return code in case of <tt class="docutils literal"><span class="pre">errorcode</span></tt> specified as list</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><tt class="docutils literal"><span class="pre">STDOUT</span></tt> of called process</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="docutils literal"><span class="pre">str</span></tt>, <tt class="docutils literal"><span class="pre">int</span></tt></p>
@@ -694,7 +752,8 @@ Python-version-proof.</p>
 <dl class="function">
 <dt id="common.yum.check_update">
 <tt class="descclassname">common.yum.</tt><tt class="descname">check_update</tt><big>(</big><em>package_name</em><big>)</big><a class="reference internal" href="modules/common/yum.html#check_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.yum.check_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Does the &#8216;yum check-update &lt;package&gt;&#8217; command.</p>
+<dd><p>Using the &#8216;yum check-update &lt;package&gt;&#8217; command, determines whether an
+update is available for the provided package.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -708,8 +767,13 @@ Python-version-proof.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="common.yum.get_yum_variable">
+<tt class="descclassname">common.yum.</tt><tt class="descname">get_yum_variable</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="modules/common/yum.html#get_yum_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.yum.get_yum_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="common.yum.groupinstall">
-<tt class="descclassname">common.yum.</tt><tt class="descname">groupinstall</tt><big>(</big><em>group</em><big>)</big><a class="headerlink" href="#common.yum.groupinstall" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.yum.</tt><tt class="descname">groupinstall</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="modules/common/yum.html#groupinstall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.yum.groupinstall" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the &#8216;yum groupinstall &lt;package&gt;&#8217; command.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -725,7 +789,7 @@ Python-version-proof.</p>
 
 <dl class="function">
 <dt id="common.yum.grouplist">
-<tt class="descclassname">common.yum.</tt><tt class="descname">grouplist</tt><big>(</big><big>)</big><a class="headerlink" href="#common.yum.grouplist" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.yum.</tt><tt class="descname">grouplist</tt><big>(</big><big>)</big><a class="reference internal" href="modules/common/yum.html#grouplist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.yum.grouplist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the &#8216;yum grouplist&#8217; command.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -800,8 +864,13 @@ Python-version-proof.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="common.yum.set_yum_variable">
+<tt class="descclassname">common.yum.</tt><tt class="descname">set_yum_variable</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="reference internal" href="modules/common/yum.html#set_yum_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.yum.set_yum_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="common.yum.update">
-<tt class="descclassname">common.yum.</tt><tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#common.yum.update" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">common.yum.</tt><tt class="descname">update</tt><big>(</big><big>)</big><a class="reference internal" href="modules/common/yum.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.yum.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the &#8216;yum update&#8217; command.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

@@ -76,8 +76,11 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">common</span>
+<span class="kn">import</span> <span class="nn">common.shell</span>
+<span class="kn">import</span> <span class="nn">common.tools</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
 
+<span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;True&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="test_audreyvars"><a class="viewcode-back" href="../test_audreyvm99unregister.html#test_audreyvm99unregister.test_audreyvars">[docs]</a><span class="k">def</span> <span class="nf">test_audreyvars</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This test checks for presence of audrey environment variables.</span>
 <span class="sd">        It&#39;s checked here again because of possibility to invoke tests separately.</span>
@@ -90,20 +93,23 @@
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
 </div>
+<span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;True&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="test_unregister"><a class="viewcode-back" href="../test_audreyvm99unregister.html#test_audreyvm99unregister.test_unregister">[docs]</a><span class="k">def</span> <span class="nf">test_unregister</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;This test unregisters system from Katello.</span>
 
 <span class="sd">    :raises: AssertionError</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;subscription-manager unregister&quot;</span><span class="p">)</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;subscription-manager unregister&quot;</span><span class="p">)</span>
 </div>
+<span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;True&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="test_verify_unregistered"><a class="viewcode-back" href="../test_audreyvm99unregister.html#test_audreyvm99unregister.test_verify_unregistered">[docs]</a><span class="k">def</span> <span class="nf">test_verify_unregistered</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;This test verifies that the system was unregistered from Katello.</span>
 
 <span class="sd">    :raises: AssertionError</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;subscription-manager unregister&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>    <span class="c"># SM unreg. returns 1 when not registered</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;subscription-manager unregister&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>    <span class="c"># SM unreg. returns 1 when not registered</span>
 </div>
+<span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;True&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="test_uninstall_cert"><a class="viewcode-back" href="../test_audreyvm99unregister.html#test_audreyvm99unregister.test_uninstall_cert">[docs]</a><span class="k">def</span> <span class="nf">test_uninstall_cert</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This test uninstalls Candlepin customer certificate.</span>
 
@@ -112,9 +118,9 @@
 
 <span class="sd">    :raises: AssertionError</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">cert_rpm</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">s_format</span><span class="p">(</span><span class="s">&quot;candlepin-cert-consumer-{KATELLO_HOST}&quot;</span><span class="p">,</span> <span class="n">audreyvars</span><span class="p">)</span>
+    <span class="n">cert_rpm</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">s_format</span><span class="p">(</span><span class="s">&quot;candlepin-cert-consumer-{KATELLO_HOST}&quot;</span><span class="p">,</span> <span class="n">audreyvars</span><span class="p">)</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s">&quot;rpm -e </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">cert_rpm</span>
-    <span class="n">common</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+    <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

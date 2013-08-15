@@ -55,7 +55,7 @@
 <dl class="function">
 <dt id="test_universal60ssl.test_default_hash_function">
 <tt class="descclassname">test_universal60ssl.</tt><tt class="descname">test_default_hash_function</tt><big>(</big><big>)</big><a class="reference internal" href="modules/test_universal60ssl.html#test_default_hash_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_universal60ssl.test_default_hash_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>tests for insufficient hashing functions in config</p>
+<dd><p>Confirm default hashing method is not md5</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -69,7 +69,8 @@
 <dl class="function">
 <dt id="test_universal60ssl.test_default_key_strength">
 <tt class="descclassname">test_universal60ssl.</tt><tt class="descname">test_default_key_strength</tt><big>(</big><big>)</big><a class="reference internal" href="modules/test_universal60ssl.html#test_default_key_strength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_universal60ssl.test_default_key_strength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks for SSL certificate generation strength</p>
+<dd><p>Confirm that the default SSL certificate generation strength is at least
+2048 bits.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

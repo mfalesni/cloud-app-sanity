@@ -71,9 +71,10 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
-<span class="kn">import</span> <span class="nn">common</span>
 <span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">common.yum</span>
 
+<span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;True&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="test_install_package_locally_from_yum"><a class="viewcode-back" href="../test_audreyvm10localyuminstall.html#test_audreyvm10localyuminstall.test_install_package_locally_from_yum">[docs]</a><span class="k">def</span> <span class="nf">test_install_package_locally_from_yum</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This test does local install of package (by yum command).</span>
 <span class="sd">        It takes a list of packages (separated by spaces) and installs them one by one.</span>
@@ -88,7 +89,7 @@
         <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;No packages marked for local install&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
         <span class="k">print</span> <span class="s">&quot;Installing package </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span>
-        <span class="n">common</span><span class="o">.</span><span class="n">install_yum_package_local</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">yum</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
 </pre></div></div>
 
           </div>

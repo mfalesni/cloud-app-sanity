@@ -72,12 +72,10 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
-<span class="kn">import</span> <span class="nn">shell</span>
-
-<span class="kn">import</span> <span class="nn">pytest</span>
-
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">common.shell</span>
 <span class="kn">from</span> <span class="nn">urllib2</span> <span class="kn">import</span> <span class="n">urlopen</span><span class="p">,</span> <span class="n">HTTPError</span><span class="p">,</span> <span class="n">URLError</span><span class="p">,</span> <span class="n">Request</span>
 
 <div class="viewcode-block" id="DownloadException"><a class="viewcode-back" href="../../common.html#common.net.DownloadException">[docs]</a><span class="k">class</span> <span class="nc">DownloadException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -91,7 +89,7 @@
 <span class="sd">    :returns: ``True`` when it&#39;s bound only to localhost, otherwise ``False``</span>
 <span class="sd">    :rtype: ``bool``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">netstat</span> <span class="o">=</span> <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;netstat -t --listen&quot;</span><span class="p">)</span>
+    <span class="n">netstat</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;netstat -t --listen&quot;</span><span class="p">)</span>
     <span class="n">protocols</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;tcp&quot;</span><span class="p">,</span> <span class="s">&quot;udp&quot;</span><span class="p">]</span>
     <span class="n">local_addrs</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="s">&quot;::1&quot;</span><span class="p">,</span> <span class="s">&quot;localhost&quot;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">netstat</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">):</span>
@@ -163,7 +161,7 @@
 <span class="sd">    :param pid: PID of the process</span>
 <span class="sd">    :type pid: ``int``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">stdout</span> <span class="o">=</span> <span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;lsof -i 4 -a -p </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">pid</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">stdout</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;lsof -i 4 -a -p </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">pid</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c"># Ignore first line</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&quot;\([^(]*\)$&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>    <span class="c"># Ignore last parenthesis</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&quot; +&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>    <span class="c"># Split into fields</span>

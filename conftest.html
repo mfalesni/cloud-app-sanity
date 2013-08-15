@@ -60,7 +60,7 @@
 <p>Some of them are cached, some not. I don&#8217;t know how to make multi-level dependency yet.</p>
 <dl class="function">
 <dt id="conftest.pytest_funcarg__PATH">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__PATH</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__PATH" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__PATH</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__PATH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__PATH" title="Permalink to this definition">¶</a></dt>
 <dd><p>PATH environment variable</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -94,7 +94,7 @@
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__chkconfig_list">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__chkconfig_list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__chkconfig_list" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__chkconfig_list</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__chkconfig_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__chkconfig_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns list of all services with enablement in each runlevel</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -128,7 +128,7 @@
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__gpgcheck_enabled">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__gpgcheck_enabled</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__gpgcheck_enabled" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__gpgcheck_enabled</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__gpgcheck_enabled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__gpgcheck_enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether is GPG check enabled in yum</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -137,6 +137,42 @@
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">GPG check status</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.pytest_funcarg__is_rhev_deployment">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__is_rhev_deployment</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__is_rhev_deployment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__is_rhev_deployment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setups cached variable whether it&#8217;s ec2 deployment or not.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> &#8211; py.test request.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Whether is this EC2 deployment (cached).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.pytest_funcarg__is_vsphere_deployment">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__is_vsphere_deployment</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__is_vsphere_deployment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__is_vsphere_deployment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setups cached variable whether it&#8217;s vsphere deployment or not.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> &#8211; py.test request.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Whether is this vsphere deployment (cached).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
 </tr>
 </tbody>
 </table>
@@ -163,7 +199,7 @@ server is accessible</p>
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__rhel_release">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rhel_release</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__rhel_release" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rhel_release</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__rhel_release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__rhel_release" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns RHEL version</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -179,7 +215,7 @@ server is accessible</p>
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__rpm_package_list">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rpm_package_list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__rpm_package_list" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rpm_package_list</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__rpm_package_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__rpm_package_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns list of all installed packages in computer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -197,7 +233,7 @@ server is accessible</p>
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__rpm_package_list_names">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rpm_package_list_names</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__rpm_package_list_names" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__rpm_package_list_names</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__rpm_package_list_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__rpm_package_list_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns list of all installed packages in computer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -215,7 +251,7 @@ server is accessible</p>
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__selinux_enabled">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_enabled</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__selinux_enabled" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_enabled</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__selinux_enabled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__selinux_enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detects whether is SElinux enabled or not</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -233,7 +269,7 @@ server is accessible</p>
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__selinux_getenforce">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_getenforce</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__selinux_getenforce" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_getenforce</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__selinux_getenforce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__selinux_getenforce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns current enforcing mode of SELinux</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -251,7 +287,7 @@ server is accessible</p>
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__selinux_getenforce_conf">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_getenforce_conf</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__selinux_getenforce_conf" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_getenforce_conf</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__selinux_getenforce_conf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__selinux_getenforce_conf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns current enforcing mode of SELinux from config file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -269,7 +305,7 @@ server is accessible</p>
 
 <dl class="function">
 <dt id="conftest.pytest_funcarg__selinux_type">
-<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_type</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#conftest.pytest_funcarg__selinux_type" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__selinux_type</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__selinux_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__selinux_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns current SELINUX type from config file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -298,6 +334,24 @@ server is accessible</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SM version from cache</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">2-tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.pytest_funcarg__system_groups">
+<tt class="descclassname">conftest.</tt><tt class="descname">pytest_funcarg__system_groups</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="modules/conftest.html#pytest_funcarg__system_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.pytest_funcarg__system_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine applicable system groups for the current system</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> &#8211; py.test request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">All Audrey-relevant environment variables.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
@@ -357,6 +411,23 @@ an ec2 image</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="conftest.setup_rhev_deployment">
+<tt class="descclassname">conftest.</tt><tt class="descname">setup_rhev_deployment</tt><big>(</big><big>)</big><a class="reference internal" href="modules/conftest.html#setup_rhev_deployment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.setup_rhev_deployment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns boolean True of False to indicate whether the current system is
+an rhev image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether is this RHEV deployment.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="conftest.setup_subscription_manager_version">
 <tt class="descclassname">conftest.</tt><tt class="descname">setup_subscription_manager_version</tt><big>(</big><big>)</big><a class="reference internal" href="modules/conftest.html#setup_subscription_manager_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.setup_subscription_manager_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets version of sub-man</p>
@@ -367,6 +438,23 @@ an ec2 image</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">SM version</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2-tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="conftest.setup_vsphere_deployment">
+<tt class="descclassname">conftest.</tt><tt class="descname">setup_vsphere_deployment</tt><big>(</big><big>)</big><a class="reference internal" href="modules/conftest.html#setup_vsphere_deployment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conftest.setup_vsphere_deployment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns boolean True of False to indicate whether the current system is
+an vsphere image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether is this RHEV deployment.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
 </tr>
 </tbody>
 </table>

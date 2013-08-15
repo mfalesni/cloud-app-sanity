@@ -75,10 +75,12 @@
 <span class="sd">    Katello -&gt; guest computer</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">common</span>
 <span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">common.katello</span>
 
-<div class="viewcode-block" id="test_install_packages_remote"><a class="viewcode-back" href="../test_audreyvm11remoteyuminstall.html#test_audreyvm11remoteyuminstall.test_install_packages_remote">[docs]</a><span class="k">def</span> <span class="nf">test_install_packages_remote</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">,</span> <span class="n">system_uuid</span><span class="p">):</span>
+
+<span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;True&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="test_install_packages_remote"><a class="viewcode-back" href="../test_audreyvm11remoteyuminstall.html#test_audreyvm11remoteyuminstall.test_install_packages_remote">[docs]</a><span class="k">def</span> <span class="nf">test_install_packages_remote</span><span class="p">(</span><span class="n">audreyvars</span><span class="p">,</span> <span class="n">system_uuid</span><span class="p">,</span> <span class="n">tunnel_requested</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Installs packages specified in YUM_REMOTE_INSTALL into this system via</span>
 <span class="sd">        remote request through Katello server to check whether there aren&#39;t any issues.</span>
 
@@ -86,6 +88,8 @@
 <span class="sd">    :type audreyvars: ``dict``</span>
 <span class="sd">    :param system_uuid: This system&#39;s unique ID for Katello</span>
 <span class="sd">    :type system_uuid: ``str``</span>
+<span class="sd">    :param tunnel_requested: Whether was tunnel requested or not</span>
+<span class="sd">    :type tunnel_requested: bool</span>
 
 <span class="sd">    :raises: pytest.Skipped, pytest.Failed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -93,12 +97,22 @@
     <span class="n">server</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="p">[</span><span class="s">&quot;KATELLO_HOST&quot;</span><span class="p">]</span>
     <span class="n">login</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;KATELLO_USER&quot;</span><span class="p">,</span> <span class="s">&quot;admin&quot;</span><span class="p">)</span>
     <span class="n">password</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;KATELLO_PASS&quot;</span><span class="p">,</span> <span class="s">&quot;admin&quot;</span><span class="p">)</span>
+
+    <span class="c"># If using a tunnel to access ec2, an alternative port is needed</span>
+    <span class="k">if</span> <span class="n">tunnel_requested</span><span class="p">:</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;SSH_TUNNEL_KATELLO_PORT&quot;</span><span class="p">,</span> <span class="mi">1443</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">audreyvars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;KATELLO_PORT&quot;</span><span class="p">,</span> <span class="mi">443</span><span class="p">)</span>
+
+    <span class="c"># Were packages requested for install?</span>
     <span class="k">if</span> <span class="n">packages</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
         <span class="n">packages</span> <span class="o">=</span> <span class="n">packages</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;No packages marked for remote install&quot;</span><span class="p">)</span>
+
+    <span class="c"># Initiate remote install for requested packages</span>
     <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
-        <span class="n">common</span><span class="o">.</span><span class="n">install_yum_package_remote</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">system_uuid</span><span class="p">,</span> <span class="n">login</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span></div>
+        <span class="n">common</span><span class="o">.</span><span class="n">katello</span><span class="o">.</span><span class="n">query_remote_install</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">system_uuid</span><span class="p">,</span> <span class="n">login</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

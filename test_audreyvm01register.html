@@ -26,7 +26,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="CloudForms Application Sanity Test Suite 1.00 documentation" href="index.html" />
-    <link rel="next" title="test_audreyvm10localyuminstall Module" href="test_audreyvm10localyuminstall.html" />
+    <link rel="next" title="test_audreyvm05system_groups Module" href="test_audreyvm05system_groups.html" />
     <link rel="prev" title="test_audreyvm00sshcert Module" href="test_audreyvm00sshcert.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="test_audreyvm10localyuminstall.html" title="test_audreyvm10localyuminstall Module"
+          <a href="test_audreyvm05system_groups.html" title="test_audreyvm05system_groups Module"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="test_audreyvm00sshcert.html" title="test_audreyvm00sshcert Module"
@@ -85,7 +85,10 @@
 <dl class="function">
 <dt id="test_audreyvm01register.test_audreyvars">
 <tt class="descclassname">test_audreyvm01register.</tt><tt class="descname">test_audreyvars</tt><big>(</big><em>audreyvars</em><big>)</big><a class="reference internal" href="modules/test_audreyvm01register.html#test_audreyvars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_audreyvm01register.test_audreyvars" title="Permalink to this definition">¶</a></dt>
-<dd><p>This test checks for presence of audrey environment variables.</p>
+<dd><p>This test checks for presence of audrey environment variables.  Any
+audrey environment variables are saves to a local file to aid later</p>
+<blockquote>
+<div>debugging.</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -253,8 +256,9 @@
 
 <dl class="function">
 <dt id="test_audreyvm01register.test_tunnel_goferd">
-<tt class="descclassname">test_audreyvm01register.</tt><tt class="descname">test_tunnel_goferd</tt><big>(</big><em>audreyvars</em><big>)</big><a class="headerlink" href="#test_audreyvm01register.test_tunnel_goferd" title="Permalink to this definition">¶</a></dt>
-<dd><p>This test sets up a GoferD tunnel, if it&#8217;s desired.</p>
+<tt class="descclassname">test_audreyvm01register.</tt><tt class="descname">test_tunnel_goferd</tt><big>(</big><em>audreyvars</em><big>)</big><a class="reference internal" href="modules/test_audreyvm01register.html#test_tunnel_goferd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_audreyvm01register.test_tunnel_goferd" title="Permalink to this definition">¶</a></dt>
+<dd><p>This test sets up a GoferD tunnel, if it&#8217;s desired.  The test will
+modify the gofer katello plugin configuration, and restart goferd.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -314,8 +318,8 @@
   <p class="topless"><a href="test_audreyvm00sshcert.html"
                         title="previous chapter">test_audreyvm00sshcert Module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="test_audreyvm10localyuminstall.html"
-                        title="next chapter">test_audreyvm10localyuminstall Module</a></p>
+  <p class="topless"><a href="test_audreyvm05system_groups.html"
+                        title="next chapter">test_audreyvm05system_groups Module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="sources/test_audreyvm01register.txt"
@@ -348,7 +352,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="test_audreyvm10localyuminstall.html" title="test_audreyvm10localyuminstall Module"
+          <a href="test_audreyvm05system_groups.html" title="test_audreyvm05system_groups Module"
              >next</a> |</li>
         <li class="right" >
           <a href="test_audreyvm00sshcert.html" title="test_audreyvm00sshcert Module"

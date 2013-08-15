@@ -71,20 +71,94 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
-<span class="kn">import</span> <span class="nn">common</span>
-<span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">stat</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">common.shell</span>
+<span class="kn">import</span> <span class="nn">fnmatch</span>
 
+<span class="sd">&quot;&quot;&quot; Filesystem checking tests &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="fmt_mode_str"><a class="viewcode-back" href="../test_universal10filescheck.html#test_universal10filescheck.fmt_mode_str">[docs]</a><span class="k">def</span> <span class="nf">fmt_mode_str</span><span class="p">(</span><span class="n">st_mode</span><span class="p">):</span>
+    <span class="c"># Type</span>
+    <span class="n">ftype_alias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">REG</span><span class="o">=</span><span class="s">&#39;-&#39;</span><span class="p">,</span> <span class="n">FIFO</span><span class="o">=</span><span class="s">&#39;p&#39;</span><span class="p">,</span> <span class="n">UID</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="n">GID</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="n">VTX</span><span class="o">=</span><span class="s">&#39;t&#39;</span><span class="p">)</span>
+    <span class="n">mode_str</span> <span class="o">=</span> <span class="s">&#39;-&#39;</span>
+    <span class="k">for</span> <span class="n">ftype</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;DIR&#39;</span><span class="p">,</span> <span class="s">&#39;CHR&#39;</span><span class="p">,</span> <span class="s">&#39;BLK&#39;</span><span class="p">,</span> <span class="s">&#39;FIFO&#39;</span><span class="p">,</span> <span class="s">&#39;LNK&#39;</span><span class="p">,</span> <span class="s">&#39;SOCK&#39;</span><span class="p">,]:</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="s">&#39;S_IS</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">ftype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">func</span><span class="p">(</span><span class="n">st_mode</span><span class="p">):</span>
+            <span class="n">mode_str</span> <span class="o">=</span> <span class="n">ftype_alias</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span> <span class="n">ftype</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+            <span class="k">break</span>
+
+    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="s">&quot;USR&quot;</span><span class="p">,</span> <span class="s">&quot;GRP&quot;</span><span class="p">,</span> <span class="s">&quot;OTH&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="s">&quot;R&quot;</span><span class="p">,</span> <span class="s">&quot;W&quot;</span><span class="p">,</span> <span class="s">&quot;X&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">st_mode</span> <span class="o">&amp;</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span><span class="s">&quot;S_I&quot;</span><span class="o">+</span><span class="n">perm</span><span class="o">+</span><span class="n">level</span><span class="p">):</span>
+                <span class="n">mode_str</span> <span class="o">+=</span> <span class="n">perm</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mode_str</span> <span class="o">+=</span> <span class="s">&#39;-&#39;</span>
+
+    <span class="c"># sticky bit</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">fsticky</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s">&#39;UID&#39;</span><span class="p">,</span> <span class="s">&#39;GID&#39;</span><span class="p">,</span> <span class="s">&#39;VTX&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">st_mode</span> <span class="o">&amp;</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span><span class="s">&quot;S_IS&quot;</span><span class="o">+</span><span class="n">fsticky</span><span class="p">):</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">count</span> <span class="o">*</span> <span class="mi">3</span>
+            <span class="n">fchar</span> <span class="o">=</span> <span class="n">ftype_alias</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fsticky</span><span class="p">,</span> <span class="n">fsticky</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+            <span class="n">mode_str</span> <span class="o">=</span> <span class="n">mode_str</span><span class="p">[:</span><span class="n">pos</span><span class="p">]</span> <span class="o">+</span> <span class="n">fchar</span> <span class="o">+</span> <span class="n">mode_str</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">mode_str</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span>
+</div>
 <div class="viewcode-block" id="test_check_permissions_and_broken_symlinks"><a class="viewcode-back" href="../test_universal10filescheck.html#test_universal10filescheck.test_check_permissions_and_broken_symlinks">[docs]</a><span class="k">def</span> <span class="nf">test_check_permissions_and_broken_symlinks</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; This test checks whether there are some files with unwanted props in FS.</span>
+<span class="sd">        Looks for broken symlinks and world-writable files.</span>
+
+<span class="sd">    :raises: pytest.Failed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># Used for storing directories to parse</span>
     <span class="n">starting_dir</span> <span class="o">=</span> <span class="s">&quot;/&quot;</span>
     <span class="n">failed</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="c"># List of all ignored patterns ...</span>
+    <span class="n">ignore_patterns</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">/proc</span>
+<span class="s">/selinux</span>
+<span class="s">/dev/.udev</span>
+<span class="s">/lib/modules/*/build</span>
+<span class="s">/lib/modules/*/source</span>
+<span class="s">/usr/lib64/valgrind/*</span>
+<span class="s">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
+    <span class="c"># Move to a file (data/whitelist_world_readable_files)</span>
+    <span class="c"># Whitelist - world-writable</span>
+    <span class="n">world_writable_whitelist</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">/tmp</span>
+<span class="s">/var/tmp</span>
+<span class="s">/dev/log</span>
+<span class="s">/dev/fuse</span>
+<span class="s">/dev/shm</span>
+<span class="s">/dev/ptmx</span>
+<span class="s">/dev/tty</span>
+<span class="s">/dev/urandom</span>
+<span class="s">/dev/random</span>
+<span class="s">/dev/full</span>
+<span class="s">/dev/zero</span>
+<span class="s">/dev/null</span>
+<span class="s">/dev/net/tun</span>
+<span class="s">/var/spool/postfix/public/*</span>
+<span class="s">/var/spool/postfix/private/*</span>
+<span class="s">/var/run/rpcbind.sock</span>
+<span class="s">/var/run/dbus/system_bus_socket</span>
+<span class="s">/var/run/abrt/abrt.socket</span>
+<span class="s">/var/run/cups/cups.sock</span>
+<span class="s">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+
     <span class="c"># Helper functions</span>
-    <span class="n">isdir</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span> <span class="n">x</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
-    <span class="n">islnk</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISLNK</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
-    <span class="n">world_writable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWOTH</span> <span class="o">&amp;</span> <span class="n">x</span><span class="o">.</span><span class="n">st_mode</span>
+    <span class="n">is_dir</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span> <span class="n">x</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+    <span class="n">is_lnk</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISLNK</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+    <span class="n">is_sock</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISSOCK</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+    <span class="n">is_chr</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISCHR</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+    <span class="n">is_blk</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISBLK</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+    <span class="n">is_reg</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISREG</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+    <span class="n">is_world_writable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWOTH</span> <span class="o">&amp;</span> <span class="n">x</span><span class="o">.</span><span class="n">st_mode</span>
+
     <span class="c"># Start it up</span>
     <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">starting_dir</span><span class="p">)</span>
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -94,22 +168,35 @@
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
             <span class="c"># Stat it</span>
             <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;//&quot;</span><span class="p">):</span>   <span class="c"># Strip beginning // because of root dir</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+            <span class="c"># Skip this file/dir, has the wrong pattern</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ignore_patterns</span><span class="p">]):</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;[ignoring] </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,))</span>
+                <span class="k">continue</span>
+
             <span class="n">info</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">lstat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">world_writable</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
-                <span class="c"># Check its permissions, if wrong, append it</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;WW </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
-                <span class="n">failed</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="k">if</span> <span class="n">islnk</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">is_lnk</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
                 <span class="c"># Check if it&#39;s broken or not</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">common</span><span class="o">.</span><span class="n">exists_in_path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">readlink</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">directory</span><span class="p">)):</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;BS </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">exists_in_path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">readlink</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">directory</span><span class="p">)):</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;[broken-symlink] </span><span class="si">%s</span><span class="s"> -&gt; </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">readlink</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
                     <span class="n">failed</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="k">elif</span> <span class="n">isdir</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
-                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">is_dir</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+                <span class="c"># FIXME - determine whether file is truly writable (parent dir</span>
+                <span class="c"># may not be readable)</span>
+                <span class="c"># Check its permissions, if wrong, append it</span>
+                <span class="k">if</span> <span class="n">is_world_writable</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+                    <span class="c"># If the path isn&#39;t on the whitelist ... we found a failure</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">world_writable_whitelist</span><span class="p">]):</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;[world-writable] </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fmt_mode_str</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">st_mode</span><span class="p">),</span> <span class="n">path</span><span class="p">))</span>
+                        <span class="n">failed</span> <span class="o">=</span> <span class="bp">True</span>
     <span class="k">if</span> <span class="n">failed</span><span class="p">:</span>
         <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;Test failed&quot;</span><span class="p">)</span>
-        </div>
-</pre></div>
+</pre></div></div>
 
           </div>
         </div>
