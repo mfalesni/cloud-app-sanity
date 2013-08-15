@@ -27,6 +27,8 @@
 import pytest
 import common.katello
 
+
+@pytest.mark.skipif("True")
 def test_install_packages_remote(audreyvars, system_uuid, tunnel_requested):
     """ Installs packages specified in YUM_REMOTE_INSTALL into this system via
         remote request through Katello server to check whether there aren't any issues.

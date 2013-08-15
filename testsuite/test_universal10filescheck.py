@@ -25,8 +25,35 @@ import stat
 import sys
 import pytest
 import common.shell
+import fnmatch
 
 """ Filesystem checking tests """
+
+def fmt_mode_str(st_mode):
+    # Type
+    ftype_alias = dict(REG='-', FIFO='p', UID='s', GID='s', VTX='t')
+    mode_str = '-'
+    for ftype in ['DIR', 'CHR', 'BLK', 'FIFO', 'LNK', 'SOCK',]:
+        func = getattr(stat, 'S_IS%s' % ftype)
+        if func(st_mode):
+            mode_str = ftype_alias.get(ftype, ftype[:1].lower())
+            break
+
+    for level in "USR", "GRP", "OTH":
+        for perm in "R", "W", "X":
+            if st_mode & getattr(stat,"S_I"+perm+level):
+                mode_str += perm.lower()
+            else:
+                mode_str += '-'
+
+    # sticky bit
+    for (count, fsticky) in enumerate(['UID', 'GID', 'VTX'], 1):
+        if st_mode & getattr(stat,"S_IS"+fsticky):
+            pos = count * 3
+            fchar = ftype_alias.get(fsticky, fsticky[:1].lower())
+            mode_str = mode_str[:pos] + fchar + mode_str[pos+1:]
+
+    return mode_str + '.'
 
 def test_check_permissions_and_broken_symlinks():
     """ This test checks whether there are some files with unwanted props in FS.
@@ -36,12 +63,51 @@ def test_check_permissions_and_broken_symlinks():
     """
     stack = []  # Used for storing directories to parse
     starting_dir = "/"
-    ignored_patterns = ["/proc"]    # List of all ignored patterns ...
     failed = False
+
+    # List of all ignored patterns ...
+    ignore_patterns = '''
+/proc
+/selinux
+/dev/.udev
+/lib/modules/*/build
+/lib/modules/*/source
+/usr/lib64/valgrind/*
+'''.split('\n')
+
+    # Move to a file (data/whitelist_world_readable_files)
+    # Whitelist - world-writable
+    world_writable_whitelist = '''
+/tmp
+/var/tmp
+/dev/log
+/dev/fuse
+/dev/shm
+/dev/ptmx
+/dev/tty
+/dev/urandom
+/dev/random
+/dev/full
+/dev/zero
+/dev/null
+/dev/net/tun
+/var/spool/postfix/public/*
+/var/spool/postfix/private/*
+/var/run/rpcbind.sock
+/var/run/dbus/system_bus_socket
+/var/run/abrt/abrt.socket
+/var/run/cups/cups.sock
+'''.split('\n')
+
     # Helper functions
-    isdir = lambda x: stat.S_ISDIR( x.st_mode)
-    islnk = lambda x: stat.S_ISLNK(x.st_mode)
-    world_writable = lambda x: stat.S_IWOTH & x.st_mode
+    is_dir = lambda x: stat.S_ISDIR( x.st_mode)
+    is_lnk = lambda x: stat.S_ISLNK(x.st_mode)
+    is_sock = lambda x: stat.S_ISSOCK(x.st_mode)
+    is_chr = lambda x: stat.S_ISCHR(x.st_mode)
+    is_blk = lambda x: stat.S_ISBLK(x.st_mode)
+    is_reg = lambda x: stat.S_ISREG(x.st_mode)
+    is_world_writable = lambda x: stat.S_IWOTH & x.st_mode
+
     # Start it up
     stack.append(starting_dir)
     while len(stack) > 0:
@@ -53,24 +119,30 @@ def test_check_permissions_and_broken_symlinks():
             path = "%s/%s" % (directory, entry)
             if path.startswith("//"):   # Strip beginning // because of root dir
                 path = path[1:]
-            cnt = False
-            for pattern in ignored_patterns:
-                if path.startswith(pattern):
-                    cnt = True    # Skip this file/dir, has the wrong pattern
-            if cnt:
+
+            # Skip this file/dir, has the wrong pattern
+            if any([fnmatch.fnmatch(path, p) for p in ignore_patterns]):
+                sys.stdout.write("[ignoring] %s\n" % (path,))
                 continue
+
             info = os.lstat(path)
-            if world_writable(info):
-                # Check its permissions, if wrong, append it
-                sys.stderr.write("WW %s\n" % path)
-                failed = True
-            if islnk(info):
+            if is_lnk(info):
                 # Check if it's broken or not
                 if not common.shell.exists_in_path(os.readlink(path), os.path.abspath(directory)):
-                    sys.stderr.write("BS %s\n" % path)
+                    sys.stderr.write("[broken-symlink] %s -> %s\n" % (path, os.readlink(path)))
                     failed = True
-            elif isdir(info):
-                stack.append(path)
+            else:
+                if is_dir(info):
+                    stack.append(path)
+
+                # FIXME - determine whether file is truly writable (parent dir
+                # may not be readable)
+                # Check its permissions, if wrong, append it
+                if is_world_writable(info):
+                    # If the path isn't on the whitelist ... we found a failure
+                    if not any([fnmatch.fnmatch(path, p) for p in world_writable_whitelist]):
+                        sys.stderr.write("[world-writable] %s %s\n" % (fmt_mode_str(info.st_mode), path))
+                        failed = True
     if failed:
         pytest.fail(msg="Test failed")
-        
+

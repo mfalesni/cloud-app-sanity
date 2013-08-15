@@ -23,6 +23,7 @@
 import pytest
 import common.yum
 
+@pytest.mark.skipif("True")
 def test_install_package_locally_from_yum(audreyvars):
     """ This test does local install of package (by yum command).
         It takes a list of packages (separated by spaces) and installs them one by one.

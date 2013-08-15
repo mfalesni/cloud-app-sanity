@@ -23,20 +23,24 @@
 import pytest
 import common.ssl
 
+REQUIRED_BITS = 2048
 def test_default_key_strength():
-    """ Checks for SSL certificate generation strength
+    """
+    Confirm that the default SSL certificate generation strength is at least
+    2048 bits.
 
     :raises: pytest.Failed
     """
     config = common.ssl.openssl_config_get_section("req")
     bits = int(config["default_bits"])
     try:
-        assert bits >= 2048
+        assert bits >= REQUIRED_BITS
     except AssertionError:
-        pytest.fail(msg="Default bit length of certificate is insufficient")
+        pytest.fail(msg="Default bit length of certificate is insufficient (< %s)" % REQUIRED_BITS)
 
 def test_default_hash_function():
-    """ tests for insufficient hashing functions in config
+    """
+    Confirm default hashing method is not md5
 
     :raises: pytest.Failed
     """
@@ -45,4 +49,4 @@ def test_default_hash_function():
     try:
         assert hashf.lower() not in ["md5"]
     except AssertionError:
-        pytest.fail(msg="Bad message digest function!")
+        pytest.fail(msg="Bad message digest function (%s)!" % hashf)

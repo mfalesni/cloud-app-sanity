@@ -15,20 +15,20 @@ class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_suite = True
-        self.test_args = shlex.split(os.environ.get('PY_ARGS', default_args))
+        self.test_args = os.environ.get('PY_ARGS', default_args)
 
         if not os.path.isdir(results_dir):
             os.mkdir(results_dir)
 
         if os.environ.has_key('PY_KEYWORDEXPR'):
-            self.test_args.extend(shlex.split('-k "%s"' % os.environ.get('PY_KEYWORDEXPR')))
+            self.test_args += ' -k "%s"' % os.environ.get('PY_KEYWORDEXPR')
 
-        self.test_args.extend(shlex.split(os.environ.get('PY_TESTS', 'testsuite')))
+        self.test_args += " %s" % os.environ.get('PY_TESTS', 'testsuite')
 
     def run_tests(self):
         #import here, cause outside the eggs aren't loaded elsewhere
         import pytest
-        print "Running: pytest %s" % " ".join(self.test_args)
+        print "Running: pytest %s" % self.test_args
         pytest.main(self.test_args)
 
 class CleanCommand(Command):

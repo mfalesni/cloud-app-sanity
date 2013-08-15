@@ -27,6 +27,8 @@ import common.rpm
 import common.shell
 import common.yum
 
+import yum, rpm
+
 def test_packages_installed_against_list(rpm_package_list_names, rhel_release):
     """ Tests whether there are only exact packages installed in the system.
 
@@ -65,6 +67,32 @@ def test_packages_installed_against_list(rpm_package_list_names, rhel_release):
     if len(rpm_package_list_names) > 0:
         pytest.fail(msg="There are packages in this system, which aren't supposed to be installed: %s" % str(rpm_package_list_names))
 
+def test_packages_installed_against_available():
+    """ Tests whether the installed packages are up to date when compared with the available packages.
+
+    :raises: pytest.Failed
+    """
+
+    yb = yum.YumBase()
+    yb.conf.cache = 1
+
+    installed_packages = yb.rpmdb.returnPackages()
+    available_packages = yb.pkgSack.returnPackages()
+
+    diff = []
+
+    for installed in installed_packages:
+        for available in available_packages:
+            if installed.name != available.name:
+                continue
+            if rpm.labelCompare((installed.epoch, installed.ver, installed.rel), (available.epoch, available.ver, available.rel)) < 0:
+                diff.append("%s-%s-%s.%s, %s\n%s-%s-%s.%s, %s" % (installed.name, installed.ver, installed.rel, installed.arch, installed.repoid, available.name, available.ver, available.rel, available.arch, available.repoid))
+
+    #%{name}-%{version}-%{release}.%{arch}
+    if diff:
+        pytest.fail('\n'.join(diff))
+
+
 def test_gpg_check(gpgcheck_enabled):
     """ Tests whether is GPG check enabled in YUM
 
@@ -99,6 +127,11 @@ def test_check_all_packages_files_fortified(package):
 
     :raises: pytest.Failed
     """
+
+    # FIXME - Review rpm-chksec
+    # (http://people.redhat.com/sgrubb/files/rpm-chksec) coverage to determine
+    # whether adjustments/enhancements are needed
+
     files = common.rpm.ql(package).strip().split("\n")
     for f in files:
         if common.elf.is_elf(f):

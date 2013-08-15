@@ -50,8 +50,9 @@ def run(cmd, errorcode=0):
         # Force errorcode to be a list
         if not isinstance(errorcode, list):
             errorcode = [errorcode]
-        if p_open.returncode not in errorcode:
-            pytest.fail(msg="Command failed with unexpected error code: %d != %s\n%s" % (p_open.returncode, errorcode, stdout))
+        assert p_open.returncode in errorcode, \
+                "Command failed with unexpected error code: %d != %s\n%s" % \
+                (p_open.returncode, errorcode, stdout)
     return stdout
 
 def command(command):

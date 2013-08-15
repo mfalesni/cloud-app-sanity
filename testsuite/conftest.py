@@ -22,7 +22,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """ This module contains generator functions for variable injecting of py.test framework.
-    
+
     Some of them are cached, some not. I don't know how to make multi-level dependency yet.
 """
 
@@ -30,8 +30,15 @@ import os
 import re
 import subprocess
 import common.shell
+import common.yum
+import common.rpm
 
 from ConfigParser import ConfigParser
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 def pytest_funcarg__audreyvars(request):
     """Setups variables for testing
@@ -86,6 +93,81 @@ def pytest_funcarg__tunnel_requested(request):
     # Otherwise, it wasn't requested
     return False
 
+def pytest_funcarg__system_groups(request):
+    """Determine applicable system groups for the current system
+
+    :param request: py.test request
+
+    :returns: All Audrey-relevant environment variables.
+    :rtype: dict
+    """
+    group_names = []
+
+    # A group for the current system platform (aka $basearch)
+    group_names.append(common.yum.get_yum_variable('basearch'))
+
+    # A group for the current system release (aka $releasever)
+    # Per katello rules, replace any non-alpha-numeric character with a '_'
+    group_names.append(re.sub(r'\W', '_', common.yum.get_yum_variable('releasever')))
+
+    # A group to indicate which provider the instance is deployed to
+    if setup_rhev_deployment():
+        group_names.append('provider_rhev')
+    if setup_vsphere_deployment():
+        group_names.append('provider_vsphere')
+    if setup_ec2_deployment():
+        group_names.append('provider_ec2')
+        # Add a group name for the ec2 region
+        (buf, rc) = common.shell.command('curl --fail http://169.254.169.254/latest/dynamic/instance-identity/document')
+        if rc == 0:
+            ec2_data = json.loads(buf)
+            if ec2_data.has_key('region'):
+                group_names.append('ec2-%s' % ec2_data.get('region'))
+
+    return group_names
+
+def pytest_funcarg__is_rhev_deployment(request):
+    """Setups cached variable whether it's ec2 deployment or not.
+
+    :param request: py.test request.
+
+    :returns: Whether is this EC2 deployment (cached).
+    :rtype: ``bool``
+
+    """
+    return request.cached_setup(setup=setup_rhev_deployment, scope="module")
+
+def setup_rhev_deployment():
+    """Returns boolean True of False to indicate whether the current system is
+       an rhev image
+
+    :returns: Whether is this RHEV deployment.
+    :rtype: ``bool``
+    """
+    return common.rpm.package_installed('rhev-agent') or \
+        common.shell.command("grep -qi rhev /sys/class/virtio-ports/*/name")[1] == 0
+
+def pytest_funcarg__is_vsphere_deployment(request):
+    """Setups cached variable whether it's vsphere deployment or not.
+
+    :param request: py.test request.
+
+    :returns: Whether is this vsphere deployment (cached).
+    :rtype: ``bool``
+
+    """
+    return request.cached_setup(setup=setup_vsphere_deployment, scope="module")
+
+def setup_vsphere_deployment():
+    """Returns boolean True of False to indicate whether the current system is
+       an vsphere image
+
+    :returns: Whether is this RHEV deployment.
+    :rtype: ``bool``
+    """
+    return common.rpm.package_installed('open-vm-tools') or \
+        common.shell.command("grep -qi vmware /sys/bus/scsi/devices/*/vendor")[1] == 0
+
 def pytest_funcarg__ec2_deployment(request):
     """Setups cached variable whether it's ec2 deployment or not.
 
@@ -93,7 +175,7 @@ def pytest_funcarg__ec2_deployment(request):
 
     :returns: Whether is this EC2 deployment (cached).
     :rtype: ``bool``
-    
+
     """
     return request.cached_setup(setup=setup_ec2_deployment, scope="module")
 
@@ -104,7 +186,9 @@ def setup_ec2_deployment():
     :returns: Whether is this EC2 deployment.
     :rtype: ``bool``
     """
-    cmd = 'curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document'
+    # The --fail curl argument will cause curl to exit with rc=22 if a server
+    # failure occurs (e.g. 403 or 404)
+    cmd = 'curl --fail http://169.254.169.254/latest/dynamic/instance-identity/document'
     print "# %s" % cmd
     return subprocess.call(cmd.split()) == 0
 

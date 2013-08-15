@@ -29,6 +29,7 @@ import pytest
 import common.yum
 import common.katello
 
+@pytest.mark.skipif("True")
 def test_system_group_query(audreyvars, tunnel_requested):
     """ Tests whether katello is capable of exporting available system groups
         via the API.
@@ -53,7 +54,8 @@ def test_system_group_query(audreyvars, tunnel_requested):
 
     common.katello.system_group_query(server, port, org, login, password)
 
-def test_system_group_create(audreyvars, tunnel_requested):
+@pytest.mark.skipif("True")
+def test_system_group_create(audreyvars, tunnel_requested, system_groups):
     """ Installs packages specified in YUM_REMOTE_INSTALL into this system via
         remote request through Katello server to check whether there aren't any issues.
 
@@ -61,6 +63,8 @@ def test_system_group_create(audreyvars, tunnel_requested):
     :type audreyvars: ``dict``
     :param tunnel_requested: Whether was tunnel requested or not
     :type tunnel_requested: bool
+    :param system_groups: A list of system_groups that apply to the current instance
+    :type system_groups: list
 
     :raises: pytest.Skipped, pytest.Failed
     """
@@ -75,17 +79,12 @@ def test_system_group_create(audreyvars, tunnel_requested):
     else:
         port = audreyvars.get("KATELLO_PORT", 443)
 
+    # Query existing system groups
     current_group_names = [g.get('name') for g in common.katello.system_group_query(server, port, org, login, password)]
-
-    # Create a group for the current system platform (aka $basearch)
-    yum_basearch = common.yum.get_yum_variable('basearch')
-    # Create a group for the current system release (aka $releasever)
-    # Per katello rules, replace any non-alpha-numeric character with a '_'
-    yum_releasever = re.sub(r'\W', '_', common.yum.get_yum_variable('releasever'))
 
     # Determine whether groups were created
     new_group_ids = []
-    for group_name in [yum_basearch, yum_releasever]:
+    for group_name in system_groups:
         if group_name not in current_group_names:
             result_dict = common.katello.system_group_create(server, port, org, login, password, group_name)
             new_group_ids.append(result_dict.get('id'))
@@ -93,7 +92,8 @@ def test_system_group_create(audreyvars, tunnel_requested):
     if len(new_group_ids) == 0:
         pytest.skip(msg="System groups already exist, no groups created")
 
-def test_system_group_add_system(audreyvars, system_uuid, tunnel_requested):
+@pytest.mark.skipif("True")
+def test_system_group_add_system(audreyvars, system_uuid, tunnel_requested, system_groups):
     """ Installs packages specified in YUM_REMOTE_INSTALL into this system via
         remote request through Katello server to check whether there aren't any issues.
 
@@ -103,6 +103,8 @@ def test_system_group_add_system(audreyvars, system_uuid, tunnel_requested):
     :type system_uuid: ``str``
     :param tunnel_requested: Whether was tunnel requested or not
     :type tunnel_requested: bool
+    :param system_groups: A list of system_groups that apply to the current instance
+    :type system_groups: list
 
     :raises: pytest.Skipped, pytest.Failed
     """
@@ -117,14 +119,8 @@ def test_system_group_add_system(audreyvars, system_uuid, tunnel_requested):
     else:
         port = audreyvars.get("KATELLO_PORT", 443)
 
-    # Query system for the system platform (aka $basearch)
-    yum_basearch = common.yum.get_yum_variable('basearch')
-    # Query system for the system release (aka $releasever)
-    # Per katello rules, replace any non-alpha-numeric character with a '_'
-    yum_releasever = re.sub(r'\W', '_', common.yum.get_yum_variable('releasever'))
-
     # Locate existing system groups, and add system
-    for group_name in [yum_basearch, yum_releasever]:
+    for group_name in system_groups:
         result = common.katello.system_group_query(server, port, org, login, password, group_name)
         assert len(result) > 0, "System group '%s' not found" % group_name
         group_id = result[0].get('id')

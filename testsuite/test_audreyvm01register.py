@@ -43,6 +43,8 @@ cwd = os.getcwd()
 :var cwd: Keeps working directory.
 """
 
+
+@pytest.mark.skipif("True")
 def test_audreyvars(audreyvars):
     """This test checks for presence of audrey environment variables.  Any
        audrey environment variables are saves to a local file to aid later
@@ -63,6 +65,7 @@ def test_audreyvars(audreyvars):
     fd.close()
 
 
+@pytest.mark.skipif("True")
 def test_gpg_key_import_release():
     """This test imports redhat-release GPG certificate
 
@@ -70,6 +73,7 @@ def test_gpg_key_import_release():
     """
     common.shell.run("rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release")
 
+@pytest.mark.skipif("True")
 def test_gpg_key_import_beta(audreyvars):
     """This test imports redhat-beta GPG certificate if it's wanted (audreyvars[IMPORT_GPG_BETA_KEY]). Otherwise, it's skipped.
 
@@ -84,6 +88,7 @@ def test_gpg_key_import_beta(audreyvars):
     else:
         pytest.skip(msg='Not importing beta key')
 
+@pytest.mark.skipif("True")
 def test_import_rhel_product_cert(audreyvars, ec2_deployment):
     """This test imports RHEL product certificates if it's desired.
 
@@ -108,10 +113,12 @@ def test_import_rhel_product_cert(audreyvars, ec2_deployment):
     else:
         pytest.skip(msg='Not importing RHEL Product key')
 
+@pytest.mark.skipif("True")
 def test_return_to_default_directory():
     """This test just assures that we are in right directory"""
     os.chdir(cwd)
 
+@pytest.mark.skipif("True")
 def test_setup_tunnel(audreyvars, katello_discoverable, tunnel_requested):
     """This test configures SSH tunnel if it's desired.
 
@@ -146,6 +153,7 @@ def test_setup_tunnel(audreyvars, katello_discoverable, tunnel_requested):
     else:
         pytest.skip(msg='Not configuring tunnel')
 
+@pytest.mark.skipif("True")
 def test_setup_releasever(audreyvars):
     """This test sets up yum releasever if it's desired
 
@@ -159,6 +167,8 @@ def test_setup_releasever(audreyvars):
     else:
         pytest.skip(msg='Not customizing yum releasever')
 
+
+@pytest.mark.skipif("True")
 def test_import_certificate(audreyvars):
     """This test imports Candlepin consumer certificate.
 
@@ -170,9 +180,15 @@ def test_import_certificate(audreyvars):
     cert_rpm = common.tools.s_format("https://{KATELLO_HOST}:{KATELLO_PORT}/pub/candlepin-cert-consumer-{KATELLO_HOST}-1.0-1.noarch.rpm", audreyvars)
     cmd = "curl -O -k \"%s\"" % cert_rpm
     common.shell.run(cmd)
-    cmd = "rpm -ivh %s" % os.path.basename(cert_rpm)
-    common.shell.run(cmd)
+    cert_rpm_local = os.path.basename(cert_rpm)
+    cert_rpm_nvr = common.shell.run("rpm -qp --qf '%%{name}-%%{version}-%%{release}\n' %s" % cert_rpm_local)
+    if not common.rpm.package_installed(cert_rpm_nvr):
+        cmd = "rpm -ivh %s" % cert_rpm_local
+        common.shell.run(cmd)
+    else:
+        pytest.skip(msg='Cert package (%s) already installed' % cert_rpm_nvr)
 
+@pytest.mark.skipif("True")
 def test_tunnel_rhsm(audreyvars, subscription_manager_version):
     """This test sets up a RHSM tunnel, if it's desired.
 
@@ -189,24 +205,24 @@ def test_tunnel_rhsm(audreyvars, subscription_manager_version):
     rhsm_baseurl = "https://%s:%s/pulp/repos" % (audreyvars["KATELLO_HOST"], audreyvars["SSH_TUNNEL_KATELLO_PORT"])
     server_port = audreyvars["SSH_TUNNEL_KATELLO_PORT"]
     server_prefix = audreyvars.get("KATELLO_PREFIX", "").strip()
-    if sm_ver_maj <= 0:
-        if sm_ver_min < 96:
-            rhsm_conf = '/etc/rhsm/rhsm.conf'
-            cfg = ConfigParser()
-            cfg.read([rhsm_conf])
-            cfg.set('rhsm', 'baseurl', rhsm_baseurl)
-            cfg.set('server', 'port', server_port)
-            # Save config
-            fd = open(rhsm_conf, 'wa+')
-            cfg.write(fd)
-            fd.close()
-        else:
-            common.shell.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
-            common.shell.run('subscription-manager config --server.port=%s' % server_port)
-            # If a non-whitespace server_prefix was provided ... use it
-            if server_prefix.strip() != "":
-                common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
+    if sm_ver_maj <= 0 and sm_ver_min < 96:
+        rhsm_conf = '/etc/rhsm/rhsm.conf'
+        cfg = ConfigParser()
+        cfg.read([rhsm_conf])
+        cfg.set('rhsm', 'baseurl', rhsm_baseurl)
+        cfg.set('server', 'port', server_port)
+        # Save config
+        fd = open(rhsm_conf, 'wa+')
+        cfg.write(fd)
+        fd.close()
+    else:
+        common.shell.run('subscription-manager config --rhsm.baseurl=%s' % rhsm_baseurl)
+        common.shell.run('subscription-manager config --server.port=%s' % server_port)
+        # If a non-whitespace server_prefix was provided ... use it
+        if server_prefix.strip() != "":
+            common.shell.run('subscription-manager config --server.prefix=%s' % server_prefix)
 
+@pytest.mark.skipif("True")
 def test_tunnel_goferd(audreyvars):
     """This test sets up a GoferD tunnel, if it's desired.  The test will
     modify the gofer katello plugin configuration, and restart goferd.
@@ -238,6 +254,7 @@ def test_tunnel_goferd(audreyvars):
         assert is_tunnelled, "No adjustments made to gofer plugin: %s" % plugin_conf
         common.shell.run('service goferd restart')
 
+@pytest.mark.skipif("True")
 def test_disable_rhui(audreyvars, ec2_deployment):
     """This test disables RHUI, if it's desired.
 
@@ -262,6 +279,7 @@ def test_disable_rhui(audreyvars, ec2_deployment):
     else:
         pytest.skip(msg='Not disabling RHUI')
 
+@pytest.mark.skipif("True")
 def test_katello_register(audreyvars, subscription_manager_version):
     """This test registers system into Katello server.
 
@@ -282,27 +300,27 @@ def test_katello_register(audreyvars, subscription_manager_version):
 
     cmd = "subscription-manager register"
 
-    if sm_ver_maj <= 0:
-        if sm_ver_min < 96:
-            if auto_subscribe:
-                cmd += " --username=%s --password=%s" % (username, password)
-                cmd += " --autosubscribe"
-            elif activation_key != "" and sm_ver_min >= 95:
-                cmd += " --activationkey=%s" % activation_key
-            else:
-                pass # determine and print error condition to stdout
+    if sm_ver_maj <= 0 and sm_ver_min < 96:
+        if auto_subscribe:
+            cmd += " --username=%s --password=%s" % (username, password)
+            cmd += " --autosubscribe"
+        elif activation_key != "" and sm_ver_min >= 95:
+            cmd += " --activationkey=%s" % activation_key
         else:
-            cmd += " --org=%s" % org
-            if auto_subscribe:
-                cmd += " --username=%s --password=%s" % (username, password)
-                cmd += " --env=%s" % kat_env
-                cmd += " --autosubscribe"
-            elif activation_key != "":
-                cmd += " --activationkey=%s" % activation_key
-            else:
-                pass # determine and print error condition to stdout
+            pass # determine and print error condition to stdout
+    else:
+        cmd += " --org=%s" % org
+        if auto_subscribe:
+            cmd += " --username=%s --password=%s" % (username, password)
+            cmd += " --env=%s" % kat_env
+            cmd += " --autosubscribe"
+        elif activation_key != "":
+            cmd += " --activationkey=%s" % activation_key
+        else:
+            pass # determine and print error condition to stdout
     common.shell.run(cmd)
 
+@pytest.mark.skipif("True")
 def test_verify_katello_registered():
     """ This test verifies whether the system is registered into Katello.
 
