@@ -21,16 +21,20 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 import pytest
+import common.tools
 
 def test_ntpd_enabled(chkconfig_list):
     """ Tests whether is NTPD enabled
 
     :param chkconfig_list: List of the services
     :type chkconfig_list: ``dict``
+
+    :raises: ``pytest.Failed``
     """
     try:
-        assert chkconfig_list["ntpd"][3] == True
-        assert chkconfig_list["ntpd"][5] == True
+        #assert chkconfig_list["ntpd"][3] == True
+        #assert chkconfig_list["ntpd"][5] == True
+        assert common.tools.service_active_in_runlevels(chkconfig_list, "ntpd", (3,5))
     except AssertionError:
         pytest.fail(msg="ntpd is not enabled")
     except KeyError:

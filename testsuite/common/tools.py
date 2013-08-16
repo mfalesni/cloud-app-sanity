@@ -79,3 +79,26 @@ def s_format(s, dct):
     else:
         # convert python-2.6 format to something 2.4 can handle
         return Template(re.sub(r'{([^}]+)}', '$\\1', s)).substitute(dct)
+
+def service_active_in_runlevels(chkconfig_list, service, runlevels=(3,5)):
+    """ Does the check of service presence in desired runlevels
+
+    :param chkconfig_list: ``dict`` from ``pytest_funcarg__chkconfig_list`` - list of all chkconfig services details injected by py.test
+    :type chkconfig_list: ``dict``
+
+    :param service: Service name
+    :type service: ``str``
+
+    :param runlevels: Tuple, list or any kind of iterable that yields integers of desired runlevels
+    :type runlevels: Iterable (``tuple``, ``list``)
+
+    :returns: Whether is the service active in all specified runlevels
+    :rtype: ``bool``
+
+    :raises: ``KeyError``
+    """
+    for runlevel in runlevels:
+        if not chkconfig_list[service][runlevel]:
+            return False
+
+    return True
