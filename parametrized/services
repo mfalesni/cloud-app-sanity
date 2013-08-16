@@ -1,6 +1,5 @@
 # Services and their intended statuses
-# Format: ^service-name (runlevel yes|no)$
+# Format (regexp-alike syntax): ^service-name( runlevel (yes|y)|(no|n))+$
 # This is a comment up to the end
 # Example: foo 2 no 3 yes 4 no 5 yes
-ntpd 3 yes 5 yes
-#httpd 4 no 5 yes
+ntpd 3 yes 5 yes # NTP active
