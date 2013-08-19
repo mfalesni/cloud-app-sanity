@@ -65,7 +65,6 @@ def services_to_test():
     for service in resulting_rules:
         for runlevel, state in resulting_rules[service].iteritems():
             tupled_rules.append((service, runlevel, state))
-    print resulting_rules
     return tupled_rules
 
 
