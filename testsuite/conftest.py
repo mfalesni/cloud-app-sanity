@@ -34,6 +34,7 @@ import subprocess
 import common.shell
 import common.yum
 import common.rpm
+import common.services
 
 from ConfigParser import ConfigParser
 
@@ -321,3 +322,16 @@ def chkconfig_list():
                 pytest.fail(msg="Bad parsing of chkconfig --list")
             result[servicename][runlevel] = status
     return result
+
+@pytest.fixture(scope="session")
+def service_check():
+    """ Produces service-checking fixture """
+
+    class ServiceChecker(object):
+        def __init__(self, services):
+            self.services = services
+
+        def __call__(self, service, runlevel, active=True):
+            return common.services.service_active_in_runlevel(self.services, service, runlevel, active)
+
+    return ServiceChecker(common.services.services_to_test)
