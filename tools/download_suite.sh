@@ -24,7 +24,7 @@
 # When not specified, use default cloud-app-sanity
 # Can be specified with export SUITE_DIR="some-dir" before launching the script
 SUITE_DIR=${SUITE_DIR:-"cloud-app-sanity"}
-curl -k -L -o master.tgz https://github.com/jlaska/cloud-app-sanity/tarball/master
+curl -k -L -o master.tgz https://github.com/mfalesni/cloud-app-sanity/tarball/master
 if [ -f master.tgz ]; then
     test -d $SUITE_DIR || mkdir $SUITE_DIR
     tar -zxvf master.tgz -C $SUITE_DIR --strip-components=1
