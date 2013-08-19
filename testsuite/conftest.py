@@ -24,8 +24,10 @@
 """ This module contains generator functions for variable injecting of py.test framework.
 
     Some of them are cached, some not. I don't know how to make multi-level dependency yet.
+    Update 2013-08-19: Cahnged to newer styled fixtures. Dependency now should work O.K. :)
 """
 
+import pytest
 import os
 import re
 import subprocess
@@ -40,10 +42,9 @@ try:
 except ImportError:
     import simplejson as json
 
-def pytest_funcarg__audreyvars(request):
+@pytest.fixture
+def audreyvars():
     """Setups variables for testing
-
-    :param request: py.test request
 
     :returns: All Audrey-relevant environment variables.
     :rtype: dict
@@ -55,8 +56,8 @@ def pytest_funcarg__audreyvars(request):
 
     return result
 
-
-def pytest_funcarg__katello_discoverable(request):
+@pytest.fixture
+def katello_discoverable(request):
     """Returns boolean (True of False) to indicate whether the provided katello
     server is accessible
 
@@ -70,7 +71,8 @@ def pytest_funcarg__katello_discoverable(request):
     print "# %s" % cmd
     return subprocess.call(cmd.split()) == 0
 
-def pytest_funcarg__tunnel_requested(request):
+@pytest.fixture
+def tunnel_requested(request):
     """Determines whether setting up SSH tunnel is requested
 
     :param request: py.test request.
@@ -93,10 +95,9 @@ def pytest_funcarg__tunnel_requested(request):
     # Otherwise, it wasn't requested
     return False
 
-def pytest_funcarg__system_groups(request):
+@pytest.fixture
+def system_groups():
     """Determine applicable system groups for the current system
-
-    :param request: py.test request
 
     :returns: All Audrey-relevant environment variables.
     :rtype: dict
@@ -111,11 +112,11 @@ def pytest_funcarg__system_groups(request):
     group_names.append(re.sub(r'\W', '_', common.yum.get_yum_variable('releasever')))
 
     # A group to indicate which provider the instance is deployed to
-    if setup_rhev_deployment():
+    if is_rhev_deployment():
         group_names.append('provider_rhev')
-    if setup_vsphere_deployment():
+    if is_vsphere_deployment():
         group_names.append('provider_vsphere')
-    if setup_ec2_deployment():
+    if ec2_deployment():
         group_names.append('provider_ec2')
         # Add a group name for the ec2 region
         (buf, rc) = common.shell.command('curl --fail http://169.254.169.254/latest/dynamic/instance-identity/document')
@@ -126,65 +127,35 @@ def pytest_funcarg__system_groups(request):
 
     return group_names
 
-def pytest_funcarg__is_rhev_deployment(request):
-    """Setups cached variable whether it's ec2 deployment or not.
+@pytest.fixture(scope="session")
+def is_rhev_deployment():
+    """Setups cached variable whether it's RHEV deployment or not.
 
-    :param request: py.test request.
-
-    :returns: Whether is this EC2 deployment (cached).
+    :returns: Whether is this RHEV deployment (cached).
     :rtype: ``bool``
 
-    """
-    return request.cached_setup(setup=setup_rhev_deployment, scope="module")
-
-def setup_rhev_deployment():
-    """Returns boolean True of False to indicate whether the current system is
-       an rhev image
-
-    :returns: Whether is this RHEV deployment.
-    :rtype: ``bool``
     """
     return common.rpm.package_installed('rhev-agent') or \
         common.shell.command("grep -qi rhev /sys/class/virtio-ports/*/name")[1] == 0
 
-def pytest_funcarg__is_vsphere_deployment(request):
+@pytest.fixture(scope="session")
+def is_vsphere_deployment():
     """Setups cached variable whether it's vsphere deployment or not.
-
-    :param request: py.test request.
 
     :returns: Whether is this vsphere deployment (cached).
     :rtype: ``bool``
 
     """
-    return request.cached_setup(setup=setup_vsphere_deployment, scope="module")
-
-def setup_vsphere_deployment():
-    """Returns boolean True of False to indicate whether the current system is
-       an vsphere image
-
-    :returns: Whether is this RHEV deployment.
-    :rtype: ``bool``
-    """
     return common.rpm.package_installed('open-vm-tools') or \
         common.shell.command("grep -qi vmware /sys/bus/scsi/devices/*/vendor")[1] == 0
 
-def pytest_funcarg__ec2_deployment(request):
+@pytest.fixture(scope="session")
+def ec2_deployment():
     """Setups cached variable whether it's ec2 deployment or not.
-
-    :param request: py.test request.
 
     :returns: Whether is this EC2 deployment (cached).
     :rtype: ``bool``
 
-    """
-    return request.cached_setup(setup=setup_ec2_deployment, scope="module")
-
-def setup_ec2_deployment():
-    """Returns boolean True of False to indicate whether the current system is
-       an ec2 image
-
-    :returns: Whether is this EC2 deployment.
-    :rtype: ``bool``
     """
     # The --fail curl argument will cause curl to exit with rc=22 if a server
     # failure occurs (e.g. 403 or 404)
@@ -192,30 +163,21 @@ def setup_ec2_deployment():
     print "# %s" % cmd
     return subprocess.call(cmd.split()) == 0
 
-def pytest_funcarg__subscription_manager_version(request):
+@pytest.fixture
+def subscription_manager_version():
     """Setups cached variable of version of sub-man
 
-    :param request: py.test request.
-
     :returns: SM version from cache
-    :rtype: 2-tuple
-    """
-    return request.cached_setup(setup=setup_subscription_manager_version, scope="module")
-
-def setup_subscription_manager_version():
-    """Gets version of sub-man
-
-    :returns: SM version
     :rtype: 2-tuple
     """
     sm_rpm_ver = common.shell.run("rpm -q --queryformat %{VERSION} subscription-manager")
     sm_ver_maj, sm_ver_min, sm_ver_rest = sm_rpm_ver.split(".", 2)
     return int(sm_ver_maj), int(sm_ver_min)
 
-def pytest_funcarg__system_uuid(request):
+@pytest.fixture
+def system_uuid():
     """ Returns system UUID from subscription-manager
 
-    :param request: py.test request
     :returns: System UUID
     :rtype: ``str``
     """
@@ -226,33 +188,32 @@ def pytest_funcarg__system_uuid(request):
         if name == "system.uuid":
             return value.lstrip()
 
-def pytest_funcarg__selinux_enabled(request):
+@pytest.fixture
+def selinux_enabled():
     """ Detects whether is SElinux enabled or not
 
-    :param request: py.test request
     :returns: SElinux status
     :rtype: ``bool``
     """
-    result = True
     try:
         common.shell.run("selinuxenabled")
+        return True
     except AssertionError:
-        result = False
-    return result
+        return False
 
-def pytest_funcarg__selinux_getenforce(request):
+@pytest.fixture
+def selinux_getenforce():
     """ Returns current enforcing mode of SELinux
 
-    :param request: py.test request
     :returns: SElinux enforcing status
     :rtype: ``str``
     """
     return common.shell.run("/usr/sbin/getenforce").strip()
 
-def pytest_funcarg__selinux_getenforce_conf(request):
+@pytest.fixture
+def selinux_getenforce_conf():
     """ Returns current enforcing mode of SELinux from config file
 
-    :param request: py.test request
     :returns: SElinux enforcing status
     :rtype: ``str``
     """
@@ -266,10 +227,10 @@ def pytest_funcarg__selinux_getenforce_conf(request):
     assert len(lines) == 1
     return lines[0].split("=")[1].strip()
 
-def pytest_funcarg__selinux_type(request):
+@pytest.fixture
+def selinux_type():
     """ Returns current SELINUX type from config file
 
-    :param request: py.test request
     :returns: SElinux type
     :rtype: ``str``
     """
@@ -283,27 +244,28 @@ def pytest_funcarg__selinux_type(request):
     assert len(lines) == 1
     return lines[0].split("=")[1].strip()
 
-def pytest_funcarg__rpm_package_list(request):
+@pytest.fixture
+def rpm_package_list():
     """ Returns list of all installed packages in computer.
 
-    :param request: py.test request
     :returns: List of all installed packages in computer.
     :rtype: ``list``
     """
     raw = common.shell.run("rpm -qa").strip()
     return [x.strip() for x in raw.split("\n")]
 
-def pytest_funcarg__rpm_package_list_names(request):
+@pytest.fixture
+def rpm_package_list_names():
     """ Returns list of all installed packages in computer.
 
-    :param request: py.test request
     :returns: List of all installed packages in computer.
     :rtype: ``list``
     """
     raw = common.shell.run("rpm -qa --qf \"%{NAME} \"").strip()
     return raw.split(" ")
 
-def pytest_funcarg__rhel_release(request):
+@pytest.fixture
+def rhel_release():
     """Returns RHEL version
 
     :returns: RHEL version
@@ -313,7 +275,8 @@ def pytest_funcarg__rhel_release(request):
     redhat_version_field = redhat_release_content.split(" ")[6]
     return tuple(redhat_version_field.split(".", 1))
 
-def pytest_funcarg__PATH(request):
+@pytest.fixture
+def PATH():
     """ PATH environment variable
 
     :returns: List of directories in $PATH
@@ -321,7 +284,8 @@ def pytest_funcarg__PATH(request):
     """
     return os.environ["PATH"].split(":")
 
-def pytest_funcarg__gpgcheck_enabled(request):
+@pytest.fixture
+def gpgcheck_enabled():
     """ Whether is GPG check enabled in yum
 
     :returns: GPG check status
@@ -331,7 +295,8 @@ def pytest_funcarg__gpgcheck_enabled(request):
     cfg.read(["/etc/yum.conf"])
     return int(cfg.get("main", "gpgcheck")) == 1
 
-def pytest_funcarg__chkconfig_list(request):
+@pytest.fixture
+def chkconfig_list():
     """ Returns list of all services with enablement in each runlevel
 
     :returns: All services.
