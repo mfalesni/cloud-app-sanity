@@ -24,7 +24,7 @@ import pytest
 import common.services
 
 @pytest.mark.parametrize(("service", "runlevel", "state"), common.services.services_to_test())
-def test_service_enabled(chkconfig_list, service, runlevel, state):
+def test_service_enabled(service_check, service, runlevel, state):
     """ Tests all services specified in parametrized/services """
-    if not common.services.service_active_in_runlevel(chkconfig_list, service, runlevel, state):
+    if not service_check(service, runlevel, state):
         pytest.fail(msg="Service %s is not %s in runlevel %d!" % (service, ["active", "inactive"][0 if state else 1], runlevel))

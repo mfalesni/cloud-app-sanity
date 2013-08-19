@@ -334,4 +334,4 @@ def service_check():
         def __call__(self, service, runlevel, active=True):
             return common.services.service_active_in_runlevel(self.services, service, runlevel, active)
 
-    return ServiceChecker(common.services.services_to_test)
+    return ServiceChecker(chkconfig_list())
