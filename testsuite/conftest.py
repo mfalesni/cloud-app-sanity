@@ -323,7 +323,7 @@ def chkconfig_list():
             result[servicename][runlevel] = status
     return result
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def service_check():
     """ Produces service-checking fixture """
 
