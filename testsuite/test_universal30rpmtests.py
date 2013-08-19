@@ -86,11 +86,21 @@ def test_packages_installed_against_available():
             if installed.name != available.name:
                 continue
             if rpm.labelCompare((installed.epoch, installed.ver, installed.rel), (available.epoch, available.ver, available.rel)) < 0:
-                diff.append("%s-%s-%s.%s, %s\n%s-%s-%s.%s, %s" % (installed.name, installed.ver, installed.rel, installed.arch, installed.repoid, available.name, available.ver, available.rel, available.arch, available.repoid))
+                if installed in [item[0] for item in diff]:
+                    index = [item[0] for item in diff].index(installed)
+                    if rpm.labelCompare((diff[index][1].epoch, diff[index][1].ver, diff[index][1].rel), (available.epoch, available.ver, available.rel)) < 0:
+                        diff[index] = (installed, available)
+                else:
+                    diff.append((installed, available))
 
-    #%{name}-%{version}-%{release}.%{arch}
     if diff:
-        pytest.fail('\n'.join(diff))
+        out = []
+        #%{name}-%{version}-%{release}.%{arch}
+        for installed, available in diff:
+            out.append("%s-%s-%s.%s, %s\n%s-%s-%s.%s, %s" % (installed.name, installed.ver, installed.rel, installed.arch, installed.repoid, available.name, available.ver, available.rel, available.arch, available.repoid))
+
+    if out:
+        pytest.fail('\n'.join(out))
 
 
 def test_gpg_check(gpgcheck_enabled):
