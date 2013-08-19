@@ -64,17 +64,14 @@ def download_file(url, target_file_name, bulletproof=False):
     result = None
     while result == None and trials > 0:
         try:
-            try:
-                handle = urlopen(url)
-                content = handle.readlines()
-                handle.close()
-                if bulletproof:
-                    for line in content:
-                        if forbidden in line:
-                            raise DownloadException("Wrong file format!")
-                result = "\n".join(content)
-            except (URLError, HTTPError, DownloadException):
-                raise
+            handle = urlopen(url)
+            content = handle.readlines()
+            handle.close()
+            if bulletproof:
+                for line in content:
+                    if forbidden in line:
+                        raise DownloadException("Wrong file format!")
+            result = "\n".join(content)
         except (DownloadException, HTTPError, URLError):
             trials -= 1
             if trials == 0:
