@@ -26,6 +26,7 @@ import common.elf
 import common.rpm
 import common.shell
 import common.yum
+import conftest as fixtures
 
 import yum, rpm
 
@@ -116,7 +117,8 @@ def test_gpg_check(gpgcheck_enabled):
     except AssertionError:
         pytest.fail(msg="GPG check is not enabled")
 
-@pytest.mark.parametrize("package", common.rpm.qa().strip().split("\n"))
+#@pytest.mark.parametrize("package", common.rpm.qa().strip().split("\n"))
+@pytest.mark.parametrize("package", fixtures.rpm_package_list())
 def test_check_all_packages(package):
     """ This test checks all packages in system.
 
@@ -128,7 +130,7 @@ def test_check_all_packages(package):
     if not common.rpm.verify_package(package):
         pytest.fail(msg="Package had problem: '%s'" % common.rpm.package_problems(package))
 
-@pytest.mark.parametrize("package", common.rpm.qa().strip().split("\n"))
+@pytest.mark.parametrize("package", fixtures.rpm_package_list())
 def test_check_all_packages_files_fortified(package):
     """ This test checks whether are all compiled files in package fortified
 
