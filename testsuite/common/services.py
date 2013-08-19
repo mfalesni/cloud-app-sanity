@@ -40,11 +40,14 @@ def services_to_test():
     for rule in lines:
         srv_name, params = rule.split("\t", 1)
         params = params.split("\t")
+        # No multiple entries
         if srv_name in resulting_rules:
             raise Exception("Service %s already exists in the list (line '%s')" % (srv_name, rule))
         resulting_rules[srv_name] = {}
+        # Parameters are always pair runlevel -> state
         if len(params) % 2 != 0:
             raise Exception("Count of parameters for service must be even (line '%s')" % rule)
+        # Ugly lambda, however does iterate over the array taking the right pairs
         for runlevel, status in (lambda iterable : [(iterable[i], iterable[i+1]) for i in range(0, len(iterable)-1, 2)])(params):   # [a,b,c,d] -> [a,b], [c,d]
             if status.lower() in ["yes", "y"]:
                 status = True
@@ -58,6 +61,7 @@ def services_to_test():
                 raise Exception("Runlevel '%s' at line '%s' is not a number!" % (runlevel, rule))
             resulting_rules[srv_name][runlevel] = status
     tupled_rules = []
+    # Make tuples from dict
     for service in resulting_rules:
         for runlevel, state in resulting_rules[service].iteritems():
             tupled_rules.append((service, runlevel, state))
