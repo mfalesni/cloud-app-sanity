@@ -42,17 +42,29 @@ def run(cmd, errorcode=0):
     print "# %s" % cmd
     if isinstance(cmd, str):
         cmd = shlex.split(cmd)
-    p_open = subprocess.Popen(cmd,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT)
-    (stdout, stderr) = p_open.communicate()
-    if errorcode is not None:
-        # Force errorcode to be a list
-        if not isinstance(errorcode, list):
-            errorcode = [errorcode]
-        assert p_open.returncode in errorcode, \
-                "Command failed with unexpected error code: %d != %s\n%s" % \
-                (p_open.returncode, errorcode, stdout)
+    collate_original = None
+    try:
+        collate_original = os.environ['LC_ALL']
+    except KeyError:
+        pass
+    os.environ['LC_ALL'] = "C" # Because of my czech locale
+    try:
+        p_open = subprocess.Popen(cmd,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT)
+        (stdout, stderr) = p_open.communicate()
+        if errorcode is not None:
+            # Force errorcode to be a list
+            if not isinstance(errorcode, list):
+                errorcode = [errorcode]
+            assert p_open.returncode in errorcode, \
+                    "Command '%s' failed with unexpected error code: %d != %s\n%s" % \
+                    (cmd, p_open.returncode, errorcode, stdout)
+    finally:
+        if collate_original:
+            os.environ['LC_ALL'] = collate_original
+        else:
+            del os.environ['LC_ALL']
     return stdout
 
 def command(command):
@@ -60,14 +72,51 @@ def command(command):
 
     :param command: Command to be launched
     :type command: ``str``
-    
+
     :returns: ``tuple`` of ``STDOUT`` and RC of the command
     :raises: AssertionError
     """
-    process = subprocess.Popen(command,stdout=subprocess.PIPE, shell=True)
-    (stdout, stderr) = process.communicate()
+    collate_original = None
+    try:
+        collate_original = os.environ['LC_ALL']
+    except KeyError:
+        pass
+    os.environ['LC_ALL'] = "C" # Because of my czech locale
+    try:
+        process = subprocess.Popen(command,stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        (stdout, stderr) = process.communicate()
+    finally:
+        if collate_original:
+            os.environ['LC_ALL'] = collate_original
+        else:
+            del os.environ['LC_ALL']
     return (stdout, process.returncode)
 
+def command_stderr(command):
+    """ Function used for calling shell commands rather than invoking programs.
+        It also returns stderr output, so it's basically the same as the preceeding function, just return tuple extended
+
+    :param command: Command to be launched
+    :type command: ``str``
+
+    :returns: ``tuple`` of ``STDOUT`` and RC of the command
+    :raises: AssertionError
+    """
+    collate_original = None
+    try:
+        collate_original = os.environ['LC_ALL']
+    except KeyError:
+        pass
+    os.environ['LC_ALL'] = "C" # Because of my czech locale
+    try:
+        process = subprocess.Popen(command,stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        (stdout, stderr) = process.communicate()
+    finally:
+        if collate_original:
+            os.environ['LC_ALL'] = collate_original
+        else:
+            del os.environ['LC_ALL']
+    return (stdout, stderr, process.returncode)
     
 def copy(source, destination):
     if not os.path.isfile(source):

@@ -32,6 +32,15 @@ class RPMPackageFailure(Exception):
 class RPMScriptletFailure(Exception):
     pass
 
+RPM_PROBLEMS_MESSAGES = {   "S": "size",
+                            "M": "mode",
+                            "5": "MD5 checksum",
+                            "D": "major and minor numbers",
+                            "L": "symbolic link contents",
+                            "U": "owner",
+                            "G": "group",
+                            "T": "modification time"}
+
 def check_for_errors(text):
     """ This function checks for errors in text and returns text unchanged
 
@@ -54,30 +63,52 @@ def keys_import(keydir="/etc/pki/rpm-gpg"):
     for key_file in file_list:
         common.shell.run("rpm --import %s/%s" % (keydir, key_file))
 
-def signature_lines(package):
+def signature_lines(package_lines):
     """ Returns lines with signature informations of package
 
-    :param package: Package name
-    :type package: ``str``
+    :param package_lines: rpm --verify output for the package
+    :type package_lines: ``list[str]``
 
     :returns: List of lines speaking about signatures
     :rtype: ``list(str)``
     """
     sig = re.compile("[Ss]ignature")
-    for line in common.shell.run("rpm -qvv %s" % package).strip().split("\n"):
+    for line in package_lines:
         if sig.search(line):
             yield line.split("#", 1)[-1].lstrip()
 
+def wrong_files_lines(package_lines):
+    """ Returns lines with problem files
+
+    :param package_lines: rpm --verify output for the package
+    :type package_lines: ``list[str]``
+
+    :returns: List of lines speaking about wrong something about files
+    :rtype: ``list(str)``
+    """
+    for line in package_lines:
+        line = line.strip()
+        if not line.startswith(".........") and len(line) > 0:
+            yield line
+
 def verify_package(package):
     """ Verifies package in RPM database.
+
+        Checks for signature, then it checks output of the rpm -Vvv and looks for files,
+        which have some problems (see http://www.rpm.org/max-rpm/s1-rpm-verify-output.html)
 
     :param package: Package to check
     :type package: ``str``
     :returns: Bool whether verification succeeded
     :rtype: ``bool``
     """
-    success = True
-    for line in common.rpm.signature_lines(package):
+    problems = []
+    source, stderr, rc = common.shell.command_stderr("rpm -Vvv %s" % package)
+    source = source.strip().split("\n")
+    stderr = stderr.strip().split("\n")
+    if int(rc) != 0:
+        problems.append("RPM $?=%d" % int(rc))
+    for line in common.rpm.signature_lines(stderr):
         fields = [x.strip() for x in line.rsplit(", key ID", 1)]
         key_status = None
         if re.match("^[0-9a-z]+$", fields[1]):
@@ -87,10 +118,28 @@ def verify_package(package):
             # RHEL 6
             key_status = fields[1]
         key_status = key_status.rsplit(":", 1)[1].strip()   # The key info is on the right side of the colon
-        print "sig: %s -> %s" % (package, key_status)
         if not key_status.upper() == "OK":
-            success = False
-    return success
+            problems.append("No key signature")
+    for line in common.rpm.wrong_files_lines(source):
+        status_type, filename = line.split("/", 1)
+        filename = "/" + filename
+        status_type = re.sub(r"\s+", " ", status_type).strip().split()
+        status = status_type[0]
+        file_type = ""
+        if len(status_type) > 1:
+            file_type = status_type[1].strip()
+        # if file_type == "c":
+        #     continue
+        status_problems = []
+        for key in RPM_PROBLEMS_MESSAGES:
+            if key in status:
+                status_problems.append(RPM_PROBLEMS_MESSAGES[key])
+        if len(status_problems) == 0:
+            status_problems.append(status)
+            #TODO config?
+
+        problems.append("file %s has problems with %s" % (filename, ", ".join(status_problems) ) )
+    return problems
 
 def package_problems(package):
     """ This functions returns reported problems with package

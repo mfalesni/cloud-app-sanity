@@ -127,8 +127,9 @@ def test_check_all_packages(package):
 
     :raises: pytest.Failed
     """
-    if not common.rpm.verify_package(package):
-        pytest.fail(msg="Package had problem: '%s'" % common.rpm.package_problems(package))
+    problems = common.rpm.verify_package(package)
+    if not len(problems) == 0:
+        pytest.fail(msg="Package %s had following problems: '%s'" % (package, ", ".join(problems)), pytrace=False)
 
 @pytest.mark.parametrize("package", fixtures.rpm_package_list())
 def test_check_all_packages_files_fortified(package):
