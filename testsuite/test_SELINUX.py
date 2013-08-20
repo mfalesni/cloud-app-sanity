@@ -104,8 +104,7 @@ class TestSelinux(object):
 
         :raises: pytest.Failed
         """
-        if not enabled:
-            pytest.fail(msg="SElinux is not enabled!", pytrace=False)
+        assert enabled, "SELinux is not enabled"
 
     def test_enforcing(self, getenforce):
         """ Verifies whether SELinux is in 'Enforcing' state.
@@ -115,10 +114,8 @@ class TestSelinux(object):
 
         :raises: pytest.Failed
         """
-        try:
-            assert getenforce == "Enforcing"
-        except AssertionError:
-            pytest.fail(msg="SELinux is not in Enforcing mode!", pytrace=False)
+        assert getenforce == "Enforcing", "SELinux is not in Enforcing mode!"
+        
 
     def test_enforcing_from_config(self, getenforce_conf):
         """ Verifies whether SELinux is in 'Enforcing' state.
@@ -129,10 +126,7 @@ class TestSelinux(object):
 
         :raises: pytest.Failed
         """
-        try:
-            assert getenforce_conf == "enforcing"
-        except AssertionError:
-            pytest.fail(msg="SELinux is not in Enforcing mode!", pytrace=False)
+        assert getenforce_conf == "enforcing", "SELinux is not in Enforcing mode!"
 
     def test_is_targeted(self, mode):
         """ Verifies whether SELinux is in 'targeted' mode.
@@ -142,10 +136,7 @@ class TestSelinux(object):
 
         :raises: pytest.Failed
         """
-        try:
-            assert mode == "targeted"
-        except AssertionError:
-            pytest.fail(msg="SELinux is not in Enforcing mode!", pytrace=False)
+        assert mode == "targeted", "SELinux is not in Enforcing mode!"
 
     def test_permissive_check(self, permissive, getenforce):
         """ Check for success of flip_permissive test.
@@ -155,10 +146,7 @@ class TestSelinux(object):
 
         :raises: pytest.Failed
         """
-        try:
-            assert getenforce == "Permissive"
-        except AssertionError:
-            pytest.fail(msg="SELinux is not in Permissive mode", pytrace=False)
+        assert getenforce == "Permissive", "SELinux is not in Permissive mode"
 
     def test_enforcing_check(self, enforcing, getenforce):
         """ Check for success of flip_enforcing test.
@@ -168,7 +156,4 @@ class TestSelinux(object):
 
         :raises: pytest.Failed
         """
-        try:
-            assert getenforce == "Enforcing"
-        except AssertionError:
-            pytest.fail(msg="SELinux is not in Enforcing mode", pytrace=False)
+        assert getenforce == "Enforcing", "SELinux is not in Enforcing mode"
