@@ -39,7 +39,6 @@ def run(cmd, errorcode=0):
     :rtype: ``str``, ``int``
     :raises: AssertionError
     """
-    print "# %s" % cmd
     if isinstance(cmd, str):
         cmd = shlex.split(cmd)
     collate_original = None
