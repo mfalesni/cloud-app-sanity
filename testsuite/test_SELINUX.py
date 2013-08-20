@@ -33,15 +33,15 @@ class TestSelinux(object):
         common.selinux.setenforce(cls.original_enforce)
 
     @pytest.fixture
-    def enforcing(self):
+    def set_enforcing(self):
         common.selinux.setenforce("Enforcing")
 
     @pytest.fixture
-    def permissive(self):
+    def set_permissive(self):
         common.selinux.setenforce("Permissive")
 
     @pytest.fixture
-    def enabled(self):
+    def is_enabled(self):
         """ Detects whether is SElinux enabled or not
 
         :returns: SElinux status
@@ -96,7 +96,7 @@ class TestSelinux(object):
         assert len(lines) == 1
         return lines[0].split("=")[1].strip()
 
-    def test_enabled(self, enabled):
+    def test_enabled(self, is_enabled):
         """ Tests whether is SElinux enabled.
 
         :param enabled: Whether is Selinux enabled or not
@@ -138,7 +138,7 @@ class TestSelinux(object):
         """
         assert mode == "targeted", "SELinux is not in Enforcing mode!"
 
-    def test_permissive_check(self, permissive, getenforce):
+    def test_permissive_check(self, set_permissive, getenforce):
         """ Check for success of flip_permissive test.
 
         :param selinux_getenforce: Current enforcing status
@@ -148,7 +148,7 @@ class TestSelinux(object):
         """
         assert getenforce == "Permissive", "SELinux is not in Permissive mode"
 
-    def test_enforcing_check(self, enforcing, getenforce):
+    def test_enforcing_check(self, set_enforcing, getenforce):
         """ Check for success of flip_enforcing test.
 
         :param selinux_getenforce: Current enforcing status
