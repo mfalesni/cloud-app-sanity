@@ -26,10 +26,16 @@ import common.selinux
 class TestSelinux(object):
     @classmethod
     def setup_class(cls):
+        """
+            This method saves the original enforcing mode for later restoring
+        """
         cls.original_enforce = common.selinux.getenforce()
 
     @classmethod
     def teardown_class(cls):
+        """
+            This method restores previous enforcing mode.
+        """
         common.selinux.setenforce(cls.original_enforce)
 
     @pytest.fixture
@@ -102,7 +108,7 @@ class TestSelinux(object):
         :param enabled: Whether is Selinux enabled or not
         :type enabled: ``bool``
 
-        :raises: pytest.Failed
+        :raises: AssertionError
         """
         assert is_enabled, "SELinux is not enabled"
 
@@ -112,7 +118,7 @@ class TestSelinux(object):
         :param getenforce: Current enforcing status
         :type getenforce: ``str``
 
-        :raises: pytest.Failed
+        :raises: AssertionError
         """
         assert getenforce == "Enforcing", "SELinux is not in Enforcing mode!"
         
@@ -124,7 +130,7 @@ class TestSelinux(object):
         :param getenforce_conf: Current enforcing status
         :type getenforce_conf: ``str``
 
-        :raises: pytest.Failed
+        :raises: AssertionError
         """
         assert getenforce_conf == "enforcing", "SELinux is not in Enforcing mode!"
 
@@ -134,7 +140,7 @@ class TestSelinux(object):
         :param selinux_type: SELinux mode (targeted)
         :type selinux_type: ``str``
 
-        :raises: pytest.Failed
+        :raises: AssertionError
         """
         assert mode == "targeted", "SELinux is not in Enforcing mode!"
 
@@ -144,7 +150,7 @@ class TestSelinux(object):
         :param selinux_getenforce: Current enforcing status
         :type selinux_getenforce: ``str``
 
-        :raises: pytest.Failed
+        :raises: AssertionError
         """
         assert getenforce == "Permissive", "SELinux is not in Permissive mode"
 
@@ -154,6 +160,6 @@ class TestSelinux(object):
         :param selinux_getenforce: Current enforcing status
         :type selinux_getenforce: ``str``
 
-        :raises: pytest.Failed
+        :raises: AssertionError
         """
         assert getenforce == "Enforcing", "SELinux is not in Enforcing mode"
