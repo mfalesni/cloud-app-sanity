@@ -104,7 +104,7 @@ class TestSelinux(object):
 
         :raises: pytest.Failed
         """
-        assert enabled, "SELinux is not enabled"
+        assert is_enabled, "SELinux is not enabled"
 
     def test_enforcing(self, getenforce):
         """ Verifies whether SELinux is in 'Enforcing' state.
