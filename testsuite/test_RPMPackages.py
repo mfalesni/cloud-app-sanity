@@ -30,18 +30,28 @@ import conftest as fixtures
 
 @pytest.mark.parametrize("package", fixtures.rpm_package_list())
 class TestRPM(object):
-    def test_sig_files(self, package):
-        """ This test checks a package whether it has signature and also whether all files are ok.
+    def test_signed(self, package):
+        """ This test checks a package whether it has signature.
+
+        :param package: package to be checked
+        :type package: ``str``
+
+        :raises: AssertionError
+        """
+        problems = common.rpm.verify_package_signed(package)
+        assert len(problems) == 0, "Package %s had following problems: '%s'" % (package, ", ".join(problems))
+
+    def test_files(self, package):
+        """ This test checks a package whether all files are ok.
             It also checks the return code of rpm -Vvv.
 
         :param package: package to be checked
         :type package: ``str``
 
-        :raises: pytest.Failed
+        :raises: AssertionError
         """
-        problems = common.rpm.verify_package(package)
-        if not len(problems) == 0:
-            pytest.fail(msg="Package %s had following problems: '%s'" % (package, ", ".join(problems)), pytrace=False)
+        problems = common.rpm.verify_package_files(package)
+        assert len(problems) == 0, "Package %s had following problems: '%s'" % (package, ", ".join(problems))
 
     def test_fortified(self, package):
         """ This test checks whether are all compiled files in package fortified.
