@@ -30,6 +30,7 @@ def setenforce(mode):
     :param type: ``str``
     :raises: AssertionError
     """
+    mode = mode.strip()
     assert mode in ["Permissive", "Enforcing"]
     common.shell.run("/usr/sbin/setenforce %s" % mode)
 
