@@ -23,30 +23,39 @@
 import pytest
 import common.ssl
 
-REQUIRED_BITS = 2048
-def test_default_key_strength():
-    """
-    Confirm that the default SSL certificate generation strength is at least
-    2048 bits.
+class TestSSL(object):
+    REQUIRED_BITS = 2048
+    FORBIDDEN_HASHES = ["md5"]
 
-    :raises: pytest.Failed
-    """
-    config = common.ssl.openssl_config_get_section("req")
-    bits = int(config["default_bits"])
-    try:
-        assert bits >= REQUIRED_BITS
-    except AssertionError:
-        pytest.fail(msg="Default bit length of certificate is insufficient (< %s)" % REQUIRED_BITS)
+    @pytest.fixture
+    def key_strength(self):
+        """
+            Fixture, providing SSL key strength.
+        """
+        config = common.ssl.openssl_config_get_section("req")
+        return int(config["default_bits"])
 
-def test_default_hash_function():
-    """
-    Confirm default hashing method is not md5
+    @pytest.fixture
+    def default_hash(self):
+        """
+            Fixture, providing default hash function.
+        """
+        config = common.ssl.openssl_config_get_section("req")
+        return config["default_md"]
 
-    :raises: pytest.Failed
-    """
-    config = common.ssl.openssl_config_get_section("req")
-    hashf = config["default_md"]
-    try:
-        assert hashf.lower() not in ["md5"]
-    except AssertionError:
-        pytest.fail(msg="Bad message digest function (%s)!" % hashf)
+    def test_default_key_strength(self, key_strength):
+        """
+        Confirm that the default SSL certificate generation strength is at least
+        2048 bits.
+
+        :raises: pytest.Failed
+        """
+        assert key_strength >= TestSSL.REQUIRED_BITS, "Default bit length of certificate is insufficient (< %s)" % TestSSL.REQUIRED_BITS
+
+    def test_default_hash_function(self, default_hash):
+        """
+        Confirm default hashing method is not md5
+
+        :raises: pytest.Failed
+        """
+        assert default_hash.lower() not in TestSSL.FORBIDDEN_HASHES, "Bad message digest function (%s)!" % default_hash
