@@ -117,42 +117,6 @@ def test_gpg_check(gpgcheck_enabled):
     except AssertionError:
         pytest.fail(msg="GPG check is not enabled")
 
-#@pytest.mark.parametrize("package", common.rpm.qa().strip().split("\n"))
-@pytest.mark.parametrize("package", fixtures.rpm_package_list())
-def test_check_all_packages(package):
-    """ This test checks all packages in system.
-
-    :param package: package to be checked
-    :type package: ``str``
-
-    :raises: pytest.Failed
-    """
-    problems = common.rpm.verify_package(package)
-    if not len(problems) == 0:
-        pytest.fail(msg="Package %s had following problems: '%s'" % (package, ", ".join(problems)), pytrace=False)
-
-@pytest.mark.parametrize("package", fixtures.rpm_package_list())
-def test_check_all_packages_files_fortified(package):
-    """ This test checks whether are all compiled files in package fortified
-
-    :param package: Package name
-    :type package: ``list``
-
-    :raises: pytest.Failed
-    """
-
-    # FIXME - Review rpm-chksec
-    # (http://people.redhat.com/sgrubb/files/rpm-chksec) coverage to determine
-    # whether adjustments/enhancements are needed
-
-    files = common.rpm.ql(package).strip().split("\n")
-    for f in files:
-        if common.elf.is_elf(f):
-            dangerous = common.elf.fortify_find_dangerous(f)
-            for function in dangerous:
-                if not function.endswith("_chk") and not function.endswith("__chk_fail"):
-                    pytest.fail(msg="File %s: Symbol '%s' found! All relevant symbols in file: %s" % (f, function, dangerous))
-
 def test_yum_full_test(rhel_release):
     """ This test tests yum thoroughly
 
