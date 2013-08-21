@@ -50,7 +50,7 @@ class TestSSL(object):
 
         :raises: pytest.Failed
         """
-        assert key_strength >= TestSSL.REQUIRED_BITS, "Default bit length of certificate is insufficient (< %s)" % TestSSL.REQUIRED_BITS
+        assert key_strength >= TestSSL.REQUIRED_BITS, "Default bit length of certificate is insufficient (%d < %d)" % (key_strength, TestSSL.REQUIRED_BITS)
 
     def test_default_hash_function(self, default_hash):
         """
