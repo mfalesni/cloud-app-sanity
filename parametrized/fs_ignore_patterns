@@ -1,0 +1,6 @@
+/proc
+/selinux
+/dev/.udev
+/lib/modules/*/build
+/lib/modules/*/source
+/usr/lib64/valgrind/*
