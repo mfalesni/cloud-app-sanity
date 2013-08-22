@@ -1,0 +1,2 @@
+REQUIRED_YUM_PACKAGES="python-setuptools"
+REQUIRED_PROGRAMS="python2"
