@@ -335,3 +335,14 @@ def service_check():
             return common.services.service_active_in_runlevel(self.services, service, runlevel, active)
 
     return ServiceChecker(chkconfig_list())
+
+@pytest.fixture
+def is_systemd():
+    """
+        Checks for systemd presence
+    """
+    try:
+        common.rpm.q("systemd")
+        return True
+    except AssertionError:
+        return False
