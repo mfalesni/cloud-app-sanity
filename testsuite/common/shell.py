@@ -153,6 +153,8 @@ class Run(object):
         Result contains stdout, stderr, rc and run command:
         self.stdout, self.stderr, self.rc, self.command.
         Result is usable in if, if the $?=0, if evaluates as True.
+
+        Run.bash() runs bash script provides as a parameter.
     """
     def __init__(self, stdout, stderr, rc, command, shell=False):
         self.stdout = stdout
