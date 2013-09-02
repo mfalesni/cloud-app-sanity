@@ -36,7 +36,7 @@ class TestSelinux(object):
         """
             This method restores previous enforcing mode.
         """
-        common.selinux.setenforce(cls.original_enforce)
+        common.selinux.setenforce(cls.original_enforce.stdout)
 
     @pytest.fixture
     def set_enforcing(self):
@@ -54,7 +54,7 @@ class TestSelinux(object):
         :rtype: ``bool``
         """
         try:
-            common.shell.run("selinuxenabled")
+            assert common.shell.Run.command("selinuxenabled")
             return True
         except AssertionError:
             return False
@@ -66,7 +66,7 @@ class TestSelinux(object):
         :returns: SElinux enforcing status
         :rtype: ``str``
         """
-        return common.shell.run("/usr/sbin/getenforce").strip()
+        return common.selinux.getenforce()
 
     @pytest.fixture
     def getenforce_conf(self):
@@ -120,7 +120,7 @@ class TestSelinux(object):
 
         :raises: AssertionError
         """
-        assert getenforce == "Enforcing", "SELinux is not in Enforcing mode!"
+        assert getenforce.stdout.strip() == "Enforcing", "SELinux is not in Enforcing mode!"
         
 
     def test_enforcing_from_config(self, getenforce_conf):
@@ -152,7 +152,7 @@ class TestSelinux(object):
 
         :raises: AssertionError
         """
-        assert getenforce == "Permissive", "SELinux is not in Permissive mode"
+        assert getenforce.stdout.strip() == "Permissive", "SELinux is not in Permissive mode"
 
     def test_enforcing_check(self, set_enforcing, getenforce):
         """ Check for success of flip_enforcing test.
@@ -162,4 +162,4 @@ class TestSelinux(object):
 
         :raises: AssertionError
         """
-        assert getenforce == "Enforcing", "SELinux is not in Enforcing mode"
+        assert getenforce.stdout.strip() == "Enforcing", "SELinux is not in Enforcing mode"

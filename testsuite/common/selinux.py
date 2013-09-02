@@ -30,9 +30,10 @@ def setenforce(mode):
     :param type: ``str``
     :raises: AssertionError
     """
-    mode = mode.strip()
+    mode = mode.strip().title()
     assert mode in ["Permissive", "Enforcing"]
-    common.shell.run("/usr/sbin/setenforce %s" % mode)
+    result = common.shell.Run.command("/usr/sbin/setenforce %s" % mode)
+    assert result
 
 def getenforce():
     """ Returns enforcing mode of SElinux
@@ -40,4 +41,4 @@ def getenforce():
     :returns: Enforcing mode of SELinux
     :rtype: ``str``
     """
-    return common.shell.run("/usr/sbin/getenforce")
+    return common.shell.Run.command("/usr/sbin/getenforce")
