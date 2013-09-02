@@ -88,7 +88,7 @@ class TestRPM(object):
                 for function in dangerous:
                     if function.endswith("_chk") or function.endswith("__chk_fail"):
                         failed = False
-                assert not failed
+                assert not failed, "File %s has problem with fortification!" % f
         if not was_elf:
             pytest.skip(msg="No binary present in this package")
         
