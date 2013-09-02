@@ -68,12 +68,23 @@ class TestRPM(object):
         # FIXME - Review rpm-chksec
         # (http://people.redhat.com/sgrubb/files/rpm-chksec) coverage to determine
         # whether adjustments/enhancements are needed
-        problems = []
+        # problems = []
+        # files = common.rpm.ql(package).strip().split("\n")
+        # for f in files:
+        #     if common.elf.is_elf(f):
+        #         dangerous = common.elf.fortify_find_dangerous(f)
+        #         for function in dangerous:
+        #             if not function.endswith("_chk") and not function.endswith("__chk_fail"):
+        #                 problems.append((f, function, "dangerous call"))
+        # assert len(problems) == 0, "Problems found:\n" + "\n".join(["%s@%s | %s" % (x[1], x[0], x[2]) for x in problems])
+        # Alternate
         files = common.rpm.ql(package).strip().split("\n")
         for f in files:
             if common.elf.is_elf(f):
+                failed = True
                 dangerous = common.elf.fortify_find_dangerous(f)
                 for function in dangerous:
-                    if not function.endswith("_chk") and not function.endswith("__chk_fail"):
-                        problems.append((f, function, "dangerous call"))
-        assert len(problems) == 0, "Problems found:\n" + "\n".join(["%s@%s | %s" % (x[1], x[0], x[2]) for x in problems])
+                    if function.endswith("_chk") or function.endswith("__chk_fail"):
+                        failed = False
+                assert not failed
+        
