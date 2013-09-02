@@ -20,32 +20,12 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common.shell
 import pytest
-from conftest import rhel_release
+import common.shell
 
-@pytest.mark.parametrize("line", [
-    "root:x:0:0:root:/root:/bin/bash",
-    "nobody:x:99:99:Nobody:/:/sbin/nologin",
-    "sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin"]
+@pytest.mark.parametrize("shell", [
+    "bin/bash",
+    "bin/nologin"]
     )
-def test_lines_in_passwd(rhel_release, line):
-    assert common.shell.Run.command(r"grep '^%s' /etc/passwd" % line)
-
-@pytest.mark.parametrize("group", [
-    "root:x:0:",
-    "daemon:x:2:bin,daemon",
-    "bin:x:1:bin,daemon"]
-    )
-@pytest.mark.skipif("int(rhel_release()[0]) != 6")
-def test_groups_RHEL6(group):
-    assert common.shell.Run.command(r"grep '^%s' /etc/group" % group)
-
-@pytest.mark.parametrize("group", [
-    "root:x:0:root",
-    "daemon:x:2:bin,daemon",
-    "bin:x:1:bin,daemon"]
-    )
-@pytest.mark.skipif("int(rhel_release()[0]) != 5")
-def test_groups_RHEL5(group):
-    assert common.shell.Run.command(r"grep '^%s' /etc/group" % group)
+def test_check_shell_in_etc_shells(shell):
+    assert common.shell.Run.command("grep '%s$' /etc/shells" % shell)
