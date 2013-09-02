@@ -32,7 +32,7 @@ import os
 
 @pytest.mark.parametrize("package", fixtures.rpm_package_list())
 class TestRPM(object):
-    @pytest.mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false') == 'true'")
+    @pytest.mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false').strip() == 'true'")
     def test_signed(self, package):
         """ This test checks a package whether it has signature.
 
