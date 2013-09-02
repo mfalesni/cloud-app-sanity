@@ -26,6 +26,7 @@
 
 import pytest
 import common.rpm
+import common.elf
 import conftest as fixtures
 import os
 
