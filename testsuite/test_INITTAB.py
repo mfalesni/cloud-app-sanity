@@ -20,32 +20,21 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import common.shell
 import pytest
-from conftest import rhel_release
+import common.shell
+from conftest import is_systemd
 
-@pytest.mark.parametrize("line", [
-    "root:x:0:0:root:/root:/bin/bash",
-    "nobody:x:99:99:Nobody:/:/sbin/nologin",
-    "sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin"]
-    )
-def test_lines_in_passwd(line):
-    assert common.shell.Run.command(r"grep '^%s' /etc/passwd" % line)
+# if (params['product'].upper() == 'RHEL' or params['product'].upper() == 'BETA') and params['version'].startswith('5.'):
+# self.ping_pong(connection, 'grep \'^si:\' /etc/inittab', 'si::sysinit:/etc/rc.d/rc.sysinit')
 
-@pytest.mark.parametrize("group", [
-    "root:x:0:",
-    "daemon:x:2:bin,daemon",
-    "bin:x:1:bin,daemon"]
-    )
-@pytest.mark.skipif("int(rhel_release()[0]) != 6")
-def test_groups_RHEL6(group):
-    assert common.shell.Run.command(r"grep '^%s' /etc/group" % group)
+@pytest.mark.skipif("not is_systemd()")
+def test_runlevel_systemd():
+    symlink = common.shell.Run.command("readlink -f /etc/systemd/system/default.target")
+    assert symlink
+    assert symlink.stdout.strip() == "/lib/systemd/system/multi-user.target"
 
-@pytest.mark.parametrize("group", [
-    "root:x:0:root",
-    "daemon:x:2:bin,daemon",
-    "bin:x:1:bin,daemon"]
-    )
-@pytest.mark.skipif("int(rhel_release()[0]) != 5")
-def test_groups_RHEL5(group):
-    assert common.shell.Run.command(r"grep '^%s' /etc/group" % group)
+@pytest.mark.skipif("is_systemd()")
+def test_runlevel_systemV():
+    inittab = common.shell.Run.command("grep '^id:' /etc/inittab")
+    assert inittab
+    assert inittab.stdout.strip() == "id:3:initdefault"

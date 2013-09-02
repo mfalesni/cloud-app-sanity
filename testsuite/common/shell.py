@@ -156,18 +156,22 @@ class Run(object):
 
         Run.bash() runs bash script provides as a parameter.
     """
-    def __init__(self, stdout, stderr, rc, command, shell=False):
+    def __init__(self, stdout, stderr, stdin, rc, command, shell=False):
         self.stdout = stdout
         self.stderr = stderr
+        self.stdin = stdin
         self.rc = rc
         self.command = command
         self.shell = shell
 
     def __repr__(self):
-        return "<Run->%d stdout='%s...' stderr='%s...'>" % (self.rc, self.stdout[:16], self.stderr[:16])
+        return "<Run->%d stdout='%s...' stderr='%s...'>" % (self.rc, self.stdout[:16].strip(), self.stderr[:16].strip())
 
     def __nonzero__(self):
         return self.rc == 0
+
+    def rerun(self):
+        return Run.command(self.command, self.stdin)
 
     @classmethod
     def command(cls, command, stdin=None, shell=False):
@@ -187,8 +191,8 @@ class Run(object):
                 os.environ['LC_ALL'] = collate_original
             else:
                 del os.environ['LC_ALL']
-        return Run(stdout, stderr, process.returncode, command)
+        return Run(stdout, stderr, stdin, process.returncode, command)
 
     @classmethod
-    def bash(cls, script_body):
-        return Run.command(["bash", "-c", script_body])
+    def bash(cls, script_body, stdin=None):
+        return Run.command(["bash", "-c", script_body], stdin=stdin)
