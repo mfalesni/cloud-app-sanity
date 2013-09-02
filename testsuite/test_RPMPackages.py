@@ -79,12 +79,16 @@ class TestRPM(object):
         # assert len(problems) == 0, "Problems found:\n" + "\n".join(["%s@%s | %s" % (x[1], x[0], x[2]) for x in problems])
         # Alternate
         files = common.rpm.ql(package).strip().split("\n")
+        was_elf = False
         for f in files:
             if common.elf.is_elf(f):
                 failed = True
+                was_elf = True
                 dangerous = common.elf.fortify_find_dangerous(f)
                 for function in dangerous:
                     if function.endswith("_chk") or function.endswith("__chk_fail"):
                         failed = False
                 assert not failed
+        if not was_elf:
+            pytest.skip(msg="No binary present in this package")
         
