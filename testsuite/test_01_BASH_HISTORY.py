@@ -23,6 +23,6 @@
 import common.shell
 
 def test_bash_history():
-    bash_history = common.shell.Run("cat /root/.bash_history")
+    bash_history = common.shell.Run.command("cat /root/.bash_history")
     if bash_history:
         assert len(bash_history.stdout.strip()) == 0, "/root/.bash_history is not empty"
