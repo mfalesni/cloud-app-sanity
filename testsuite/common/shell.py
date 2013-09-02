@@ -145,3 +145,48 @@ def exists_in_path(file, actual_directory):
             if os.path.exists(filename):
                 return True
     return False
+
+class Run(object):
+    """
+        New class for running shell commands.
+        To run a command, use the Run.command(...) class method.
+        Result contains stdout, stderr, rc and run command:
+        self.stdout, self.stderr, self.rc, self.command.
+        Result is usable in if, if the $?=0, if evaluates as True.
+    """
+    def __init__(self, stdout, stderr, rc, command, shell=False):
+        self.stdout = stdout
+        self.stderr = stderr
+        self.rc = rc
+        self.command = command
+        self.shell = shell
+
+    def __repr__(self):
+        return "<Run->%d stdout='%s...' stderr='%s...'>" % (self.rc, self.stdout[:16], self.stderr[:16])
+
+    def __nonzero__(self):
+        return self.rc == 0
+
+    @classmethod
+    def command(cls, command, stdin=None, shell=False):
+        if not shell and isinstance(command, str):
+            command = shlex.split(command)
+        collate_original = None
+        try:
+            collate_original = os.environ['LC_ALL']
+        except KeyError:
+            pass
+        os.environ['LC_ALL'] = "C" # Because of my czech locale
+        try:
+            process = subprocess.Popen(command,stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=shell)
+            (stdout, stderr) = process.communicate(stdin)
+        finally:
+            if collate_original:
+                os.environ['LC_ALL'] = collate_original
+            else:
+                del os.environ['LC_ALL']
+        return Run(stdout, stderr, process.returncode, command)
+
+    @classmethod
+    def bash(cls, script_body):
+        return Run.command(["bash", "-c", script_body])
