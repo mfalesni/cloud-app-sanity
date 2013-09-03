@@ -112,6 +112,7 @@ class TestSelinux(object):
         """
         assert is_enabled, "SELinux is not enabled"
 
+    @pytest.mark.xfail
     def test_enforcing(self, getenforce):
         """ Verifies whether SELinux is in 'Enforcing' state.
 
@@ -123,6 +124,7 @@ class TestSelinux(object):
         assert getenforce.stdout.strip() == "Enforcing", "SELinux is not in Enforcing mode!"
         
 
+    @pytest.mark.xfail
     def test_enforcing_from_config(self, getenforce_conf):
         """ Verifies whether SELinux is in 'Enforcing' state.
             Checks from config file
