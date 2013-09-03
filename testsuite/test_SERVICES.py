@@ -34,7 +34,7 @@ class TestServices(object):
         :rtype: ``dict``
         """
         result = {}
-        services = common.shell.Run("chkconfig --list")
+        services = common.shell.Run.command("chkconfig --list")
         for line in services.stdout.strip().split("\n"):
             line = re.sub("[[:blank:]]+", "\t", line)
             fields = line.split("\t")
@@ -64,10 +64,10 @@ class TestServices(object):
             def __call__(self, service, runlevel, active=True):
                 return common.services.service_active_in_runlevel(self.services, service, runlevel, active)
 
-        return ServiceChecker(chkconfig_list())
+        return ServiceChecker(chkconfig_list)
 
     @pytest.mark.parametrize(("service", "runlevel", "state"), common.services.services_to_test())
-    def test_service_enabled(service_check, service, runlevel, state):
+    def test_service_enabled(self, service_check, service, runlevel, state):
         """ Tests all services specified in parametrized/services """
         if not service_check(service, runlevel, state):
             pytest.fail(msg="Service %s is not %s in runlevel %d!" % (service, ["active", "inactive"][0 if state else 1], runlevel))
