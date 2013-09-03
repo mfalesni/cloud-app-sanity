@@ -82,9 +82,11 @@ class TestRPM(object):
         was_elf = False
         for f in files:
             if common.elf.is_elf(f):
-                failed = True
+                failed = False
                 was_elf = True
                 dangerous = common.elf.fortify_find_dangerous(f)
+                if len(dangerous) > 0:
+                    failed = True
                 for function in dangerous:
                     if function.endswith("_chk") or function.endswith("__chk_fail"):
                         failed = False
