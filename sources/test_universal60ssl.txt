@@ -1,7 +1,0 @@
-test_universal60ssl Module
-==========================
-
-.. automodule:: test_universal60ssl
-    :members:
-    :undoc-members:
-    :show-inheritance:
