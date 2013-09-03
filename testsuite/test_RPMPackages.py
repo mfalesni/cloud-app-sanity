@@ -80,6 +80,7 @@ class TestRPM(object):
         # Alternate
         files = common.rpm.ql(package).strip().split("\n")
         was_elf = False
+        total_fail = False
         for f in files:
             if common.elf.is_elf(f):
                 failed = True
@@ -88,7 +89,12 @@ class TestRPM(object):
                 for function in dangerous:
                     if function.endswith("_chk") or function.endswith("__chk_fail"):
                         failed = False
-                assert not failed, "File %s has problem with fortification!" % f
+                if failed:
+                    total_fail = True
+                    print f
+                
         if not was_elf:
             pytest.skip(msg="No binary present in this package")
+        else:
+            assert not total_fail "package %s has problem with fortification!" % package
         
