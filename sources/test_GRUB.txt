@@ -1,0 +1,7 @@
+test_GRUB Module
+================
+
+.. automodule:: test_GRUB
+    :members:
+    :undoc-members:
+    :show-inheritance:

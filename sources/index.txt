@@ -1,0 +1,36 @@
+.. CloudForms Application Sanity Test Suite documentation master file, created by
+   sphinx-quickstart on Tue Sep  3 11:43:36 2013.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to CloudForms Application Sanity Test Suite's documentation!
+====================================================================
+
+Contents:
+
+.. toctree::
+   :maxdepth: 4
+
+   common
+   conftest
+   test_01_BASH_HISTORY
+   test_ETC_PASSWD
+   test_FILESYSTEM
+   test_GRUB
+   test_INITTAB
+   test_RPMPackages
+   test_SELINUX
+   test_SERVICES
+   test_SHELLS
+   test_SSL
+   test_SYSLOG
+   test_UNAME
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+

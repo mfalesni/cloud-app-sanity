@@ -1,0 +1,7 @@
+test_RPMPackages Module
+=======================
+
+.. automodule:: test_RPMPackages
+    :members:
+    :undoc-members:
+    :show-inheritance:

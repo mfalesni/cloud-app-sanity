@@ -1,0 +1,7 @@
+test_SYSLOG Module
+==================
+
+.. automodule:: test_SYSLOG
+    :members:
+    :undoc-members:
+    :show-inheritance:

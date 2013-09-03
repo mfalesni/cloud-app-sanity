@@ -1,0 +1,188 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test_RPMPackages &mdash; CloudForms Application Sanity Test Suite 1.00 documentation</title>
+    
+    <link rel="stylesheet" href="../static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.00',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="CloudForms Application Sanity Test Suite 1.00 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">CloudForms Application Sanity Test Suite 1.00 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for test_RPMPackages</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python2</span>
+<span class="c">#   Author(s): Milan Falesnik &lt;mfalesni@redhat.com&gt;</span>
+<span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c">#</span>
+<span class="c">#   Copyright (c) 2013 Red Hat, Inc. All rights reserved.</span>
+<span class="c">#</span>
+<span class="c">#   This copyrighted material is made available to anyone wishing</span>
+<span class="c">#   to use, modify, copy, or redistribute it subject to the terms</span>
+<span class="c">#   and conditions of the GNU General Public License version 2.</span>
+<span class="c">#</span>
+<span class="c">#   This program is distributed in the hope that it will be</span>
+<span class="c">#   useful, but WITHOUT ANY WARRANTY; without even the implied</span>
+<span class="c">#   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR</span>
+<span class="c">#   PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#   You should have received a copy of the GNU General Public</span>
+<span class="c">#   License along with this program; if not, write to the Free</span>
+<span class="c">#   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,</span>
+<span class="c">#   Boston, MA 02110-1301, USA.</span>
+<span class="c">#</span>
+<span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This file contains class which tests each RPM package in the system.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">common.rpm</span>
+<span class="kn">import</span> <span class="nn">common.elf</span>
+<span class="kn">import</span> <span class="nn">conftest</span> <span class="kn">as</span> <span class="nn">fixtures</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">fixtures</span><span class="o">.</span><span class="n">rpm_package_list</span><span class="p">())</span>
+<div class="viewcode-block" id="TestRPM"><a class="viewcode-back" href="../test_RPMPackages.html#test_RPMPackages.TestRPM">[docs]</a><span class="k">class</span> <span class="nc">TestRPM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;os.environ.get(&#39;SKIP_SIGNATURE_CHECK&#39;, &#39;false&#39;).strip() == &#39;true&#39;&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="TestRPM.test_signed"><a class="viewcode-back" href="../test_RPMPackages.html#test_RPMPackages.TestRPM.test_signed">[docs]</a>    <span class="k">def</span> <span class="nf">test_signed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This test checks a package whether it has signature.</span>
+
+<span class="sd">        :param package: package to be checked</span>
+<span class="sd">        :type package: ``str``</span>
+
+<span class="sd">        :raises: AssertionError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">problems</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">verify_package_signed</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">problems</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Package </span><span class="si">%s</span><span class="s"> had following problems: &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">problems</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="TestRPM.test_files"><a class="viewcode-back" href="../test_RPMPackages.html#test_RPMPackages.TestRPM.test_files">[docs]</a>    <span class="k">def</span> <span class="nf">test_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This test checks a package whether all files are ok.</span>
+<span class="sd">            It also checks the return code of rpm -Vvv.</span>
+
+<span class="sd">        :param package: package to be checked</span>
+<span class="sd">        :type package: ``str``</span>
+
+<span class="sd">        :raises: AssertionError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">problems</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">verify_package_files</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">problems</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Package </span><span class="si">%s</span><span class="s"> had following problems: &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">problems</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="TestRPM.test_fortified"><a class="viewcode-back" href="../test_RPMPackages.html#test_RPMPackages.TestRPM.test_fortified">[docs]</a>    <span class="k">def</span> <span class="nf">test_fortified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This test checks whether are all compiled files in package fortified.</span>
+
+<span class="sd">        :param package: Package name</span>
+<span class="sd">        :type package: ``list``</span>
+
+<span class="sd">        :raises: pytest.Failed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># FIXME - Review rpm-chksec</span>
+        <span class="c"># (http://people.redhat.com/sgrubb/files/rpm-chksec) coverage to determine</span>
+        <span class="c"># whether adjustments/enhancements are needed</span>
+        <span class="c"># problems = []</span>
+        <span class="c"># files = common.rpm.ql(package).strip().split(&quot;\n&quot;)</span>
+        <span class="c"># for f in files:</span>
+        <span class="c">#     if common.elf.is_elf(f):</span>
+        <span class="c">#         dangerous = common.elf.fortify_find_dangerous(f)</span>
+        <span class="c">#         for function in dangerous:</span>
+        <span class="c">#             if not function.endswith(&quot;_chk&quot;) and not function.endswith(&quot;__chk_fail&quot;):</span>
+        <span class="c">#                 problems.append((f, function, &quot;dangerous call&quot;))</span>
+        <span class="c"># assert len(problems) == 0, &quot;Problems found:\n&quot; + &quot;\n&quot;.join([&quot;%s@%s | %s&quot; % (x[1], x[0], x[2]) for x in problems])</span>
+        <span class="c"># Alternate</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">ql</span><span class="p">(</span><span class="n">package</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+        <span class="n">was_elf</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">common</span><span class="o">.</span><span class="n">elf</span><span class="o">.</span><span class="n">is_elf</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="n">failed</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">was_elf</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">dangerous</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">elf</span><span class="o">.</span><span class="n">fortify_find_dangerous</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">dangerous</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">function</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;_chk&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">function</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;__chk_fail&quot;</span><span class="p">):</span>
+                        <span class="n">failed</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">assert</span> <span class="ow">not</span> <span class="n">failed</span><span class="p">,</span> <span class="s">&quot;File </span><span class="si">%s</span><span class="s"> has problem with fortification!&quot;</span> <span class="o">%</span> <span class="n">f</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">was_elf</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;No binary present in this package&quot;</span><span class="p">)</span>
+        </div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">CloudForms Application Sanity Test Suite 1.00 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Milan Falesnik (mfalesni at redhat.com).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+test_INITTAB Module
+===================
+
+.. automodule:: test_INITTAB
+    :members:
+    :undoc-members:
+    :show-inheritance:

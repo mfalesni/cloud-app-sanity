@@ -1,0 +1,7 @@
+test_01_BASH_HISTORY Module
+===========================
+
+.. automodule:: test_01_BASH_HISTORY
+    :members:
+    :undoc-members:
+    :show-inheritance:
