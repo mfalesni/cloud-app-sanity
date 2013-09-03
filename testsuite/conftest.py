@@ -253,9 +253,7 @@ def rpm_package_list():
     :rtype: ``list``
     """
     raw = common.shell.run("rpm -qa").strip()
-    result = [x.strip() for x in raw.split("\n")]
-    result.sort()
-    return result
+    return [x.strip() for x in raw.split("\n")]
 
 @pytest.fixture
 def rpm_package_list_names():
