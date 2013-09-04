@@ -25,6 +25,7 @@ import re
 import pytest
 import common.shell
 import common.rpm
+import conftest as fixtures
 
 class RPMPackageFailure(Exception):
     pass
@@ -86,10 +87,14 @@ def wrong_files_lines(package_lines):
     :returns: List of lines speaking about wrong something about files
     :rtype: ``list(str)``
     """
+    release = fixtures.rhel_release()
     for line in package_lines:
         line = line.strip()
-        if not line.startswith(".........") and len(line) > 0:
-            yield line
+        if len(line) > 0:
+            # RHEL5 has 8 dots
+            # RHEL6 has 9 dots
+            if (not line.startswith(".........") and release.major == 6) or (not line.startswith("........") and release.major == 5):
+                yield line
 
 def verify_package_files(package):
     """ Verifies package in RPM database.
