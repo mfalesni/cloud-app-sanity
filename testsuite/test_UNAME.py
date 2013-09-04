@@ -25,6 +25,8 @@ import common.rpm
 import pytest
 import re
 
+#TODO!! Doplnit
+
 def test_uname_o_gnu_linux():
     uname = common.shell.Run.command("uname -o")
     assert uname, "uname failed!"
@@ -41,7 +43,7 @@ def test_kernel_latest_version_is_running():
     last_kernel = re.split(r"\s+", last_kernel, 1)[0]
     last_kernel = re.sub(r"^kernel-", "", last_kernel)
     print uname_r, last_kernel
-    assert uname_r == last_kernel, "Running kernel does not match latest installed kernel!"
+    assert uname_r == last_kernel, "Running kernel (%s) does not match latest installed kernel (%s)!" % (uname_r, last_kernel)
 
 @pytest.mark.skipif("not common.rpm.package_installed('kernel-xen')")
 def test_kernel_latest_XEN_version_is_running():
@@ -53,4 +55,4 @@ def test_kernel_latest_XEN_version_is_running():
     last_kernel = last_kernel.stdout.strip().split("\n")[0] #
     last_kernel = re.split(r"\s+", last_kernel, 1)[0]       # Drop the date field
     last_kernel = re.sub(r"^kernel-xen-", "", last_kernel)  # Strip the beginning
-    assert uname_r == last_kernel, "Running kernel does not match latest installed kernel!"
+    assert uname_r == last_kernel, "Running kernel (%s) does not match latest installed kernel (%s)!" % (uname_r, last_kernel)
