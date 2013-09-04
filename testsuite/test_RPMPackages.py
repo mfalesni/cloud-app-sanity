@@ -30,9 +30,10 @@ import common.elf
 import conftest as fixtures
 import os
 
-@pytest.mark.parametrize("package", fixtures.rpm_package_list())
 class TestRPM(object):
+    
     @pytest.mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false').strip() == 'true'")
+    @pytest.mark.parametrize("package", fixtures.rpm_package_list())
     def test_signed(self, package):
         """ This test checks a package whether it has signature.
 
@@ -44,6 +45,7 @@ class TestRPM(object):
         problems = common.rpm.verify_package_signed(package)
         assert len(problems) == 0, "Package %s had following problems: '%s'" % (package, ", ".join(problems))
 
+    @pytest.mark.parametrize("package", fixtures.rpm_package_list())
     def test_files(self, package):
         """ This test checks a package whether all files are ok.
             It also checks the return code of rpm -Vvv.
@@ -56,6 +58,7 @@ class TestRPM(object):
         problems = common.rpm.verify_package_files(package)
         assert len(problems) == 0, "Package %s had following problems: '%s'" % (package, ", ".join(problems))
 
+    @pytest.mark.parametrize("package", fixtures.rpm_package_list())
     def test_fortified(self, package):
         """ This test checks whether are all compiled files in package fortified.
 
