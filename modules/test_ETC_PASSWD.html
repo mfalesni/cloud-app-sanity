@@ -71,6 +71,10 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    File containing tests around /etc/passwd and /etc/group</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">common.shell</span>
 <span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">from</span> <span class="nn">conftest</span> <span class="kn">import</span> <span class="n">rhel_release</span>
@@ -81,6 +85,11 @@
     <span class="s">&quot;sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin&quot;</span><span class="p">]</span>
     <span class="p">)</span>
 <div class="viewcode-block" id="test_lines_in_passwd"><a class="viewcode-back" href="../test_ETC_PASSWD.html#test_ETC_PASSWD.test_lines_in_passwd">[docs]</a><span class="k">def</span> <span class="nf">test_lines_in_passwd</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This test checks whether important accounts are correctly specified</span>
+
+<span class="sd">    :raises: ``AssertionError``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">r&quot;grep &#39;^</span><span class="si">%s</span><span class="s">&#39; /etc/passwd&quot;</span> <span class="o">%</span> <span class="n">line</span><span class="p">)</span>
 </div>
 <span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;group&quot;</span><span class="p">,</span> <span class="p">[</span>
@@ -90,6 +99,12 @@
     <span class="p">)</span>
 <span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;int(rhel_release()[0]) != 6&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="test_groups_RHEL6"><a class="viewcode-back" href="../test_ETC_PASSWD.html#test_ETC_PASSWD.test_groups_RHEL6">[docs]</a><span class="k">def</span> <span class="nf">test_groups_RHEL6</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This test checks whether important groups are correctly specified.</span>
+<span class="sd">        RHEL6 variant.</span>
+
+<span class="sd">    :raises: ``AssertionError``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">r&quot;grep &#39;^</span><span class="si">%s</span><span class="s">&#39; /etc/group&quot;</span> <span class="o">%</span> <span class="n">group</span><span class="p">)</span>
 </div>
 <span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;group&quot;</span><span class="p">,</span> <span class="p">[</span>
@@ -99,6 +114,12 @@
     <span class="p">)</span>
 <span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;int(rhel_release()[0]) != 5&quot;</span><span class="p">)</span>
 <div class="viewcode-block" id="test_groups_RHEL5"><a class="viewcode-back" href="../test_ETC_PASSWD.html#test_ETC_PASSWD.test_groups_RHEL5">[docs]</a><span class="k">def</span> <span class="nf">test_groups_RHEL5</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This test checks whether important groups are correctly specified.</span>
+<span class="sd">        RHEL5 variant.</span>
+
+<span class="sd">    :raises: ``AssertionError``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">r&quot;grep &#39;^</span><span class="si">%s</span><span class="s">&#39; /etc/group&quot;</span> <span class="o">%</span> <span class="n">group</span><span class="p">)</span></div>
 </pre></div>
 

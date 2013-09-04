@@ -82,6 +82,11 @@
 <div class="viewcode-block" id="TestFileSystem"><a class="viewcode-back" href="../test_FILESYSTEM.html#test_FILESYSTEM.TestFileSystem">[docs]</a><span class="k">class</span> <span class="nc">TestFileSystem</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="nd">@pytest.fixture</span>
 <div class="viewcode-block" id="TestFileSystem.world_writable_whitelist"><a class="viewcode-back" href="../test_FILESYSTEM.html#test_FILESYSTEM.TestFileSystem.world_writable_whitelist">[docs]</a>    <span class="k">def</span> <span class="nf">world_writable_whitelist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Reads a whitelist of files that can be world_writable.</span>
+
+<span class="sd">        :returns: Whitelist of world-writable files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;parametrized/world_writable_whitelist&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
@@ -93,6 +98,11 @@
 </div>
     <span class="nd">@pytest.fixture</span>
 <div class="viewcode-block" id="TestFileSystem.ignore_patterns"><a class="viewcode-back" href="../test_FILESYSTEM.html#test_FILESYSTEM.TestFileSystem.ignore_patterns">[docs]</a>    <span class="k">def</span> <span class="nf">ignore_patterns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Reads a list of ignore patterns which won&#39;t be tested.</span>
+
+<span class="sd">        :returns: List of ignore patterns</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;parametrized/fs_ignore_patterns&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
@@ -104,6 +114,9 @@
 
 </div>
 <div class="viewcode-block" id="TestFileSystem.fmt_mode_str"><a class="viewcode-back" href="../test_FILESYSTEM.html#test_FILESYSTEM.TestFileSystem.fmt_mode_str">[docs]</a>    <span class="k">def</span> <span class="nf">fmt_mode_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">st_mode</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ???</span>
+<span class="sd">            Does the formatting of props.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Type</span>
         <span class="n">ftype_alias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">REG</span><span class="o">=</span><span class="s">&#39;-&#39;</span><span class="p">,</span> <span class="n">FIFO</span><span class="o">=</span><span class="s">&#39;p&#39;</span><span class="p">,</span> <span class="n">UID</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="n">GID</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="n">VTX</span><span class="o">=</span><span class="s">&#39;t&#39;</span><span class="p">)</span>
         <span class="n">mode_str</span> <span class="o">=</span> <span class="s">&#39;-&#39;</span>
@@ -133,7 +146,7 @@
         <span class="sd">&quot;&quot;&quot; This test checks whether there are some files with unwanted props in FS.</span>
 <span class="sd">            Looks for broken symlinks and world-writable files.</span>
 
-<span class="sd">        :raises: pytest.Failed</span>
+<span class="sd">        :raises: ``pytest.Failed``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># Used for storing directories to parse</span>
         <span class="n">starting_dir</span> <span class="o">=</span> <span class="s">&quot;/&quot;</span>

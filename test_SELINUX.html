@@ -56,6 +56,7 @@
             
   <div class="section" id="module-test_SELINUX">
 <span id="test-selinux-module"></span><h1>test_SELINUX Module<a class="headerlink" href="#module-test_SELINUX" title="Permalink to this headline">¶</a></h1>
+<p>This file contains tests on SElinux</p>
 <dl class="class">
 <dt id="test_SELINUX.TestSelinux">
 <em class="property">class </em><tt class="descclassname">test_SELINUX.</tt><tt class="descname">TestSelinux</tt><a class="reference internal" href="modules/test_SELINUX.html#TestSelinux"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_SELINUX.TestSelinux" title="Permalink to this definition">¶</a></dt>
@@ -127,12 +128,14 @@
 <dl class="method">
 <dt id="test_SELINUX.TestSelinux.set_enforcing">
 <tt class="descname">set_enforcing</tt><big>(</big><big>)</big><a class="reference internal" href="modules/test_SELINUX.html#TestSelinux.set_enforcing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_SELINUX.TestSelinux.set_enforcing" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set Enforcing mode.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="test_SELINUX.TestSelinux.set_permissive">
 <tt class="descname">set_permissive</tt><big>(</big><big>)</big><a class="reference internal" href="modules/test_SELINUX.html#TestSelinux.set_permissive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_SELINUX.TestSelinux.set_permissive" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set Permissive mode.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="test_SELINUX.TestSelinux.setup_class">
@@ -181,7 +184,8 @@
 <dl class="method">
 <dt id="test_SELINUX.TestSelinux.test_enforcing_check">
 <tt class="descname">test_enforcing_check</tt><big>(</big><em>set_enforcing</em>, <em>getenforce</em><big>)</big><a class="reference internal" href="modules/test_SELINUX.html#TestSelinux.test_enforcing_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_SELINUX.TestSelinux.test_enforcing_check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check for success of flip_enforcing test.</p>
+<dd><p>Flips SElinux into Enforcing mode.
+Checks if SElinux is in Enforcing mode.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -230,7 +234,8 @@ Checks from config file</p>
 <dl class="method">
 <dt id="test_SELINUX.TestSelinux.test_permissive_check">
 <tt class="descname">test_permissive_check</tt><big>(</big><em>set_permissive</em>, <em>getenforce</em><big>)</big><a class="reference internal" href="modules/test_SELINUX.html#TestSelinux.test_permissive_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_SELINUX.TestSelinux.test_permissive_check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check for success of flip_permissive test.</p>
+<dd><p>Flips SElinux into permissive mode.
+Checks if SElinux is in Permissive mode.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

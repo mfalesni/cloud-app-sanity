@@ -368,6 +368,12 @@ if downloading from Gitweb-site</p>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 </dd></dl>
 
+<dl class="data">
+<dt id="common.rpm.RPM_PROBLEMS_MESSAGES">
+<tt class="descclassname">common.rpm.</tt><tt class="descname">RPM_PROBLEMS_MESSAGES</tt><em class="property"> = {'S': 'size', '5': 'MD5 checksum', 'D': 'major and minor numbers', 'G': 'group', 'U': 'owner', 'M': 'mode', 'L': 'symbolic link contents', 'T': 'modification time'}</em><a class="headerlink" href="#common.rpm.RPM_PROBLEMS_MESSAGES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains messages reported by RPM tests for each problem</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="common.rpm.check_for_errors">
 <tt class="descclassname">common.rpm.</tt><tt class="descname">check_for_errors</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="modules/common/rpm.html#check_for_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.rpm.check_for_errors" title="Permalink to this definition">¶</a></dt>
@@ -539,7 +545,8 @@ if downloading from Gitweb-site</p>
 <tt class="descclassname">common.rpm.</tt><tt class="descname">verify_package_files</tt><big>(</big><em>package</em><big>)</big><a class="reference internal" href="modules/common/rpm.html#verify_package_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.rpm.verify_package_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Verifies package in RPM database.</p>
 <blockquote>
-<div>Checks output of the rpm -Vvv and looks for files, which have some problems (see <a class="reference external" href="http://www.rpm.org/max-rpm/s1-rpm-verify-output.html">http://www.rpm.org/max-rpm/s1-rpm-verify-output.html</a>)</div></blockquote>
+<div>Checks output of the rpm -Vvv and looks for files, which have some problems (see <a class="reference external" href="http://www.rpm.org/max-rpm/s1-rpm-verify-output.html">http://www.rpm.org/max-rpm/s1-rpm-verify-output.html</a>)
+When using RHEL5, $? is ignored.</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -645,27 +652,72 @@ Result contains stdout, stderr, rc and run command:
 self.stdout, self.stderr, self.rc, self.command.
 Result is usable in if, if the $?=0, if evaluates as True.</p>
 <p>Run.bash() runs bash script provides as a parameter.</p>
+<dl class="method">
+<dt id="common.shell.Run.AssertRC">
+<tt class="descname">AssertRC</tt><big>(</big><em>rc=0</em><big>)</big><a class="reference internal" href="modules/common/shell.html#Run.AssertRC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.shell.Run.AssertRC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert used for testing on certain RC values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><tt class="docutils literal"><span class="pre">AssertionError</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="classmethod">
 <dt id="common.shell.Run.bash">
 <em class="property">classmethod </em><tt class="descname">bash</tt><big>(</big><em>script_body</em>, <em>stdin=None</em><big>)</big><a class="reference internal" href="modules/common/shell.html#Run.bash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.shell.Run.bash" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Uses Run.command(...) to open bash shell and feed it with script from string <tt class="docutils literal"><span class="pre">script_body</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Run() instance with resulting data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="common.shell.Run.command">
 <em class="property">classmethod </em><tt class="descname">command</tt><big>(</big><em>command</em>, <em>stdin=None</em>, <em>shell=False</em><big>)</big><a class="reference internal" href="modules/common/shell.html#Run.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.shell.Run.command" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Runs specified command.</p>
+<p>The command can be fed with data on stdin with parameter <tt class="docutils literal"><span class="pre">stdin</span></tt>.
+The command can also be treated as a shell command with parameter <tt class="docutils literal"><span class="pre">shell</span></tt>.
+Please refer to subprocess.Popen on how does this stuff work</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Run() instance with resulting data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="common.shell.Run.rerun">
 <tt class="descname">rerun</tt><big>(</big><big>)</big><a class="reference internal" href="modules/common/shell.html#Run.rerun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.shell.Run.rerun" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Performs a new run of the command which produced this result</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Instance of Run() class</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="common.shell.command">
 <tt class="descclassname">common.shell.</tt><tt class="descname">command</tt><big>(</big><em>command</em><big>)</big><a class="reference internal" href="modules/common/shell.html#command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.shell.command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function used for calling shell commands rather than invoking programs.</p>
+<dd><p>DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!</p>
+<p>Function used for calling shell commands rather than invoking programs.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -683,7 +735,8 @@ Result is usable in if, if the $?=0, if evaluates as True.</p>
 <dl class="function">
 <dt id="common.shell.command_stderr">
 <tt class="descclassname">common.shell.</tt><tt class="descname">command_stderr</tt><big>(</big><em>command</em><big>)</big><a class="reference internal" href="modules/common/shell.html#command_stderr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.shell.command_stderr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function used for calling shell commands rather than invoking programs.
+<dd><p>DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!</p>
+<p>Function used for calling shell commands rather than invoking programs.
 It also returns stderr output, so it&#8217;s basically the same as the preceeding function, just return tuple extended</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -736,7 +789,8 @@ It also returns stderr output, so it&#8217;s basically the same as the preceedin
 <dl class="function">
 <dt id="common.shell.run">
 <tt class="descclassname">common.shell.</tt><tt class="descname">run</tt><big>(</big><em>cmd</em>, <em>errorcode=0</em><big>)</big><a class="reference internal" href="modules/common/shell.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.shell.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function runs desired command and checks whether it has failed or not</p>
+<dd><p>DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!</p>
+<p>This function runs desired command and checks whether it has failed or not</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -855,7 +909,8 @@ update is available for the provided package.</p>
 <dl class="function">
 <dt id="common.yum.get_yum_variable">
 <tt class="descclassname">common.yum.</tt><tt class="descname">get_yum_variable</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="modules/common/yum.html#get_yum_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.yum.get_yum_variable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>???</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="common.yum.groupinstall">
@@ -952,7 +1007,8 @@ update is available for the provided package.</p>
 <dl class="function">
 <dt id="common.yum.set_yum_variable">
 <tt class="descclassname">common.yum.</tt><tt class="descname">set_yum_variable</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="reference internal" href="modules/common/yum.html#set_yum_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#common.yum.set_yum_variable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>???</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="common.yum.update">

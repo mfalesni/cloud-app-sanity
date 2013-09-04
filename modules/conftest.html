@@ -325,7 +325,22 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">redhat_release_content</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;cat /etc/redhat-release&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">redhat_version_field</span> <span class="o">=</span> <span class="n">redhat_release_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)[</span><span class="mi">6</span><span class="p">]</span>
-    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">redhat_version_field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">class</span> <span class="nc">RedhatRelease</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">,</span> <span class="n">distro</span><span class="o">=</span><span class="s">&quot;RHEL&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">major</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distro</span> <span class="o">=</span> <span class="n">distro</span>
+
+        <span class="c"># Compatibility layer</span>
+        <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">position</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&quot;only 0 and 1 supported&quot;</span><span class="p">)</span>
+    <span class="c">#return tuple(redhat_version_field.split(&quot;.&quot;, 1))</span>
+    <span class="k">return</span> <span class="n">RedhatRelease</span><span class="p">(</span><span class="o">*</span><span class="n">redhat_version_field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 </div>
 <span class="nd">@pytest.fixture</span>
 <div class="viewcode-block" id="PATH"><a class="viewcode-back" href="../conftest.html#conftest.PATH">[docs]</a><span class="k">def</span> <span class="nf">PATH</span><span class="p">():</span>

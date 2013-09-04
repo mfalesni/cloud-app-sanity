@@ -71,6 +71,10 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This file contains tests on SElinux</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">common.selinux</span>
 
@@ -91,10 +95,16 @@
 </div>
     <span class="nd">@pytest.fixture</span>
 <div class="viewcode-block" id="TestSelinux.set_enforcing"><a class="viewcode-back" href="../test_SELINUX.html#test_SELINUX.TestSelinux.set_enforcing">[docs]</a>    <span class="k">def</span> <span class="nf">set_enforcing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Set Enforcing mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">common</span><span class="o">.</span><span class="n">selinux</span><span class="o">.</span><span class="n">setenforce</span><span class="p">(</span><span class="s">&quot;Enforcing&quot;</span><span class="p">)</span>
 </div>
     <span class="nd">@pytest.fixture</span>
 <div class="viewcode-block" id="TestSelinux.set_permissive"><a class="viewcode-back" href="../test_SELINUX.html#test_SELINUX.TestSelinux.set_permissive">[docs]</a>    <span class="k">def</span> <span class="nf">set_permissive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Set Permissive mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">common</span><span class="o">.</span><span class="n">selinux</span><span class="o">.</span><span class="n">setenforce</span><span class="p">(</span><span class="s">&quot;Permissive&quot;</span><span class="p">)</span>
 </div>
     <span class="nd">@pytest.fixture</span>
@@ -163,6 +173,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">is_enabled</span><span class="p">,</span> <span class="s">&quot;SELinux is not enabled&quot;</span>
 </div>
+    <span class="nd">@pytest.mark.xfail</span>
 <div class="viewcode-block" id="TestSelinux.test_enforcing"><a class="viewcode-back" href="../test_SELINUX.html#test_SELINUX.TestSelinux.test_enforcing">[docs]</a>    <span class="k">def</span> <span class="nf">test_enforcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">getenforce</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Verifies whether SELinux is in &#39;Enforcing&#39; state.</span>
 
@@ -174,6 +185,7 @@
         <span class="k">assert</span> <span class="n">getenforce</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;Enforcing&quot;</span><span class="p">,</span> <span class="s">&quot;SELinux is not in Enforcing mode!&quot;</span>
         
 </div>
+    <span class="nd">@pytest.mark.xfail</span>
 <div class="viewcode-block" id="TestSelinux.test_enforcing_from_config"><a class="viewcode-back" href="../test_SELINUX.html#test_SELINUX.TestSelinux.test_enforcing_from_config">[docs]</a>    <span class="k">def</span> <span class="nf">test_enforcing_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">getenforce_conf</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Verifies whether SELinux is in &#39;Enforcing&#39; state.</span>
 <span class="sd">            Checks from config file</span>
@@ -196,7 +208,8 @@
         <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&quot;targeted&quot;</span><span class="p">,</span> <span class="s">&quot;SELinux is not in Enforcing mode!&quot;</span>
 </div>
 <div class="viewcode-block" id="TestSelinux.test_permissive_check"><a class="viewcode-back" href="../test_SELINUX.html#test_SELINUX.TestSelinux.test_permissive_check">[docs]</a>    <span class="k">def</span> <span class="nf">test_permissive_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_permissive</span><span class="p">,</span> <span class="n">getenforce</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Check for success of flip_permissive test.</span>
+        <span class="sd">&quot;&quot;&quot; Flips SElinux into permissive mode.</span>
+<span class="sd">            Checks if SElinux is in Permissive mode.</span>
 
 <span class="sd">        :param selinux_getenforce: Current enforcing status</span>
 <span class="sd">        :type selinux_getenforce: ``str``</span>
@@ -206,7 +219,8 @@
         <span class="k">assert</span> <span class="n">getenforce</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;Permissive&quot;</span><span class="p">,</span> <span class="s">&quot;SELinux is not in Permissive mode&quot;</span>
 </div>
 <div class="viewcode-block" id="TestSelinux.test_enforcing_check"><a class="viewcode-back" href="../test_SELINUX.html#test_SELINUX.TestSelinux.test_enforcing_check">[docs]</a>    <span class="k">def</span> <span class="nf">test_enforcing_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_enforcing</span><span class="p">,</span> <span class="n">getenforce</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Check for success of flip_enforcing test.</span>
+        <span class="sd">&quot;&quot;&quot; Flips SElinux into Enforcing mode.</span>
+<span class="sd">            Checks if SElinux is in Enforcing mode.</span>
 
 <span class="sd">        :param selinux_getenforce: Current enforcing status</span>
 <span class="sd">        :type selinux_getenforce: ``str``</span>

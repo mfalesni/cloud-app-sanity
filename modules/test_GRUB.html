@@ -71,12 +71,26 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
+<span class="sd">&quot;&quot;&quot; Tests around grub</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">common.shell</span>
 
 <div class="viewcode-block" id="test_menu_lst_exists"><a class="viewcode-back" href="../test_GRUB.html#test_GRUB.test_menu_lst_exists">[docs]</a><span class="k">def</span> <span class="nf">test_menu_lst_exists</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test which checks whether ``menu.lst`` exists.</span>
+
+<span class="sd">    :raises: ``AssertionError``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;test -h /boot/grub/menu.lst&quot;</span><span class="p">),</span> <span class="s">&quot;/boot/grub/menu.lst does not exist&quot;</span>
 </div>
 <div class="viewcode-block" id="test_symlink_menu_lst"><a class="viewcode-back" href="../test_GRUB.html#test_GRUB.test_symlink_menu_lst">[docs]</a><span class="k">def</span> <span class="nf">test_symlink_menu_lst</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test which checks whether ``menu.lst`` is a symlink to ``/boot/grub/grub.conf``.</span>
+
+<span class="sd">    :raises: ``AssertionError``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">symlink</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;readlink -e /boot/grub/menu.lst&quot;</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">symlink</span>
     <span class="k">assert</span> <span class="n">symlink</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;/boot/grub/grub.conf&quot;</span><span class="p">,</span> <span class="s">&quot;/boot/grub/menu.lst is not a symlink to /boot/grub/grub.conf&quot;</span></div>

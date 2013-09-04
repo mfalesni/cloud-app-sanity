@@ -77,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">common.shell</span>
 <span class="kn">import</span> <span class="nn">common.rpm</span>
+<span class="kn">import</span> <span class="nn">conftest</span> <span class="kn">as</span> <span class="nn">fixtures</span>
 
 <div class="viewcode-block" id="RPMPackageFailure"><a class="viewcode-back" href="../../common.html#common.rpm.RPMPackageFailure">[docs]</a><span class="k">class</span> <span class="nc">RPMPackageFailure</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span>
@@ -92,6 +93,7 @@
                             <span class="s">&quot;U&quot;</span><span class="p">:</span> <span class="s">&quot;owner&quot;</span><span class="p">,</span>
                             <span class="s">&quot;G&quot;</span><span class="p">:</span> <span class="s">&quot;group&quot;</span><span class="p">,</span>
                             <span class="s">&quot;T&quot;</span><span class="p">:</span> <span class="s">&quot;modification time&quot;</span><span class="p">}</span>
+<span class="sd">&quot;&quot;&quot; Contains messages reported by RPM tests for each problem &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="check_for_errors"><a class="viewcode-back" href="../../common.html#common.rpm.check_for_errors">[docs]</a><span class="k">def</span> <span class="nf">check_for_errors</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This function checks for errors in text and returns text unchanged</span>
@@ -138,15 +140,20 @@
 <span class="sd">    :returns: List of lines speaking about wrong something about files</span>
 <span class="sd">    :rtype: ``list(str)``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">release</span> <span class="o">=</span> <span class="n">fixtures</span><span class="o">.</span><span class="n">rhel_release</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">package_lines</span><span class="p">:</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;.........&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="n">line</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c"># RHEL5 has 8 dots</span>
+            <span class="c"># RHEL6 has 9 dots</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;.........&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">release</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">6</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;........&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">release</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">5</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">line</span>
 </div>
 <div class="viewcode-block" id="verify_package_files"><a class="viewcode-back" href="../../common.html#common.rpm.verify_package_files">[docs]</a><span class="k">def</span> <span class="nf">verify_package_files</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Verifies package in RPM database.</span>
 
 <span class="sd">        Checks output of the rpm -Vvv and looks for files, which have some problems (see http://www.rpm.org/max-rpm/s1-rpm-verify-output.html)</span>
+<span class="sd">        When using RHEL5, $? is ignored.</span>
 
 <span class="sd">    :param package: Package to check</span>
 <span class="sd">    :type package: ``str``</span>
@@ -156,7 +163,7 @@
     <span class="n">problems</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">source</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">command_stderr</span><span class="p">(</span><span class="s">&quot;rpm -Vvv </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span>
     <span class="n">source</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">fixtures</span><span class="o">.</span><span class="n">rhel_release</span><span class="p">()</span><span class="o">.</span><span class="n">major</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span> <span class="c"># RHEL5 will ignore returncode</span>
         <span class="n">problems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;RPM $?=</span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">rc</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">wrong_files_lines</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
         <span class="n">status_type</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -238,7 +245,7 @@
 <span class="sd">    :rtype: ``bool``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;rpm -q </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;rpm -q </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">True</span>
     <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span>

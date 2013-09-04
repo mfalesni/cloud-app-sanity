@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>test_UNAME Module &mdash; CloudForms Application Sanity Test Suite 1.00 documentation</title>
+    <title>test_SSHD Module &mdash; CloudForms Application Sanity Test Suite 1.00 documentation</title>
     
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -26,7 +26,8 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="CloudForms Application Sanity Test Suite 1.00 documentation" href="index.html" />
-    <link rel="prev" title="test_SYSLOG Module" href="test_SYSLOG.html" /> 
+    <link rel="next" title="test_SSL Module" href="test_SSL.html" />
+    <link rel="prev" title="test_SHELLS Module" href="test_SHELLS.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,7 +40,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="test_SYSLOG.html" title="test_SYSLOG Module"
+          <a href="test_SSL.html" title="test_SSL Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="test_SHELLS.html" title="test_SHELLS Module"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">CloudForms Application Sanity Test Suite 1.00 documentation</a> &raquo;</li> 
       </ul>
@@ -50,44 +54,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-test_UNAME">
-<span id="test-uname-module"></span><h1>test_UNAME Module<a class="headerlink" href="#module-test_UNAME" title="Permalink to this headline">¶</a></h1>
-<p>Tests using uname</p>
+  <div class="section" id="module-test_SSHD">
+<span id="test-sshd-module"></span><h1>test_SSHD Module<a class="headerlink" href="#module-test_SSHD" title="Permalink to this headline">¶</a></h1>
+<p>This file contains tests around SSH</p>
 <dl class="function">
-<dt id="test_UNAME.test_kernel_latest_XEN_version_is_running">
-<tt class="descclassname">test_UNAME.</tt><tt class="descname">test_kernel_latest_XEN_version_is_running</tt><big>(</big><big>)</big><a class="reference internal" href="modules/test_UNAME.html#test_kernel_latest_XEN_version_is_running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_UNAME.test_kernel_latest_XEN_version_is_running" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>This test checks whether system runs on a kernel, which is latest installed.</dt>
-<dd>For xen kernel.</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><tt class="docutils literal"><span class="pre">AssertionError</span></tt></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="test_UNAME.test_kernel_latest_version_is_running">
-<tt class="descclassname">test_UNAME.</tt><tt class="descname">test_kernel_latest_version_is_running</tt><big>(</big><big>)</big><a class="reference internal" href="modules/test_UNAME.html#test_kernel_latest_version_is_running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_UNAME.test_kernel_latest_version_is_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>This test checks whether system runs on a kernel, which is latest installed.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><tt class="docutils literal"><span class="pre">AssertionError</span></tt></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="test_UNAME.test_uname_o_gnu_linux">
-<tt class="descclassname">test_UNAME.</tt><tt class="descname">test_uname_o_gnu_linux</tt><big>(</big><big>)</big><a class="reference internal" href="modules/test_UNAME.html#test_uname_o_gnu_linux"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_UNAME.test_uname_o_gnu_linux" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test that system reports it is GNU/Linux</p>
+<dt id="test_SSHD.test_sshd_active">
+<tt class="descclassname">test_SSHD.</tt><tt class="descname">test_sshd_active</tt><big>(</big><em>is_systemd</em><big>)</big><a class="reference internal" href="modules/test_SSHD.html#test_sshd_active"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test_SSHD.test_sshd_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>This tests checks that SSH server is active</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -107,11 +80,14 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="test_SYSLOG.html"
-                        title="previous chapter">test_SYSLOG Module</a></p>
+  <p class="topless"><a href="test_SHELLS.html"
+                        title="previous chapter">test_SHELLS Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="test_SSL.html"
+                        title="next chapter">test_SSL Module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="sources/test_UNAME.txt"
+    <li><a href="sources/test_SSHD.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -141,7 +117,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="test_SYSLOG.html" title="test_SYSLOG Module"
+          <a href="test_SSL.html" title="test_SSL Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="test_SHELLS.html" title="test_SHELLS Module"
              >previous</a> |</li>
         <li><a href="index.html">CloudForms Application Sanity Test Suite 1.00 documentation</a> &raquo;</li> 
       </ul>

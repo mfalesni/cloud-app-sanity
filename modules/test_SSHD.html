@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>test_SHELLS &mdash; CloudForms Application Sanity Test Suite 1.00 documentation</title>
+    <title>test_SSHD &mdash; CloudForms Application Sanity Test Suite 1.00 documentation</title>
     
     <link rel="stylesheet" href="../static/default.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
@@ -48,7 +48,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <h1>Source code for test_SHELLS</h1><div class="highlight"><pre>
+  <h1>Source code for test_SSHD</h1><div class="highlight"><pre>
 <span class="c">#!/usr/bin/env python2</span>
 <span class="c">#   Author(s): Milan Falesnik &lt;mfalesni@redhat.com&gt;</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
@@ -72,23 +72,23 @@
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This file contains tests around shells</span>
+<span class="sd">    This file contains tests around SSH</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">common.shell</span>
 
-<span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;shell&quot;</span><span class="p">,</span> <span class="p">[</span>
-    <span class="s">&quot;bin/bash&quot;</span><span class="p">,</span>
-    <span class="s">&quot;bin/nologin&quot;</span><span class="p">]</span>
-    <span class="p">)</span>
-<div class="viewcode-block" id="test_check_shell_in_etc_shells"><a class="viewcode-back" href="../test_SHELLS.html#test_SHELLS.test_check_shell_in_etc_shells">[docs]</a><span class="k">def</span> <span class="nf">test_check_shell_in_etc_shells</span><span class="p">(</span><span class="n">shell</span><span class="p">):</span>
+<div class="viewcode-block" id="test_sshd_active"><a class="viewcode-back" href="../test_SSHD.html#test_SSHD.test_sshd_active">[docs]</a><span class="k">def</span> <span class="nf">test_sshd_active</span><span class="p">(</span><span class="n">is_systemd</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This tests checks a presence of specified shells in /etc/shells</span>
+<span class="sd">        This tests checks that SSH server is active</span>
 
 <span class="sd">    :raises: ``AssertionError``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;grep &#39;</span><span class="si">%s</span><span class="s">$&#39; /etc/shells&quot;</span> <span class="o">%</span> <span class="n">shell</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">is_systemd</span><span class="p">:</span>
+        <span class="n">sshd_active</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;systemctl is-active sshd.service&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">sshd_active</span><span class="p">,</span> <span class="s">&quot;SSH daemon must be active&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;service sshd status&quot;</span><span class="p">),</span> <span class="s">&quot;SSH server must be enabled&quot;</span></div>
 </pre></div>
 
           </div>

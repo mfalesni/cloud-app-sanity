@@ -81,11 +81,12 @@
 <span class="kn">import</span> <span class="nn">conftest</span> <span class="kn">as</span> <span class="nn">fixtures</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">fixtures</span><span class="o">.</span><span class="n">rpm_package_list</span><span class="p">())</span>
 <div class="viewcode-block" id="TestRPM"><a class="viewcode-back" href="../test_RPMPackages.html#test_RPMPackages.TestRPM">[docs]</a><span class="k">class</span> <span class="nc">TestRPM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
     <span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;os.environ.get(&#39;SKIP_SIGNATURE_CHECK&#39;, &#39;false&#39;).strip() == &#39;true&#39;&quot;</span><span class="p">)</span>
+    <span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">fixtures</span><span class="o">.</span><span class="n">rpm_package_list</span><span class="p">())</span>
 <div class="viewcode-block" id="TestRPM.test_signed"><a class="viewcode-back" href="../test_RPMPackages.html#test_RPMPackages.TestRPM.test_signed">[docs]</a>    <span class="k">def</span> <span class="nf">test_signed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This test checks a package whether it has signature.</span>
+        <span class="sd">&quot;&quot;&quot; This test checks a package whether it has a signature.</span>
 
 <span class="sd">        :param package: package to be checked</span>
 <span class="sd">        :type package: ``str``</span>
@@ -95,6 +96,7 @@
         <span class="n">problems</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">verify_package_signed</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">problems</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Package </span><span class="si">%s</span><span class="s"> had following problems: &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">problems</span><span class="p">))</span>
 </div>
+    <span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">fixtures</span><span class="o">.</span><span class="n">rpm_package_list</span><span class="p">())</span>
 <div class="viewcode-block" id="TestRPM.test_files"><a class="viewcode-back" href="../test_RPMPackages.html#test_RPMPackages.TestRPM.test_files">[docs]</a>    <span class="k">def</span> <span class="nf">test_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This test checks a package whether all files are ok.</span>
 <span class="sd">            It also checks the return code of rpm -Vvv.</span>
@@ -107,8 +109,10 @@
         <span class="n">problems</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">rpm</span><span class="o">.</span><span class="n">verify_package_files</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">problems</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Package </span><span class="si">%s</span><span class="s"> had following problems: &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">problems</span><span class="p">))</span>
 </div>
+    <span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s">&quot;package&quot;</span><span class="p">,</span> <span class="n">fixtures</span><span class="o">.</span><span class="n">rpm_package_list</span><span class="p">())</span>
 <div class="viewcode-block" id="TestRPM.test_fortified"><a class="viewcode-back" href="../test_RPMPackages.html#test_RPMPackages.TestRPM.test_fortified">[docs]</a>    <span class="k">def</span> <span class="nf">test_fortified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This test checks whether are all compiled files in package fortified.</span>
+<span class="sd">            This test is still not completed as I don&#39;t have all required informations.</span>
 
 <span class="sd">        :param package: Package name</span>
 <span class="sd">        :type package: ``list``</span>
@@ -133,9 +137,11 @@
         <span class="n">was_elf</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">common</span><span class="o">.</span><span class="n">elf</span><span class="o">.</span><span class="n">is_elf</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-                <span class="n">failed</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">failed</span> <span class="o">=</span> <span class="bp">False</span>
                 <span class="n">was_elf</span> <span class="o">=</span> <span class="bp">True</span>
                 <span class="n">dangerous</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">elf</span><span class="o">.</span><span class="n">fortify_find_dangerous</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dangerous</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">failed</span> <span class="o">=</span> <span class="bp">True</span>
                 <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">dangerous</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">function</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;_chk&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">function</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;__chk_fail&quot;</span><span class="p">):</span>
                         <span class="n">failed</span> <span class="o">=</span> <span class="bp">False</span>

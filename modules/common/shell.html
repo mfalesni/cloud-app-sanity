@@ -80,7 +80,9 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../common.html#common.shell.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">errorcode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This function runs desired command and checks whether it has failed or not</span>
+    <span class="sd">&quot;&quot;&quot; DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!</span>
+
+<span class="sd">    This function runs desired command and checks whether it has failed or not</span>
 
 <span class="sd">    :param cmd: Command to be run</span>
 <span class="sd">    :type cmd: str or list (``shlex``-splitted)</span>
@@ -119,7 +121,9 @@
     <span class="k">return</span> <span class="n">stdout</span>
 </div>
 <div class="viewcode-block" id="command"><a class="viewcode-back" href="../../common.html#common.shell.command">[docs]</a><span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Function used for calling shell commands rather than invoking programs.</span>
+    <span class="sd">&quot;&quot;&quot; DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!</span>
+
+<span class="sd">    Function used for calling shell commands rather than invoking programs.</span>
 
 <span class="sd">    :param command: Command to be launched</span>
 <span class="sd">    :type command: ``str``</span>
@@ -144,8 +148,10 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="command_stderr"><a class="viewcode-back" href="../../common.html#common.shell.command_stderr">[docs]</a><span class="k">def</span> <span class="nf">command_stderr</span><span class="p">(</span><span class="n">command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Function used for calling shell commands rather than invoking programs.</span>
-<span class="sd">        It also returns stderr output, so it&#39;s basically the same as the preceeding function, just return tuple extended</span>
+    <span class="sd">&quot;&quot;&quot; DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!</span>
+
+<span class="sd">    Function used for calling shell commands rather than invoking programs.</span>
+<span class="sd">    It also returns stderr output, so it&#39;s basically the same as the preceeding function, just return tuple extended</span>
 
 <span class="sd">    :param command: Command to be launched</span>
 <span class="sd">    :type command: ``str``</span>
@@ -209,6 +215,9 @@
 <span class="sd">        Run.bash() runs bash script provides as a parameter.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">stdin</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Constructor, self-explaining :)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stdin</span> <span class="o">=</span> <span class="n">stdin</span>
@@ -220,13 +229,43 @@
         <span class="k">return</span> <span class="s">&quot;&lt;Run-&gt;</span><span class="si">%d</span><span class="s"> stdout=&#39;</span><span class="si">%s</span><span class="s">...&#39; stderr=&#39;</span><span class="si">%s</span><span class="s">...&#39;&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">__nonzero__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Used for testing in if- and similar statements.</span>
+
+<span class="sd">            Example:</span>
+<span class="sd">            passwd = common.shell.Run.command(&quot;cat /etc/shadow)</span>
+<span class="sd">            if passwd:</span>
+<span class="sd">                print &quot;Yay :)&quot;</span>
+<span class="sd">            else:</span>
+<span class="sd">                print &quot;Booo&quot;</span>
+
+<span class="sd">        :returns: True if the $? is 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="Run.rerun"><a class="viewcode-back" href="../../common.html#common.shell.Run.rerun">[docs]</a>    <span class="k">def</span> <span class="nf">rerun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Performs a new run of the command which produced this result</span>
+
+<span class="sd">        :returns: Instance of Run() class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Run.AssertRC"><a class="viewcode-back" href="../../common.html#common.shell.Run.AssertRC">[docs]</a>    <span class="k">def</span> <span class="nf">AssertRC</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rc</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Assert used for testing on certain RC values</span>
+
+<span class="sd">        :raises: ``AssertionError``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc</span> <span class="o">==</span> <span class="n">rc</span><span class="p">,</span> <span class="s">&quot;Command `</span><span class="si">%s</span><span class="s">` failed. $? expected: </span><span class="si">%d</span><span class="s">, $? given: </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc</span><span class="p">)</span>
 </div>
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="Run.command"><a class="viewcode-back" href="../../common.html#common.shell.Run.command">[docs]</a>    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Runs specified command.</span>
+
+<span class="sd">        The command can be fed with data on stdin with parameter ``stdin``.</span>
+<span class="sd">        The command can also be treated as a shell command with parameter ``shell``.</span>
+<span class="sd">        Please refer to subprocess.Popen on how does this stuff work</span>
+
+<span class="sd">        :returns: Run() instance with resulting data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">shell</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">command</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
         <span class="n">collate_original</span> <span class="o">=</span> <span class="bp">None</span>
@@ -247,6 +286,10 @@
 </div>
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="Run.bash"><a class="viewcode-back" href="../../common.html#common.shell.Run.bash">[docs]</a>    <span class="k">def</span> <span class="nf">bash</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">script_body</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Uses Run.command(...) to open bash shell and feed it with script from string ``script_body``.</span>
+
+<span class="sd">        :returns: Run() instance with resulting data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">([</span><span class="s">&quot;bash&quot;</span><span class="p">,</span> <span class="s">&quot;-c&quot;</span><span class="p">,</span> <span class="n">script_body</span><span class="p">],</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">)</span></div></div>
 </pre></div>
 

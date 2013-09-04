@@ -71,12 +71,62 @@
 <span class="c">#</span>
 <span class="c"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests using uname</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">common.shell</span>
+<span class="kn">import</span> <span class="nn">common.rpm</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="c">#TODO!! Doplnit</span>
 
 <div class="viewcode-block" id="test_uname_o_gnu_linux"><a class="viewcode-back" href="../test_UNAME.html#test_UNAME.test_uname_o_gnu_linux">[docs]</a><span class="k">def</span> <span class="nf">test_uname_o_gnu_linux</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test that system reports it is GNU/Linux</span>
+
+<span class="sd">    :raises: ``AssertionError``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">uname</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;uname -o&quot;</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">uname</span><span class="p">,</span> <span class="s">&quot;uname failed!&quot;</span>
-    <span class="k">assert</span> <span class="n">uname</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;GNU/Linux&quot;</span><span class="p">,</span> <span class="s">&quot;uname -o shoul equal to GNU/Linux&quot;</span></div>
+    <span class="k">assert</span> <span class="n">uname</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;GNU/Linux&quot;</span><span class="p">,</span> <span class="s">&quot;uname -o shoul equal to GNU/Linux&quot;</span>
+</div>
+<span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;not common.rpm.package_installed(&#39;kernel&#39;)&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="test_kernel_latest_version_is_running"><a class="viewcode-back" href="../test_UNAME.html#test_UNAME.test_kernel_latest_version_is_running">[docs]</a><span class="k">def</span> <span class="nf">test_kernel_latest_version_is_running</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This test checks whether system runs on a kernel, which is latest installed.</span>
+
+<span class="sd">    :raises: ``AssertionError``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uname_r</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;uname -r&quot;</span><span class="p">)</span>
+    <span class="n">uname_r</span><span class="o">.</span><span class="n">AssertRC</span><span class="p">()</span>
+    <span class="n">uname_r</span> <span class="o">=</span> <span class="n">uname_r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">last_kernel</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;rpm -q --last kernel&quot;</span><span class="p">)</span>
+    <span class="n">last_kernel</span><span class="o">.</span><span class="n">AssertRC</span><span class="p">()</span>
+    <span class="n">last_kernel</span> <span class="o">=</span> <span class="n">last_kernel</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">last_kernel</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">r&quot;\s+&quot;</span><span class="p">,</span> <span class="n">last_kernel</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">last_kernel</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r&quot;^kernel-&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">last_kernel</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">uname_r</span><span class="p">,</span> <span class="n">last_kernel</span>
+    <span class="k">assert</span> <span class="n">uname_r</span> <span class="o">==</span> <span class="n">last_kernel</span><span class="p">,</span> <span class="s">&quot;Running kernel (</span><span class="si">%s</span><span class="s">) does not match latest installed kernel (</span><span class="si">%s</span><span class="s">)!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">uname_r</span><span class="p">,</span> <span class="n">last_kernel</span><span class="p">)</span>
+</div>
+<span class="nd">@pytest.mark.skipif</span><span class="p">(</span><span class="s">&quot;not common.rpm.package_installed(&#39;kernel-xen&#39;)&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="test_kernel_latest_XEN_version_is_running"><a class="viewcode-back" href="../test_UNAME.html#test_UNAME.test_kernel_latest_XEN_version_is_running">[docs]</a><span class="k">def</span> <span class="nf">test_kernel_latest_XEN_version_is_running</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This test checks whether system runs on a kernel, which is latest installed.</span>
+<span class="sd">        For xen kernel.</span>
+
+<span class="sd">    :raises: ``AssertionError``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uname_r</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;uname -r&quot;</span><span class="p">)</span>
+    <span class="n">uname_r</span><span class="o">.</span><span class="n">AssertRC</span><span class="p">()</span>
+    <span class="n">uname_r</span> <span class="o">=</span> <span class="n">uname_r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">last_kernel</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;rpm -q --last kernel-xen&quot;</span><span class="p">)</span>
+    <span class="n">last_kernel</span><span class="o">.</span><span class="n">AssertRC</span><span class="p">()</span>
+    <span class="n">last_kernel</span> <span class="o">=</span> <span class="n">last_kernel</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c">#</span>
+    <span class="n">last_kernel</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">r&quot;\s+&quot;</span><span class="p">,</span> <span class="n">last_kernel</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>       <span class="c"># Drop the date field</span>
+    <span class="n">last_kernel</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r&quot;^kernel-xen-&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">last_kernel</span><span class="p">)</span>  <span class="c"># Strip the beginning</span>
+    <span class="k">assert</span> <span class="n">uname_r</span> <span class="o">==</span> <span class="n">last_kernel</span><span class="p">,</span> <span class="s">&quot;Running kernel (</span><span class="si">%s</span><span class="s">) does not match latest installed kernel (</span><span class="si">%s</span><span class="s">)!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">uname_r</span><span class="p">,</span> <span class="n">last_kernel</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
