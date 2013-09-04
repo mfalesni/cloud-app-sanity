@@ -173,6 +173,9 @@ class Run(object):
     def rerun(self):
         return Run.command(self.command, self.stdin)
 
+    def AssertRC(self, rc=0):
+        assert self.rc == rc, "Command `%s` failed. $? expected: %d, $? given: %d" % (self.command, rc, self.rc)
+
     @classmethod
     def command(cls, command, stdin=None, shell=False):
         if not shell and isinstance(command, str):
