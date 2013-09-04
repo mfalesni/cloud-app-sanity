@@ -4,6 +4,9 @@ Maintainer: Milan Falešník <mfalesni@redhat.com>
 
 Documentation: http://mfalesni.github.io/cloud-app-sanity/
 
+
+Introduction:
+=============
 Test suite for validating deployed CloudForms applications. It can be also used for validating basically any kind of RHEL system. What can be validated? Current suite validates:
 * filesystem (world-writable files, symlinks, ...)
 * <code>/etc/passwd</code> (whether it contains only correct records for impotant accounts)
