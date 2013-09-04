@@ -109,7 +109,7 @@ def verify_package_files(package):
     problems = []
     source, stderr, rc = common.shell.command_stderr("rpm -Vvv %s" % package)
     source = source.strip().split("\n")
-    if int(rc) != 0:
+    if int(rc) != 0 and fixtures.rhel_release().major != 5: # RHEL5 will ignore returncode
         problems.append("RPM $?=%d" % int(rc))
     for line in common.rpm.wrong_files_lines(source):
         status_type, filename = line.split("/", 1)
