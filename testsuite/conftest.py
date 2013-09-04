@@ -276,15 +276,16 @@ def rhel_release():
     redhat_version_field = redhat_release_content.split(" ")[6]
     class RedhatRelease(object):
         def __init__(self, major, minor, distro="RHEL"):
-            self.major = major
-            self.minor = minor
+            self.major = int(major)
+            self.minor = int(minor)
             self.distro = distro
 
+        # Compatibility layer
         def __getitem__(self, position):
             if position == 0:
-                return self.major
+                return str(self.major)
             elif position == 1:
-                return self.minor
+                return str(self.minor)
             else:
                 raise KeyError("only 0 and 1 supported")
     #return tuple(redhat_version_field.split(".", 1))
