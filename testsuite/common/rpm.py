@@ -186,7 +186,7 @@ def package_installed(package):
     :rtype: ``bool``
     """
     try:
-        common.shell.run("rpm -q %s" % package)
+        assert common.shell.Run.command("rpm -q %s" % package)
         return True
     except AssertionError:
         return False
