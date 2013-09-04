@@ -1,6 +1,7 @@
 CloudForms Applications Sanity Test Suite
 ================
 Maintainer: Milan Falešník <mfalesni@redhat.com>
+
 Documentation: http://mfalesni.github.io/cloud-app-sanity/
 
 Test suite for validating deployed CloudForms applications. It can be also used for validating basically any kind of RHEL system. What can be validated? Current suite validates:
