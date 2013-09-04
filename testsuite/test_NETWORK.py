@@ -39,9 +39,10 @@ def test_iptables_rules(rule):
     iptables = common.shell.Run.command('iptables -L')
     assert iptables
     iptables = [re.sub(r"\s\s+", "\t", x) for x in iptables.stdout.strip().split("\n")]
+    iptables = [re.sub(r"([^\s]+)\s(--)", "\\1\t\\2", x) for x in iptables]   # for icmp -- (only one space)
     found = False
     for line in iptables:
-        line = tuple(x.strip() for x in line.split("\t"))
+        line = tuple(x.strip() for x in line.strip().split("\t"))
         if line != rule:
             continue
         else:

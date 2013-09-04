@@ -32,8 +32,7 @@ def setenforce(mode):
     """
     mode = mode.strip().title()
     assert mode in ["Permissive", "Enforcing"]
-    result = common.shell.Run.command("/usr/sbin/setenforce %s" % mode)
-    assert result
+    assert common.shell.Run.command("/usr/sbin/setenforce %s" % mode)
 
 def getenforce():
     """ Returns enforcing mode of SElinux
