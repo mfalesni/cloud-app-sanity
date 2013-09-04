@@ -70,4 +70,9 @@ class TestServices(object):
     def test_service_enabled(self, service_check, service, runlevel, state):
         """ Tests all services specified in parametrized/services """
         if not service_check(service, runlevel, state):
-            pytest.fail(msg="Service %s is not %s in runlevel %d!" % (service, ["active", "inactive"][0 if state else 1], runlevel))
+            state_message = None
+            if state:
+                state_message = "active"
+            else:
+                state_message = "inactive"
+            pytest.fail(msg="Service %s is not %s in runlevel %d!" % (service, state_message, runlevel))
