@@ -20,9 +20,20 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+"""
+    Module used for testing .bash_history and stuff around it.
+
+"""
+
+
 import common.shell
 
 def test_bash_history():
+    """ This test checks whether .bash_history for root user exists.
+    If yes, must be empty
+
+    :raises: ``AssertionError``
+    """
     bash_history = common.shell.Run.command("cat /root/.bash_history")
     if bash_history:
         assert len(bash_history.stdout.strip()) == 0, "/root/.bash_history is not empty"

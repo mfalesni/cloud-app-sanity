@@ -20,11 +20,20 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+"""
+    SYSLOG tests
+"""
+
 import pytest
 import common.shell
 import re
 
 def test_syslog_checksum(rhel_release):
+    """
+        Check that the file /etc/rsyslog.conf is unchanged.
+
+    :raises: ``AssertionError``
+    """
     md5sum = common.shell.Run.command("md5sum /etc/rsyslog.conf")
     assert md5sum, "md5sum on /etc/rsyslog.conf failed, probably does not exist"
     md5sum = md5sum.stdout.strip()[:32]

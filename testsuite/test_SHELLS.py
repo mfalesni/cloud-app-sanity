@@ -20,6 +20,10 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+"""
+    This file contains tests around shells
+"""
+
 import pytest
 import common.shell
 
@@ -28,4 +32,9 @@ import common.shell
     "bin/nologin"]
     )
 def test_check_shell_in_etc_shells(shell):
+    """
+        This tests checks a presence of specified shells in /etc/shells
+
+    :raises: ``AssertionError``
+    """
     assert common.shell.Run.command("grep '%s$' /etc/shells" % shell)

@@ -41,6 +41,7 @@ RPM_PROBLEMS_MESSAGES = {   "S": "size",
                             "U": "owner",
                             "G": "group",
                             "T": "modification time"}
+""" Contains messages reported by RPM tests for each problem """
 
 def check_for_errors(text):
     """ This function checks for errors in text and returns text unchanged
@@ -100,6 +101,7 @@ def verify_package_files(package):
     """ Verifies package in RPM database.
 
         Checks output of the rpm -Vvv and looks for files, which have some problems (see http://www.rpm.org/max-rpm/s1-rpm-verify-output.html)
+        When using RHEL5, $? is ignored.
 
     :param package: Package to check
     :type package: ``str``

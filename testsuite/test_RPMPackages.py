@@ -35,7 +35,7 @@ class TestRPM(object):
     @pytest.mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false').strip() == 'true'")
     @pytest.mark.parametrize("package", fixtures.rpm_package_list())
     def test_signed(self, package):
-        """ This test checks a package whether it has signature.
+        """ This test checks a package whether it has a signature.
 
         :param package: package to be checked
         :type package: ``str``
@@ -61,6 +61,7 @@ class TestRPM(object):
     @pytest.mark.parametrize("package", fixtures.rpm_package_list())
     def test_fortified(self, package):
         """ This test checks whether are all compiled files in package fortified.
+            This test is still not completed as I don't have all required informations.
 
         :param package: Package name
         :type package: ``list``

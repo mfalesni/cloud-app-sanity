@@ -20,6 +20,10 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+"""
+    This file contains tests which can test various aspects around services.
+"""
+
 import pytest
 import re
 import common.services
@@ -62,13 +66,16 @@ class TestServices(object):
                 self.services = services
 
             def __call__(self, service, runlevel, active=True):
+                """
+                    Calls a checking function
+                """
                 return common.services.service_active_in_runlevel(self.services, service, runlevel, active)
 
         return ServiceChecker(chkconfig_list)
 
     @pytest.mark.parametrize(("service", "runlevel", "state"), common.services.services_to_test())
     def test_service_enabled(self, service_check, service, runlevel, state):
-        """ Tests all services specified in parametrized/services """
+        """ Tests that all services specified in parametrized/services """
         if not service_check(service, runlevel, state):
             state_message = None
             if state:

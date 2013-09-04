@@ -31,6 +31,11 @@ import fnmatch
 class TestFileSystem(object):
     @pytest.fixture
     def world_writable_whitelist(self):
+        """
+            Reads a whitelist of files that can be world_writable.
+
+        :returns: Whitelist of world-writable files
+        """
         try:
             f = open("parametrized/world_writable_whitelist", "r")
         except IOError:
@@ -42,6 +47,11 @@ class TestFileSystem(object):
 
     @pytest.fixture
     def ignore_patterns(self):
+        """
+            Reads a list of ignore patterns which won't be tested.
+
+        :returns: List of ignore patterns
+        """
         try:
             f = open("parametrized/fs_ignore_patterns", "r")
         except IOError:
@@ -53,6 +63,9 @@ class TestFileSystem(object):
 
 
     def fmt_mode_str(self, st_mode):
+        """ ???
+            Does the formatting of props.
+        """
         # Type
         ftype_alias = dict(REG='-', FIFO='p', UID='s', GID='s', VTX='t')
         mode_str = '-'
@@ -82,7 +95,7 @@ class TestFileSystem(object):
         """ This test checks whether there are some files with unwanted props in FS.
             Looks for broken symlinks and world-writable files.
 
-        :raises: pytest.Failed
+        :raises: ``pytest.Failed``
         """
         stack = []  # Used for storing directories to parse
         starting_dir = "/"

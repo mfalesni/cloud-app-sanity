@@ -20,6 +20,10 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+"""
+    Tests using uname
+"""
+
 import common.shell
 import common.rpm
 import pytest
@@ -28,12 +32,22 @@ import re
 #TODO!! Doplnit
 
 def test_uname_o_gnu_linux():
+    """
+        Test that system reports it is GNU/Linux
+
+    :raises: ``AssertionError``
+    """
     uname = common.shell.Run.command("uname -o")
     assert uname, "uname failed!"
     assert uname.stdout.strip() == "GNU/Linux", "uname -o shoul equal to GNU/Linux"
 
 @pytest.mark.skipif("not common.rpm.package_installed('kernel')")
 def test_kernel_latest_version_is_running():
+    """
+        This test checks whether system runs on a kernel, which is latest installed.
+
+    :raises: ``AssertionError``
+    """
     uname_r = common.shell.Run.command("uname -r")
     uname_r.AssertRC()
     uname_r = uname_r.stdout.strip()
@@ -47,6 +61,12 @@ def test_kernel_latest_version_is_running():
 
 @pytest.mark.skipif("not common.rpm.package_installed('kernel-xen')")
 def test_kernel_latest_XEN_version_is_running():
+    """
+        This test checks whether system runs on a kernel, which is latest installed.
+        For xen kernel.
+
+    :raises: ``AssertionError``
+    """
     uname_r = common.shell.Run.command("uname -r")
     uname_r.AssertRC()
     uname_r = uname_r.stdout.strip()

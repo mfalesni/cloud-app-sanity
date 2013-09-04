@@ -28,7 +28,9 @@ import shutil
 import os
 
 def run(cmd, errorcode=0):
-    """This function runs desired command and checks whether it has failed or not
+    """ DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!
+
+    This function runs desired command and checks whether it has failed or not
 
     :param cmd: Command to be run
     :type cmd: str or list (``shlex``-splitted)
@@ -67,7 +69,9 @@ def run(cmd, errorcode=0):
     return stdout
 
 def command(command):
-    """ Function used for calling shell commands rather than invoking programs.
+    """ DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!
+
+    Function used for calling shell commands rather than invoking programs.
 
     :param command: Command to be launched
     :type command: ``str``
@@ -92,8 +96,10 @@ def command(command):
     return (stdout, process.returncode)
 
 def command_stderr(command):
-    """ Function used for calling shell commands rather than invoking programs.
-        It also returns stderr output, so it's basically the same as the preceeding function, just return tuple extended
+    """ DEPRECATED, PLEASE DO NOT USE IN THE NEW CODE!!!!!
+
+    Function used for calling shell commands rather than invoking programs.
+    It also returns stderr output, so it's basically the same as the preceeding function, just return tuple extended
 
     :param command: Command to be launched
     :type command: ``str``
@@ -157,6 +163,9 @@ class Run(object):
         Run.bash() runs bash script provides as a parameter.
     """
     def __init__(self, stdout, stderr, stdin, rc, command, shell=False):
+        """ Constructor, self-explaining :)
+
+        """
         self.stdout = stdout
         self.stderr = stderr
         self.stdin = stdin
@@ -168,16 +177,43 @@ class Run(object):
         return "<Run->%d stdout='%s...' stderr='%s...'>" % (self.rc, self.stdout[:16].strip(), self.stderr[:16].strip())
 
     def __nonzero__(self):
+        """ Used for testing in if- and similar statements.
+
+            Example:
+            passwd = common.shell.Run.command("cat /etc/shadow)
+            if passwd:
+                print "Yay :)"
+            else:
+                print "Booo"
+
+        :returns: True if the $? is 0
+        """
         return self.rc == 0
 
     def rerun(self):
+        """ Performs a new run of the command which produced this result
+
+        :returns: Instance of Run() class
+        """
         return Run.command(self.command, self.stdin)
 
     def AssertRC(self, rc=0):
+        """ Assert used for testing on certain RC values
+
+        :raises: ``AssertionError``
+        """
         assert self.rc == rc, "Command `%s` failed. $? expected: %d, $? given: %d" % (self.command, rc, self.rc)
 
     @classmethod
     def command(cls, command, stdin=None, shell=False):
+        """ Runs specified command.
+
+        The command can be fed with data on stdin with parameter ``stdin``.
+        The command can also be treated as a shell command with parameter ``shell``.
+        Please refer to subprocess.Popen on how does this stuff work
+
+        :returns: Run() instance with resulting data
+        """
         if not shell and isinstance(command, str):
             command = shlex.split(command)
         collate_original = None
@@ -198,4 +234,8 @@ class Run(object):
 
     @classmethod
     def bash(cls, script_body, stdin=None):
+        """ Uses Run.command(...) to open bash shell and feed it with script from string ``script_body``.
+
+        :returns: Run() instance with resulting data
+        """
         return Run.command(["bash", "-c", script_body], stdin=stdin)

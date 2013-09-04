@@ -20,6 +20,10 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+"""
+    This file contains tests on SElinux
+"""
+
 import pytest
 import common.selinux
 
@@ -40,10 +44,16 @@ class TestSelinux(object):
 
     @pytest.fixture
     def set_enforcing(self):
+        """
+            Set Enforcing mode.
+        """
         common.selinux.setenforce("Enforcing")
 
     @pytest.fixture
     def set_permissive(self):
+        """
+            Set Permissive mode.
+        """
         common.selinux.setenforce("Permissive")
 
     @pytest.fixture
@@ -147,7 +157,8 @@ class TestSelinux(object):
         assert mode == "targeted", "SELinux is not in Enforcing mode!"
 
     def test_permissive_check(self, set_permissive, getenforce):
-        """ Check for success of flip_permissive test.
+        """ Flips SElinux into permissive mode.
+            Checks if SElinux is in Permissive mode.
 
         :param selinux_getenforce: Current enforcing status
         :type selinux_getenforce: ``str``
@@ -157,7 +168,8 @@ class TestSelinux(object):
         assert getenforce.stdout.strip() == "Permissive", "SELinux is not in Permissive mode"
 
     def test_enforcing_check(self, set_enforcing, getenforce):
-        """ Check for success of flip_enforcing test.
+        """ Flips SElinux into Enforcing mode.
+            Checks if SElinux is in Enforcing mode.
 
         :param selinux_getenforce: Current enforcing status
         :type selinux_getenforce: ``str``

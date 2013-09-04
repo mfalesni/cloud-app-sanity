@@ -28,6 +28,9 @@ import common.rpm
 from ConfigParser import ConfigParser
 
 def set_yum_variable(key, value):
+    """ ???
+
+    """
     if not os.path.isdir('/etc/yum/vars'):
         os.mkdir('/etc/yum/vars')
     fp = open("/etc/yum/vars/%s" % key, "w+")
@@ -35,6 +38,9 @@ def set_yum_variable(key, value):
     fp.close()
 
 def get_yum_variable(key):
+    """ ???
+
+    """
     # FIXME ... should we also look in /etc/yum/vars/releasever ?
 
     # Bypass namespace collision on the 'yum' module

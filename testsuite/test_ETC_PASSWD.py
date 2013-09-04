@@ -20,6 +20,10 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+"""
+    File containing tests around /etc/passwd and /etc/group
+"""
+
 import common.shell
 import pytest
 from conftest import rhel_release
@@ -30,6 +34,11 @@ from conftest import rhel_release
     "sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin"]
     )
 def test_lines_in_passwd(line):
+    """
+        This test checks whether important accounts are correctly specified
+
+    :raises: ``AssertionError``
+    """
     assert common.shell.Run.command(r"grep '^%s' /etc/passwd" % line)
 
 @pytest.mark.parametrize("group", [
@@ -39,6 +48,12 @@ def test_lines_in_passwd(line):
     )
 @pytest.mark.skipif("int(rhel_release()[0]) != 6")
 def test_groups_RHEL6(group):
+    """
+        This test checks whether important groups are correctly specified.
+        RHEL6 variant.
+
+    :raises: ``AssertionError``
+    """
     assert common.shell.Run.command(r"grep '^%s' /etc/group" % group)
 
 @pytest.mark.parametrize("group", [
@@ -48,4 +63,10 @@ def test_groups_RHEL6(group):
     )
 @pytest.mark.skipif("int(rhel_release()[0]) != 5")
 def test_groups_RHEL5(group):
+    """
+        This test checks whether important groups are correctly specified.
+        RHEL5 variant.
+
+    :raises: ``AssertionError``
+    """
     assert common.shell.Run.command(r"grep '^%s' /etc/group" % group)
