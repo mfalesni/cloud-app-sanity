@@ -21,8 +21,36 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 import common.shell
+import common.rpm
+import pytest
+import re
 
 def test_uname_o_gnu_linux():
     uname = common.shell.Run.command("uname -o")
     assert uname, "uname failed!"
     assert uname.stdout.strip() == "GNU/Linux", "uname -o shoul equal to GNU/Linux"
+
+@pytest.mark.skipif("not common.rpm.package_installed('kernel')")
+def test_kernel_latest_version_is_running():
+    uname_r = common.shell.Run.command("uname -r")
+    assert uname_r, "uname -r failed"
+    uname_r = uname_r.stdout.strip()
+    last_kernel = common.shell.Run.command("rpm -q --last kernel")
+    assert last_kernel, "rpm -q --last kernel failed"
+    last_kernel = last_kernel.stdout.strip().split("\n")[0]
+    last_kernel = re.split(r"\s+", last_kernel, 1)[0]
+    last_kernel = re.sub(r"^kernel-", "", last_kernel)
+    print uname_r, last_kernel
+    assert uname_r == last_kernel, "Running kernel does not match latest installed kernel!"
+
+@pytest.mark.skipif("not common.rpm.package_installed('kernel-xen')")
+def test_kernel_latest_XEN_version_is_running():
+    uname_r = common.shell.Run.command("uname -r")
+    assert uname_r, "uname -r failed"
+    uname_r = uname_r.stdout.strip()
+    last_kernel = common.shell.Run.command("rpm -q --last kernel-xen")
+    assert last_kernel, "rpm -q --last kernel-xen failed"
+    last_kernel = last_kernel.stdout.strip().split("\n")[0] #
+    last_kernel = re.split(r"\s+", last_kernel, 1)[0]       # Drop the date field
+    last_kernel = re.sub(r"^kernel-xen-", "", last_kernel)  # Strip the beginning
+    assert uname_r == last_kernel, "Running kernel does not match latest installed kernel!"
