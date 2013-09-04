@@ -274,7 +274,21 @@ def rhel_release():
     """
     redhat_release_content = common.shell.run("cat /etc/redhat-release").strip()
     redhat_version_field = redhat_release_content.split(" ")[6]
-    return tuple(redhat_version_field.split(".", 1))
+    class RedhatRelease(object):
+        def __init__(self, major, minor, distro="RHEL"):
+            self.major = major
+            self.minor = minor
+            self.distro = distro
+
+        def __getitem__(self, position):
+            if position == 0:
+                return self.major
+            elif position == 1:
+                return self.minor
+            else:
+                raise KeyError("only 0 and 1 supported")
+    #return tuple(redhat_version_field.split(".", 1))
+    return RedhatRelease(*redhat_version_field.split(".", 1))
 
 @pytest.fixture
 def PATH():
