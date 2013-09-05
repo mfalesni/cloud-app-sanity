@@ -24,13 +24,11 @@
     This file contains tests which can test various aspects around services.
 """
 
-import pytest
 import re
 import common.services
-import common.shell
 
 class TestServices(object):
-    @pytest.fixture
+    @Test.Fixture
     def chkconfig_list(self):
         """ Returns list of all services with enablement in each runlevel
 
@@ -38,7 +36,7 @@ class TestServices(object):
         :rtype: ``dict``
         """
         result = {}
-        services = common.shell.Run.command("chkconfig --list")
+        services = Test.Run.command("chkconfig --list")
         for line in services.stdout.strip().split("\n"):
             line = re.sub("[[:blank:]]+", "\t", line)
             fields = line.split("\t")
@@ -53,11 +51,11 @@ class TestServices(object):
                 elif status.lower() == "off":
                     status = False
                 else:
-                    pytest.fail(msg="Bad parsing of chkconfig --list")
+                    Test.Fail(msg="Bad parsing of chkconfig --list")
                 result[servicename][runlevel] = status
         return result
 
-    @pytest.fixture
+    @Test.Fixture
     def service_check(self, chkconfig_list):
         """ Produces service-checking fixture """
 
@@ -73,7 +71,8 @@ class TestServices(object):
 
         return ServiceChecker(chkconfig_list)
 
-    @pytest.mark.parametrize(("service", "runlevel", "state"), common.services.services_to_test())
+    #TODO services na novy format
+    @Test.Mark.parametrize(("service", "runlevel", "state"), common.services.services_to_test())
     def test_service_enabled(self, service_check, service, runlevel, state):
         """ Tests that all services specified in parametrized/services """
         if not service_check(service, runlevel, state):
@@ -82,7 +81,7 @@ class TestServices(object):
                 state_message = "active"
             else:
                 state_message = "inactive"
-            pytest.fail(msg="Service %s is not %s in runlevel %d!" % (service, state_message, runlevel))
+            Test.Fail(msg="Service %s is not %s in runlevel %d!" % (service, state_message, runlevel))
 
     def test_httpd_running(self):
         """
@@ -90,7 +89,7 @@ class TestServices(object):
 
         :raises: ``AssertionError``
         """
-        service = common.shell.Run.bash("service httpd status")
+        service = Test.Run.bash("service httpd status")
         assert "is running" in service.stdout, "httpd must be running"
 
     def test_evm_running(self):
@@ -99,7 +98,7 @@ class TestServices(object):
 
         :raises: ``AssertionError``
         """
-        service = common.shell.Run.bash("service evmserverd status | grep EVM")
+        service = Test.Run.bash("service evmserverd status | grep EVM")
         assert "started" in service.stdout, "evmserverd must be running"
     
     def test_iptables_running(self):
@@ -108,6 +107,6 @@ class TestServices(object):
 
         :raises: ``AssertionError``
         """
-        service = common.shell.Run.bash("service iptables status")
+        service = Test.Run.bash("service iptables status")
         assert "is not running" not in service.stdout, "iptables must be running"
     
