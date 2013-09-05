@@ -24,9 +24,6 @@
     This file contains class which tests each RPM package in the system.
 """
 
-import pytest
-import common.rpm
-import common.elf
 import re
 
 class TestRPM(object):
@@ -96,13 +93,12 @@ class TestRPM(object):
         #                 problems.append((f, function, "dangerous call"))
         # assert len(problems) == 0, "Problems found:\n" + "\n".join(["%s@%s | %s" % (x[1], x[0], x[2]) for x in problems])
         # Alternate
-        files = common.rpm.ql(package).strip().split("\n")
         was_elf = False
-        for f in files:
-            if common.elf.is_elf(f):
+        for f in Test.RPM.list_files(package):
+            if Test.Elf.is_elf(f):
                 failed = False
                 was_elf = True
-                dangerous = common.elf.fortify_find_dangerous(f)
+                dangerous = Test.Elf.fortify_find_dangerous(f)
                 if len(dangerous) > 0:
                     failed = True
                 for function in dangerous:

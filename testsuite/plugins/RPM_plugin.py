@@ -58,6 +58,15 @@ class RPMPlugin(object):
             return rpm.stdout.strip()
 
     @classmethod
+    def list_files(cls, package):
+        """
+            List all files owned by a specified package.
+        """
+        rpm = Test.Run.command("rpm -ql %s" % package)
+        assert rpm, "'rpm -ql %s' failed, does the package exist?" % package
+        return rpm.stdout.strip().split("\n")
+
+    @classmethod
     def signature_lines(cls, package_lines):
         """ Returns lines with signature informations of package
 
