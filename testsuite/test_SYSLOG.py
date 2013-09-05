@@ -24,9 +24,6 @@
     SYSLOG tests
 """
 
-import pytest
-import common.shell
-import re
 
 def test_syslog_checksum(rhel_release):
     """
@@ -34,7 +31,7 @@ def test_syslog_checksum(rhel_release):
 
     :raises: ``AssertionError``
     """
-    md5sum = common.shell.Run.command("md5sum /etc/rsyslog.conf")
+    md5sum = Test.Run.command("md5sum /etc/rsyslog.conf")
     assert md5sum, "md5sum on /etc/rsyslog.conf failed, probably does not exist"
     md5sum = md5sum.stdout.strip()[:32]
     if int(rhel_release[0]) == 5:
@@ -44,5 +41,5 @@ def test_syslog_checksum(rhel_release):
     elif int(rhel_release[0]) == 6:
         assert md5sum in ["8b91b32300134e98ef4aee632ed61e21"]
     else:
-        pytest.fail("Unknown version of RHEL (%d.%d)" % rhel_release)
+        Test.Fail("Unknown version of RHEL (%d.%d)" % rhel_release)
 
