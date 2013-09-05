@@ -27,8 +27,7 @@
 import pytest
 import common.rpm
 import common.elf
-import conftest as fixtures
-import os
+import re
 
 class TestRPM(object):
     
@@ -111,7 +110,7 @@ class TestRPM(object):
                         failed = False
                 assert not failed, "File %s has problem with fortification!" % f
         if not was_elf:
-            pytest.skip(msg="No binary present in this package")
+            Test.Skip(msg="No binary present in this package")
 
     @Test.Mark.parametrize("package", TestRPM.packages_that_must_be_installed())
     def test_whether_package_installed(self, package):
