@@ -24,27 +24,24 @@
     This file contains tests around SSL
 """
 
-import pytest
-import common.ssl
-
 class TestSSL(object):
     REQUIRED_BITS = 2048
     FORBIDDEN_HASHES = ["md5"]
 
-    @pytest.fixture
+    @Test.Fixture
     def key_strength(self):
         """
             Fixture, providing SSL key strength.
         """
-        config = common.ssl.openssl_config_get_section("req")
+        config = Test.SSL.config_get_section("req")
         return int(config["default_bits"])
 
-    @pytest.fixture
+    @Test.Fixture
     def default_hash(self):
         """
             Fixture, providing default hash function.
         """
-        config = common.ssl.openssl_config_get_section("req")
+        config = Test.SSL.config_get_section("req")
         return config["default_md"]
 
     def test_default_key_strength(self, key_strength):
