@@ -1,7 +1,7 @@
 import __builtin__
 import sys
 
-folder_name = "plugins"
+folder_name = __package__
 
 class PluginNotFound(Exception):
     pass
@@ -12,8 +12,27 @@ class ClassProperty (property):
         return self.fget.__get__(None, owner)()
 
 class PluginProxy(object):
+    """
+        Lazy plugin loader. Let's say you have:
+
+        ``Plugin = PluginProxy()``
+
+        Then if you write ``Plugin.Foo`` it looks up
+        in internal plugin table for Foo and when it
+        does not find it, it tries to load a module
+        named ``folder_name.Foo_plugin``. If everything
+        succeeds, it looks for variable ``export`` inside
+        the module, which specifies the class to be assigned
+        as the module itself.
+    """
     def __init__(self):
         self.plugins = dict()
+        self.Fixtures = __import__("conftest")  # Provide fixtures from conftest.py without imports
+        pytest = __import__("pytest")
+        self.Mark = pytest.mark
+        self.Fail = pytest.fail
+        self.Skip = pytest.skip
+        self.Fixture = pytest.fixture
 
     def __getattribute__(self, attribute):
         try:
@@ -36,3 +55,14 @@ class PluginProxy(object):
 # Guido will kill me
 __builtin__.Test = PluginProxy()
 __builtin__.ClassProperty = ClassProperty
+
+# Python 2.4 compatibility
+try:
+    __builtin__.any
+except AttributeError:
+    def any(iterable):
+        for element in iterable:
+            if element:
+                return True
+        return False
+    __builtin__.any = any

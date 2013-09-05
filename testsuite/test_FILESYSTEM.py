@@ -27,16 +27,6 @@ import pytest
 import common.shell
 import fnmatch
 
-# Python 2.4 compatibility
-try:
-    any
-except NameError:
-    def any(iterable):
-        for element in iterable:
-            if element:
-                return True
-        return False
-
 """ Filesystem checking tests """
 class TestFileSystem(object):
     @pytest.fixture

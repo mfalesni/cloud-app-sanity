@@ -31,9 +31,11 @@ import pytest
 import os
 import re
 import subprocess
-import common.shell
-import common.yum
-import common.rpm
+
+# This loads the PluginProxy, no need to write this inside tests
+import plugins
+
+#Deprecated
 import common.services
 
 from ConfigParser import ConfigParser
@@ -106,11 +108,11 @@ def system_groups():
     group_names = []
 
     # A group for the current system platform (aka $basearch)
-    group_names.append(common.yum.get_yum_variable('basearch'))
+    group_names.append(Test.Yum.get_yum_variable('basearch'))
 
     # A group for the current system release (aka $releasever)
     # Per katello rules, replace any non-alpha-numeric character with a '_'
-    group_names.append(re.sub(r'\W', '_', common.yum.get_yum_variable('releasever')))
+    group_names.append(re.sub(r'\W', '_', Test.Yum.get_yum_variable('releasever')))
 
     # A group to indicate which provider the instance is deployed to
     if is_rhev_deployment():
@@ -120,7 +122,8 @@ def system_groups():
     if ec2_deployment():
         group_names.append('provider_ec2')
         # Add a group name for the ec2 region
-        (buf, rc) = common.shell.command('curl --fail http://169.254.169.254/latest/dynamic/instance-identity/document')
+        result = Test.Run.command('curl --fail http://169.254.169.254/latest/dynamic/instance-identity/document')
+        buf, rc = result.stdout, result.rc
         if rc == 0:
             ec2_data = json.loads(buf)
             if ec2_data.has_key('region'):
@@ -136,8 +139,19 @@ def is_rhev_deployment():
     :rtype: ``bool``
 
     """
-    return common.rpm.package_installed('rhev-agent') or \
-        common.shell.command("grep -qi rhev /sys/class/virtio-ports/*/name")[1] == 0
+    try:
+        Test.RPM.query('rhev-agent')
+        return True
+    except AssertionError:
+        pass
+
+    try:
+        assert Test.Run.bash("grep -qi rhev /sys/class/virtio-ports/*/name")
+        return True
+    except AssertionError:
+        pass
+
+    return False
 
 @pytest.fixture(scope="session")
 def is_vsphere_deployment():
@@ -147,8 +161,17 @@ def is_vsphere_deployment():
     :rtype: ``bool``
 
     """
-    return common.rpm.package_installed('open-vm-tools') or \
-        common.shell.command("grep -qi vmware /sys/bus/scsi/devices/*/vendor")[1] == 0
+    try:
+        Test.RPM.query('open-vm-tools')
+        return True
+    except AssertionError:
+        pass
+
+    try:
+        assert Test.Run.bash("grep -qi vmware /sys/bus/scsi/devices/*/vendor")
+        return True
+    except AssertionError:
+        pass
 
 @pytest.fixture(scope="session")
 def ec2_deployment():
@@ -171,7 +194,9 @@ def subscription_manager_version():
     :returns: SM version from cache
     :rtype: 2-tuple
     """
-    sm_rpm_ver = common.shell.run("rpm -q --queryformat %{VERSION} subscription-manager")
+    sm_rpm_ver = Test.Run.bash("rpm -q --queryformat %{VERSION} subscription-manager")
+    assert sm_rpm_ver
+    sm_rpm_ver = sm_rpm_ver.stdout
     sm_ver_maj, sm_ver_min, sm_ver_rest = sm_rpm_ver.split(".", 2)
     return int(sm_ver_maj), int(sm_ver_min)
 
@@ -182,8 +207,9 @@ def system_uuid():
     :returns: System UUID
     :rtype: ``str``
     """
-    facts = common.shell.run("subscription-manager facts --list")
-    facts = facts.strip().split("\n")
+    facts = Test.Run.command("subscription-manager facts --list")
+    assert facts
+    facts = facts.stdout.strip().split("\n")
     for fact in facts:
         name, value = fact.split(":", 1)
         if name == "system.uuid":
@@ -196,11 +222,7 @@ def selinux_enabled():
     :returns: SElinux status
     :rtype: ``bool``
     """
-    try:
-        common.shell.run("selinuxenabled")
-        return True
-    except AssertionError:
-        return False
+    return Test.SELinux.enabled
 
 @pytest.fixture
 def selinux_getenforce():
@@ -209,7 +231,7 @@ def selinux_getenforce():
     :returns: SElinux enforcing status
     :rtype: ``str``
     """
-    return common.shell.run("/usr/sbin/getenforce").strip()
+    return Test.SELinux.getenforce
 
 @pytest.fixture
 def selinux_getenforce_conf():
@@ -252,8 +274,7 @@ def rpm_package_list():
     :returns: List of all installed packages in computer.
     :rtype: ``list``
     """
-    raw = common.shell.run("rpm -qa").strip()
-    return [x.strip() for x in raw.split("\n")]
+    return Test.RPM.query()
 
 @pytest.fixture
 def rpm_package_list_names():
@@ -262,8 +283,7 @@ def rpm_package_list_names():
     :returns: List of all installed packages in computer.
     :rtype: ``list``
     """
-    raw = common.shell.run("rpm -qa --qf \"%{NAME} \"").strip()
-    return raw.split(" ")
+    return Test.RPM.query(format="%{NAME}")
 
 @pytest.fixture
 def rhel_release():
@@ -272,8 +292,9 @@ def rhel_release():
     :returns: RHEL version
     :rtype: ``tuple``
     """
-    redhat_release_content = common.shell.run("cat /etc/redhat-release").strip()
-    redhat_version_field = redhat_release_content.split(" ")[6]
+    redhat_release_content = Test.Run.command("cat /etc/redhat-release")
+    assert redhat_release_content
+    redhat_version_field = redhat_release_content.stdout.strip().split(" ")[6]
     class RedhatRelease(object):
         def __init__(self, major, minor, distro="RHEL"):
             self.major = int(major)
@@ -319,8 +340,9 @@ def chkconfig_list():
     :rtype: ``dict``
     """
     result = {}
-    stdout = common.shell.run("chkconfig --list").strip()
-    for line in stdout.split("\n"):
+    chkconfig = Test.Run.command("chkconfig --list")
+    assert chkconfig
+    for line in chkconfig.stdout.strip().split("\n"):
         line = re.sub("[[:blank:]]+", "\t", line)
         fields = line.split("\t")
         servicename = fields[0].strip()
@@ -357,7 +379,7 @@ def is_systemd():
         Checks for systemd presence
     """
     try:
-        common.rpm.q("systemd")
+        Test.RPM.query("systemd")
         return True
     except AssertionError:
         return False
