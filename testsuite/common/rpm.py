@@ -256,5 +256,5 @@ def packages_that_must_be_installed():
         f = open("../parametrized/packages_installed", "r") # For testing purposes
     lines = [re.sub(r"\s+", "\t", re.sub(r"#[^#]*$", "", x.strip())).strip() for x in f.readlines()] # Remove comments and normalize blank spaces into tabs
     f.close()
-    lines = [line for line in lines if len(line) > 0] # remove blank lines
-    print lines
+    return [line for line in lines if len(line) > 0] # remove blank lines
+    

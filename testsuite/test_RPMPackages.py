@@ -97,4 +97,13 @@ class TestRPM(object):
                 assert not failed, "File %s has problem with fortification!" % f
         if not was_elf:
             pytest.skip(msg="No binary present in this package")
+
+    @pytest.mark.parametrize("package", common.rpm.packages_that_must_be_installed())
+    def test_whether_package_installed(self, package):
+        """
+            This test tests whether required packages are present
+
+        :raises: ``AssertionError``
+        """
+        assert common.shell.Run.command("rpm -q %s" % package), "Package %s has to be installed!!" % package
         
