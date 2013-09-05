@@ -23,6 +23,7 @@
 """ This file contains methods used for testing services (init.d/) """
 
 import re
+import pytest
 
 def services_to_test():
     """ Reads all rules from file parametrized/services for purposes of parametrizing of the testing
@@ -90,7 +91,10 @@ def service_active_in_runlevel(chkconfig_list, service, runlevel, active=True):
 
     :raises: ``KeyError``
     """
-    if chkconfig_list[service][runlevel] != active:
-        return False
+    try:
+        if chkconfig_list[service][runlevel] != active:
+            return False
+    except KeyError:
+        pytest.fail("Service %s probably even does not exist in the system!" % service)
 
     return True
