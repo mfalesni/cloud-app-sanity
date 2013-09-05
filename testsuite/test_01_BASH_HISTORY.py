@@ -27,13 +27,15 @@
 
 
 import common.shell
+import pytest
 
-def test_bash_history():
-    """ This test checks whether .bash_history for root user exists.
+@pytest.mark.parametrize("user", ["/root"])
+def test_bash_history(user):
+    """ This test checks whether .bash_history for certain user exists.
     If yes, must be empty
 
     :raises: ``AssertionError``
     """
-    bash_history = common.shell.Run.command("cat /root/.bash_history")
+    bash_history = common.shell.Run.command("cat %s/.bash_history" % user)
     if bash_history:
-        assert len(bash_history.stdout.strip()) == 0, "/root/.bash_history is not empty"
+        assert len(bash_history.stdout.strip()) == 0, "%s/.bash_history is not empty" % user
