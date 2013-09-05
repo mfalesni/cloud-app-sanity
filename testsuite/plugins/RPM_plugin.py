@@ -37,6 +37,17 @@ class RPMPlugin(object):
         return rpm.stdout.strip().split("\n")
 
     @classmethod
+    def is_package_installed(cls, package):
+        """
+            rpm -q without assertion, instead returns bool
+        """
+        try:
+            cls.query(package)
+            return True
+        except AssertionError:
+            return False
+
+    @classmethod
     def verify(cls, package):
         """
             Does rpm -Vvv command, returns the output.
