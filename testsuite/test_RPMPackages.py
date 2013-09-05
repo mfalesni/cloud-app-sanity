@@ -32,8 +32,22 @@ import os
 
 class TestRPM(object):
     
-    @pytest.mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false').strip() == 'true'")
-    @pytest.mark.parametrize("package", fixtures.rpm_package_list())
+    @staticmethod
+    def packages_that_must_be_installed():
+        """ Reads all rules from file parametrized/packages_installed for purposes of parametrizing of the testing
+
+        :raises: ``IOError``
+        """
+        try:
+            f = open("parametrized/packages_installed", "r")
+        except IOError:
+            f = open("../parametrized/packages_installed", "r") # For testing purposes
+        lines = [re.sub(r"\s+", "\t", re.sub(r"#[^#]*$", "", x.strip())).strip() for x in f.readlines()] # Remove comments and normalize blank spaces into tabs
+        f.close()
+        return [line for line in lines if len(line) > 0] # remove blank lines
+
+    @Test.Mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false').strip() == 'true'")
+    @Test.Mark.parametrize("package", Test.Fixtures.rpm_package_list())
     def test_signed(self, package):
         """ This test checks a package whether it has a signature.
 
@@ -42,10 +56,9 @@ class TestRPM(object):
 
         :raises: AssertionError
         """
-        problems = common.rpm.verify_package_signed(package)
-        assert len(problems) == 0, "Package %s had following problems: '%s'" % (package, ", ".join(problems))
+        assert Test.RPM.package_signed(package), "Package %s is not signed!" % (package,)
 
-    @pytest.mark.parametrize("package", fixtures.rpm_package_list())
+    @Test.Mark.parametrize("package", Test.Fixtures.rpm_package_list())
     def test_files(self, package):
         """ This test checks a package whether all files are ok.
             It also checks the return code of rpm -Vvv.
@@ -58,7 +71,9 @@ class TestRPM(object):
         problems = common.rpm.verify_package_files(package)
         assert len(problems) == 0, "Package %s had following problems: '%s'" % (package, ", ".join(problems))
 
-    @pytest.mark.parametrize("package", fixtures.rpm_package_list())
+
+    #TODO FINISH!!!!!!!!!!!
+    @Test.Mark.parametrize("package", Test.Fixtures.rpm_package_list())
     def test_fortified(self, package):
         """ This test checks whether are all compiled files in package fortified.
             This test is still not completed as I don't have all required informations.
@@ -98,12 +113,12 @@ class TestRPM(object):
         if not was_elf:
             pytest.skip(msg="No binary present in this package")
 
-    @pytest.mark.parametrize("package", common.rpm.packages_that_must_be_installed())
+    @Test.Mark.parametrize("package", TestRPM.packages_that_must_be_installed())
     def test_whether_package_installed(self, package):
         """
             This test tests whether required packages are present
 
         :raises: ``AssertionError``
         """
-        assert common.shell.Run.command("rpm -q %s" % package), "Package %s has to be installed!!" % package
+        assert Test.RPM.query(package), "Package %s has to be installed!!" % package
         
