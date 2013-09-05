@@ -24,9 +24,6 @@
     This file contains tests on SElinux
 """
 
-import pytest
-import common.selinux
-
 class TestSelinux(object):
     @classmethod
     def setup_class(cls):
