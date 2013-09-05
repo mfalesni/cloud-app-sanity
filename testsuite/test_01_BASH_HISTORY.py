@@ -25,7 +25,7 @@
 
 """
 
-@Test.mark.parametrize("user", ["/root"])
+@Test.Mark.parametrize("user", ["/root"])
 def test_bash_history(user):
     """ This test checks whether .bash_history for certain user exists.
     If yes, must be empty

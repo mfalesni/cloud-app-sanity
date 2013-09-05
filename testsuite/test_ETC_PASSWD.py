@@ -24,11 +24,7 @@
     File containing tests around /etc/passwd and /etc/group
 """
 
-import common.shell
-import pytest
-from conftest import rhel_release
-
-@pytest.mark.parametrize("line", [
+@Test.Mark.parametrize("line", [
     "root:x:0:0:root:/root:/bin/bash",
     "nobody:x:99:99:Nobody:/:/sbin/nologin",
     "sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin"]
@@ -39,14 +35,14 @@ def test_lines_in_passwd(line):
 
     :raises: ``AssertionError``
     """
-    assert common.shell.Run.command(r"grep '^%s' /etc/passwd" % line)
+    assert Test.Run.command(r"grep '^%s' /etc/passwd" % line)
 
-@pytest.mark.parametrize("group", [
+@Test.Mark.parametrize("group", [
     "root:x:0:",
     "daemon:x:2:bin,daemon",
     "bin:x:1:bin,daemon"]
     )
-@pytest.mark.skipif("int(rhel_release()[0]) != 6")
+@Test.Mark.skipif("int(rhel_release()[0]) != 6")
 def test_groups_RHEL6(group):
     """
         This test checks whether important groups are correctly specified.
@@ -54,14 +50,14 @@ def test_groups_RHEL6(group):
 
     :raises: ``AssertionError``
     """
-    assert common.shell.Run.command(r"grep '^%s' /etc/group" % group)
+    assert Test.Run.command(r"grep '^%s' /etc/group" % group)
 
-@pytest.mark.parametrize("group", [
+@Test.Mark.parametrize("group", [
     "root:x:0:root",
     "daemon:x:2:bin,daemon",
     "bin:x:1:bin,daemon"]
     )
-@pytest.mark.skipif("int(rhel_release()[0]) != 5")
+@Test.Mark.skipif("int(Test.Fixtures.rhel_release()[0]) != 5")
 def test_groups_RHEL5(group):
     """
         This test checks whether important groups are correctly specified.
@@ -69,4 +65,4 @@ def test_groups_RHEL5(group):
 
     :raises: ``AssertionError``
     """
-    assert common.shell.Run.command(r"grep '^%s' /etc/group" % group)
+    assert Test.Run.command(r"grep '^%s' /etc/group" % group)
