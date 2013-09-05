@@ -24,15 +24,13 @@
 
 """
 
-import common.shell
-
 def test_menu_lst_exists():
     """
         Test which checks whether ``menu.lst`` exists.
 
     :raises: ``AssertionError``
     """
-    assert common.shell.Run.command("test -h /boot/grub/menu.lst"), "/boot/grub/menu.lst does not exist"
+    assert Test.Run.command("test -h /boot/grub/menu.lst"), "/boot/grub/menu.lst does not exist"
 
 def test_symlink_menu_lst():
     """
@@ -40,6 +38,6 @@ def test_symlink_menu_lst():
 
     :raises: ``AssertionError``
     """
-    symlink = common.shell.Run.command("readlink -e /boot/grub/menu.lst")
+    symlink = Test.Run.command("readlink -e /boot/grub/menu.lst")
     assert symlink
     assert symlink.stdout.strip() == "/boot/grub/grub.conf", "/boot/grub/menu.lst is not a symlink to /boot/grub/grub.conf"
