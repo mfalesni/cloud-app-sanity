@@ -24,8 +24,6 @@
     This module contains tests targeted on system hardware and so.
 """
 
-import pytest
-import common.shell
 import re
 
 
@@ -35,7 +33,7 @@ def test_memory():
 
     :raises: ``AssertionError``
     """
-    mem = common.shell.Run.bash("free -g | grep Mem:")
+    mem = Test.Run.bash("free -g | grep Mem:")
     assert mem
     mem = re.sub(r"\s+", "\t", mem.stdout.strip()).split("\t")  # ['Mem:', '1', '1', ...]
     mem = int(mem[1]) # second column
@@ -47,7 +45,7 @@ def test_cpu():
 
     :raises: ``AssertionError``
     """
-    cpus = common.shell.Run.bash("lscpu | grep ^CPU\(s\):")
+    cpus = Test.Run.bash("lscpu | grep ^CPU\(s\):")
     assert cpus
     cpus = re.sub(r"\s+", "\t", cpus.stdout.strip())
     cpus = int(cpus.split("\t", 1)[-1]) # Second column
