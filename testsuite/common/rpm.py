@@ -244,3 +244,17 @@ def ql(package):
     :type package: ``str``
     """
     return common.shell.run("rpm -ql %s" % package)
+
+def packages_that_must_be_installed():
+    """ Reads all rules from file parametrized/packages_installed for purposes of parametrizing of the testing
+
+    :raises: ``IOError``
+    """
+    try:
+        f = open("parametrized/packages_installed", "r")
+    except IOError:
+        f = open("../parametrized/packages_installed", "r") # For testing purposes
+    lines = [re.sub(r"\s+", "\t", re.sub(r"#[^#]*$", "", x.strip())).strip() for x in f.readlines()] # Remove comments and normalize blank spaces into tabs
+    f.close()
+    lines = [line for line in lines if len(line) > 0] # remove blank lines
+    print lines

@@ -1,0 +1,3 @@
+# Check for installed packages
+nfs-utils
+nfs-utils-lib
