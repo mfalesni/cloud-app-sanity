@@ -23,13 +23,11 @@
 import os
 import stat
 import sys
-import pytest
-import common.shell
 import fnmatch
 
 """ Filesystem checking tests """
 class TestFileSystem(object):
-    @pytest.fixture
+    @Test.Fixture
     def world_writable_whitelist(self):
         """
             Reads a whitelist of files that can be world_writable.
@@ -45,7 +43,7 @@ class TestFileSystem(object):
         f.close()
         return data
 
-    @pytest.fixture
+    @Test.Fixture
     def ignore_patterns(self):
         """
             Reads a list of ignore patterns which won't be tested.
@@ -130,7 +128,7 @@ class TestFileSystem(object):
                 info = os.lstat(path)
                 if is_lnk(info):
                     # Check if it's broken or not
-                    if not common.shell.exists_in_path(os.readlink(path), os.path.abspath(directory)):
+                    if not Test.Shell.exists_in_path(os.readlink(path), os.path.abspath(directory)):
                         sys.stderr.write("[broken-symlink] %s -> %s\n" % (path, os.readlink(path)))
                         failed = True
                 else:
@@ -146,5 +144,5 @@ class TestFileSystem(object):
                             sys.stderr.write("[world-writable] %s %s\n" % (self.fmt_mode_str(info.st_mode), path))
                             failed = True
         if failed:
-            pytest.fail(msg="Test failed")
+            Test.Fail(msg="Test failed")
 
