@@ -84,8 +84,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
     <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;Permissive&quot;</span><span class="p">,</span> <span class="s">&quot;Enforcing&quot;</span><span class="p">]</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;/usr/sbin/setenforce </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">mode</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&quot;/usr/sbin/setenforce </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">mode</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="getenforce"><a class="viewcode-back" href="../../common.html#common.selinux.getenforce">[docs]</a><span class="k">def</span> <span class="nf">getenforce</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Returns enforcing mode of SElinux</span>

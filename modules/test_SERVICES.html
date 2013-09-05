@@ -133,7 +133,35 @@
                 <span class="n">state_message</span> <span class="o">=</span> <span class="s">&quot;active&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">state_message</span> <span class="o">=</span> <span class="s">&quot;inactive&quot;</span>
-            <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;Service </span><span class="si">%s</span><span class="s"> is not </span><span class="si">%s</span><span class="s"> in runlevel </span><span class="si">%d</span><span class="s">!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">state_message</span><span class="p">,</span> <span class="n">runlevel</span><span class="p">))</span></div></div>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s">&quot;Service </span><span class="si">%s</span><span class="s"> is not </span><span class="si">%s</span><span class="s"> in runlevel </span><span class="si">%d</span><span class="s">!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">state_message</span><span class="p">,</span> <span class="n">runlevel</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="TestServices.test_httpd_running"><a class="viewcode-back" href="../test_SERVICES.html#test_SERVICES.TestServices.test_httpd_running">[docs]</a>    <span class="k">def</span> <span class="nf">test_httpd_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks whether httpd service is running</span>
+
+<span class="sd">        :raises: ``AssertionError``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">bash</span><span class="p">(</span><span class="s">&quot;service httpd status&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s">&quot;is running&quot;</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s">&quot;httpd must be running&quot;</span>
+</div>
+<div class="viewcode-block" id="TestServices.test_evm_running"><a class="viewcode-back" href="../test_SERVICES.html#test_SERVICES.TestServices.test_evm_running">[docs]</a>    <span class="k">def</span> <span class="nf">test_evm_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks whether EVM service is running</span>
+
+<span class="sd">        :raises: ``AssertionError``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">bash</span><span class="p">(</span><span class="s">&quot;service evmserverd status | grep EVM&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s">&quot;started&quot;</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s">&quot;evmserverd must be running&quot;</span>
+    </div>
+<div class="viewcode-block" id="TestServices.test_iptables_running"><a class="viewcode-back" href="../test_SERVICES.html#test_SERVICES.TestServices.test_iptables_running">[docs]</a>    <span class="k">def</span> <span class="nf">test_iptables_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks whether iptables service is running</span>
+
+<span class="sd">        :raises: ``AssertionError``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">Run</span><span class="o">.</span><span class="n">bash</span><span class="p">(</span><span class="s">&quot;service iptables status&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s">&quot;is not running&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s">&quot;iptables must be running&quot;</span>
+    </div></div>
 </pre></div>
 
           </div>
