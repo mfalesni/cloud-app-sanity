@@ -24,28 +24,24 @@
     tests around ``/etc/inittab``.
 """
 
-import pytest
-import common.shell
-from conftest import is_systemd
-
-@pytest.mark.skipif("not is_systemd()")
+@Test.Mark.skipif("not Test.Fixtures.is_systemd()")
 def test_runlevel_systemd():
     """
         Check for correct runlevel when using systemd
 
     :raises: ``AssertionError``
     """
-    symlink = common.shell.Run.command("readlink -f /etc/systemd/system/default.target")
+    symlink = Test.Run.command("readlink -f /etc/systemd/system/default.target")
     assert symlink
     assert symlink.stdout.strip() == "/lib/systemd/system/multi-user.target"
 
-@pytest.mark.skipif("is_systemd()")
+@Test.Mark.skipif("Test.Fixtures.is_systemd()")
 def test_runlevel_systemV():
     """
         Check for correct runlevel when using SysV
 
     :raises: ``AssertionError``
     """
-    inittab = common.shell.Run.command("grep '^id:' /etc/inittab")
+    inittab = Test.Run.command("grep '^id:' /etc/inittab")
     assert inittab
     assert inittab.stdout.strip() == "id:3:initdefault"

@@ -24,20 +24,18 @@
     This module contains tests targeted on system hardware and so.
 """
 
-import pytest
-import common.shell
 import re
 
 #TODO parametrize externally
 #TODO nicer output in the test?
-@pytest.mark.parametrize(("rule"),[
+@Test.Mark.parametrize(("rule"),[
     ("ACCEPT", "tcp", "--", "anywhere", "anywhere", "state NEW tcp dpt:ssh"),
     ("ACCEPT", "tcp", "--", "anywhere", "anywhere", "state NEW tcp dpt:http"),
     ("ACCEPT", "tcp", "--", "anywhere", "anywhere", "state NEW tcp dpt:https"),
     ])
 def test_iptables_rules(rule):
     ''' Verifies key iptable rules are in place '''
-    iptables = common.shell.Run.command('iptables -L')
+    iptables = Test.Run.command('iptables -L')
     assert iptables
     iptables = [re.sub(r"\s\s+", "\t", x) for x in iptables.stdout.strip().split("\n")]
     iptables = [re.sub(r"([^\s]+)\s(--)", "\\1\t\\2", x) for x in iptables]   # for icmp -- (only one space)
