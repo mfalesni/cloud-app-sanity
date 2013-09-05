@@ -24,9 +24,6 @@
     This file contains tests around SSH
 """
 
-import pytest
-import common.shell
-
 def test_sshd_active(is_systemd):
     """
         This tests checks that SSH server is active
@@ -34,7 +31,7 @@ def test_sshd_active(is_systemd):
     :raises: ``AssertionError``
     """
     if is_systemd:
-        sshd_active = common.shell.Run.command("systemctl is-active sshd.service")
+        sshd_active = Test.Run.command("systemctl is-active sshd.service")
         assert sshd_active, "SSH daemon must be active"
     else:
-        assert common.shell.Run.command("service sshd status"), "SSH server must be enabled"
+        assert Test.Run.command("service sshd status"), "SSH server must be enabled"
