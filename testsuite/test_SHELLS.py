@@ -24,10 +24,7 @@
     This file contains tests around shells
 """
 
-import pytest
-import common.shell
-
-@pytest.mark.parametrize("shell", [
+@Test.Mark.parametrize("shell", [
     "bin/bash",
     "bin/nologin"]
     )
@@ -37,4 +34,4 @@ def test_check_shell_in_etc_shells(shell):
 
     :raises: ``AssertionError``
     """
-    assert common.shell.Run.command("grep '%s$' /etc/shells" % shell)
+    assert Test.Run.command("grep '%s$' /etc/shells" % shell)
