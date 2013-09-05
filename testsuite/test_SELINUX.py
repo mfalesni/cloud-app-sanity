@@ -33,52 +33,48 @@ class TestSelinux(object):
         """
             This method saves the original enforcing mode for later restoring
         """
-        cls.original_enforce = common.selinux.getenforce()
+        cls.original_enforce = Test.SELinux.getenforce
 
     @classmethod
     def teardown_class(cls):
         """
             This method restores previous enforcing mode.
         """
-        common.selinux.setenforce(cls.original_enforce.stdout)
+        Test.SELinux.setenforce(cls.original_enforce)
 
-    @pytest.fixture
+    @Test.Fixture
     def set_enforcing(self):
         """
             Set Enforcing mode.
         """
-        common.selinux.setenforce("Enforcing")
+        Test.SELinux.setenforce("Enforcing")
 
-    @pytest.fixture
+    @Test.Fixture
     def set_permissive(self):
         """
             Set Permissive mode.
         """
-        common.selinux.setenforce("Permissive")
+        Test.SELinux.setenforce("Permissive")
 
-    @pytest.fixture
+    @Test.Fixture
     def is_enabled(self):
         """ Detects whether is SElinux enabled or not
 
         :returns: SElinux status
         :rtype: ``bool``
         """
-        try:
-            assert common.shell.Run.command("selinuxenabled")
-            return True
-        except AssertionError:
-            return False
+        return Test.SELinux.enabled
 
-    @pytest.fixture
+    @Test.Fixture
     def getenforce(self):
         """ Returns current enforcing mode of SELinux
 
         :returns: SElinux enforcing status
         :rtype: ``str``
         """
-        return common.selinux.getenforce()
+        return Test.SELinux.getenforce
 
-    @pytest.fixture
+    @Test.Fixture
     def getenforce_conf(self):
         """ Returns current enforcing mode of SELinux from config file
 
@@ -95,7 +91,7 @@ class TestSelinux(object):
         assert len(lines) == 1
         return lines[0].split("=")[1].strip()
 
-    @pytest.fixture
+    @Test.Fixture
     def mode(self):
         """ Returns current SELINUX type/mode from config file
 
@@ -122,7 +118,7 @@ class TestSelinux(object):
         """
         assert is_enabled, "SELinux is not enabled"
 
-    @pytest.mark.xfail
+    @Test.Mark.xfail
     def test_enforcing(self, getenforce):
         """ Verifies whether SELinux is in 'Enforcing' state.
 
@@ -131,10 +127,10 @@ class TestSelinux(object):
 
         :raises: AssertionError
         """
-        assert getenforce.stdout.strip() == "Enforcing", "SELinux is not in Enforcing mode!"
+        assert getenforce == "Enforcing", "SELinux is not in Enforcing mode!"
         
 
-    @pytest.mark.xfail
+    @Test.Mark.xfail
     def test_enforcing_from_config(self, getenforce_conf):
         """ Verifies whether SELinux is in 'Enforcing' state.
             Checks from config file
@@ -165,7 +161,7 @@ class TestSelinux(object):
 
         :raises: AssertionError
         """
-        assert getenforce.stdout.strip() == "Permissive", "SELinux is not in Permissive mode"
+        assert getenforce == "Permissive", "SELinux is not in Permissive mode"
 
     def test_enforcing_check(self, set_enforcing, getenforce):
         """ Flips SElinux into Enforcing mode.
@@ -176,4 +172,4 @@ class TestSelinux(object):
 
         :raises: AssertionError
         """
-        assert getenforce.stdout.strip() == "Enforcing", "SELinux is not in Enforcing mode"
+        assert getenforce == "Enforcing", "SELinux is not in Enforcing mode"
