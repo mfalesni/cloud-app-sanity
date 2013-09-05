@@ -100,6 +100,22 @@ class RPMPlugin(object):
                 return False
         return True
 
+    @classmethod
+    def check_for_errors(cls, text):
+        """ This function checks for errors in text and returns text unchanged
+
+        :param text: text to be checked
+        :type text: ``str``
+
+        :returns: text
+        :rtype: ``str``
+        """
+        errors = {'failure in rpm package': RPMPackageFailure, 'scriptlet failed, exit status 1': RPMScriptletFailure}
+        for error in errors.keys():
+            if error in text:
+                raise errors.keys()[error](text)
+        return text
+
 
 
 
