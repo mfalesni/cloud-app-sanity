@@ -1,7 +1,7 @@
 import __builtin__
 import sys
 
-folder_name = "library"
+folder_name = "plugins"
 
 class PluginNotFound(Exception):
     pass
