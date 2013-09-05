@@ -29,6 +29,7 @@ import common.shell
 import re
 
 #TODO parametrize externally
+#TODO nicer output in the test?
 @pytest.mark.parametrize(("rule"),[
     ("ACCEPT", "tcp", "--", "anywhere", "anywhere", "state NEW tcp dpt:ssh"),
     ("ACCEPT", "tcp", "--", "anywhere", "anywhere", "state NEW tcp dpt:http"),
