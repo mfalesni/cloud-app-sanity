@@ -26,22 +26,21 @@
 
 import re
 
+def packages_that_must_be_installed():
+    """ Reads all rules from file parametrized/packages_installed for purposes of parametrizing of the testing
+
+    :raises: ``IOError``
+    """
+    try:
+        f = open("parametrized/packages_installed", "r")
+    except IOError:
+        f = open("../parametrized/packages_installed", "r") # For testing purposes
+    lines = [re.sub(r"\s+", "\t", re.sub(r"#[^#]*$", "", x.strip())).strip() for x in f.readlines()] # Remove comments and normalize blank spaces into tabs
+    f.close()
+    return [line for line in lines if len(line) > 0] # remove blank lines
+
 class TestRPM(object):
     
-    @staticmethod
-    def packages_that_must_be_installed():
-        """ Reads all rules from file parametrized/packages_installed for purposes of parametrizing of the testing
-
-        :raises: ``IOError``
-        """
-        try:
-            f = open("parametrized/packages_installed", "r")
-        except IOError:
-            f = open("../parametrized/packages_installed", "r") # For testing purposes
-        lines = [re.sub(r"\s+", "\t", re.sub(r"#[^#]*$", "", x.strip())).strip() for x in f.readlines()] # Remove comments and normalize blank spaces into tabs
-        f.close()
-        return [line for line in lines if len(line) > 0] # remove blank lines
-
     @Test.Mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false').strip() == 'true'")
     @Test.Mark.parametrize("package", Test.Fixtures.rpm_package_list())
     def test_signed(self, package):
@@ -64,11 +63,10 @@ class TestRPM(object):
 
         :raises: AssertionError
         """
-        problems = common.rpm.verify_package_files(package)
+        problems = Test.RPM.verify_package_files(package)
         assert len(problems) == 0, "Package %s had following problems: '%s'" % (package, ", ".join(problems))
 
 
-    #TODO FINISH!!!!!!!!!!!
     @Test.Mark.parametrize("package", Test.Fixtures.rpm_package_list())
     def test_fortified(self, package):
         """ This test checks whether are all compiled files in package fortified.
@@ -108,7 +106,8 @@ class TestRPM(object):
         if not was_elf:
             Test.Skip(msg="No binary present in this package")
 
-    @Test.Mark.parametrize("package", TestRPM.packages_that_must_be_installed())
+    # TODO better placement of the list
+    @Test.Mark.parametrize("package", packages_that_must_be_installed())
     def test_whether_package_installed(self, package):
         """
             This test tests whether required packages are present

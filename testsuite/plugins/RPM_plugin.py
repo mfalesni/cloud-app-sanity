@@ -125,6 +125,63 @@ class RPMPlugin(object):
                 raise errors.keys()[error](text)
         return text
 
+    @classmethod
+    def wrong_files_lines(cls, package_lines):
+        """ Returns lines with problem files
+
+        :param package_lines: rpm --verify output for the package
+        :type package_lines: ``list[str]``
+
+        :returns: List of lines speaking about wrong something about files
+        :rtype: ``list(str)``
+        """
+        release = Test.Fixtures.rhel_release()
+        for line in package_lines:
+            line = line.strip()
+            if len(line) > 0:
+                # RHEL5 has 8 dots
+                # RHEL6 has 9 dots
+                if (not line.startswith(".........") and release.major == 6) or (not line.startswith("........") and release.major == 5):
+                    yield line
+
+    @classmethod
+    def verify_package_files(cls, package):
+        """ Verifies package in RPM database.
+
+            Checks output of the rpm -Vvv and looks for files, which have some problems (see http://www.rpm.org/max-rpm/s1-rpm-verify-output.html)
+            When using RHEL5, $? is ignored.
+
+        :param package: Package to check
+        :type package: ``str``
+        :returns: Bool whether verification succeeded
+        :rtype: ``bool``
+        """
+        problems = []
+        vrf = cls.verify(package)
+        source = vrf.stdout.strip().split("\n")
+        if int(vrf.rc) != 0 and Test.Fixtures.rhel_release().major != 5: # RHEL5 will ignore returncode
+            problems.append("RPM $?=%d" % int(vrf.rc))
+        for line in cls.wrong_files_lines(source):
+            status_type, filename = line.split("/", 1)
+            filename = "/" + filename
+            status_type = re.sub(r"\s+", " ", status_type).strip().split()
+            status = status_type[0]
+            file_type = ""
+            if len(status_type) > 1:
+                file_type = status_type[1].strip()
+            # if file_type == "c":
+            #     continue
+            status_problems = []
+            for key in RPM_PROBLEMS_MESSAGES:
+                if key in status:
+                    status_problems.append(RPM_PROBLEMS_MESSAGES[key])
+            if len(status_problems) == 0:
+                status_problems.append(status)
+                #TODO config?
+
+            problems.append("file %s has problems with %s" % (filename, ", ".join(status_problems) ) )
+        return problems
+
 
 
 
