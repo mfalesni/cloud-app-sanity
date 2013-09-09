@@ -1,6 +1,7 @@
 import re
 import pytest
 import base64
+import socket
 import common.shell
 from urllib2 import urlopen, HTTPError, URLError, Request
 
@@ -81,5 +82,36 @@ class NetworkPlugin(object):
         request = Request(url)
         request.add_header("Authorization", "Basic %s" % base64.encodestring('%s:%s' % (login, password))[:-1])
         return request
+
+    @classmethod
+    def wait_for_request(cls, request_path="/continue", port=35579):
+        host = '0.0.0.0'
+        backlog = 5
+        size = 1024
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((host,port))
+        s.listen(backlog)
+        try:
+            while True:
+                client, address = s.accept()
+                data = client.recv(size)
+                if not data:
+                    client.close()
+                    continue
+                data = data.strip().split("\n", 1)[0].strip()
+                if not data.startswith("GET"):
+                    client.send("HTTP/1.1 405 Method Not Allowed\nContent-type: text/plain\n\n405 %s\n" % request_path)
+                else:
+                    method, rest = data.split(" ", 1)
+                    path, protocol = rest.rsplit(" ", 1)
+                    if path.strip() == request_path:
+                        client.send("HTTP/1.1 200 OK\nContent-type: text/plain\n\n200 %s\n" % request_path)
+                        break
+                    else:
+                        client.send("HTTP/1.1 404 Not Found\nContent-type: text/plain\n\n404 %s\n" % request_path)
+                client.close()
+        finally:
+            s.close()
 
 export = NetworkPlugin
