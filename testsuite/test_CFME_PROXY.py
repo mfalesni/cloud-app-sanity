@@ -24,14 +24,11 @@
     Special CFME test
 """
 
-def test_wait_for_command_1():
-    """
-        Waits for an external command.
-    """
-    Test.Network.wait_for_request("/start_proxy_test")
-
-def test_disable_subscription_over_iptables():
-    Test.iptables.block_output_ip("10.4.127.49")
+def test_wait_and_disable_subscription_over_iptables():
+    Test.iptables.open_port(Test.Network.default_wait_port)
+    address = Test.Network.wait_for_request("/start_proxy_test")
+    assert len(address), "Address must be provided!"
+    Test.iptables.block_output_ip(Test.Network.domain_ip(address))
 
 def test_wait_for_command_2():
     """

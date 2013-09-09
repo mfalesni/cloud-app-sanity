@@ -9,6 +9,9 @@ class DownloadException(Exception):
     pass
 
 class NetworkPlugin(object):
+
+    default_wait_port = 35579
+
     @staticmethod
     def service_bound_localhost(service):
         """ This function checks whether certain service is bound only to localhost.
@@ -84,14 +87,17 @@ class NetworkPlugin(object):
         return request
 
     @classmethod
-    def wait_for_request(cls, request_path="/continue", port=35579):
+    def wait_for_request(cls, request_path="/continue", port=None):
         host = '0.0.0.0'
+        if not port:
+            port = cls.default_wait_port
         backlog = 5
         size = 1024
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((host,port))
         s.listen(backlog)
+        result = None
         try:
             while True:
                 client, address = s.accept()
@@ -105,13 +111,24 @@ class NetworkPlugin(object):
                 else:
                     method, rest = data.split(" ", 1)
                     path, protocol = rest.rsplit(" ", 1)
-                    if path.strip() == request_path:
+                    if path.strip().startswith(request_path):
                         client.send("HTTP/1.1 200 OK\nContent-type: text/plain\n\n200 %s\n" % request_path)
+                        result = path.strip()[len(request_path):]
+                        result = re.sub(r"^/", "", result)
                         break
                     else:
                         client.send("HTTP/1.1 404 Not Found\nContent-type: text/plain\n\n404 %s\n" % request_path)
                 client.close()
         finally:
             s.close()
+        return result
+
+    @classmethod
+    def domain_ip(cls, domain):
+        result = Test.Run.command("host -t a %s" % domain)
+        assert result
+        assert "has address" in result.stdout
+        ip_addr = result.stdout.strip().rsplit("has address", 1)[-1].strip()
+        return ip_addr
 
 export = NetworkPlugin
