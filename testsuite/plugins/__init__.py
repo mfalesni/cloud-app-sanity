@@ -33,6 +33,8 @@ class PluginProxy(object):
         self.Fail = pytest.fail
         self.Skip = pytest.skip
         self.Fixture = pytest.fixture
+        unittestzero = __import__("unittestzero")
+        self.Assert = unittestzero.Assert
 
     def __getattribute__(self, attribute):
         try:
