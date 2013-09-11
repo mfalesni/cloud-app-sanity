@@ -8,3 +8,6 @@ py
 # Until issue#232 is resolved, require pytest-2.3.3
 # https://bitbucket.org/hpk42/pytest/issue/232/pytest-234-throws-internalerror-when-not
 pytest == 2.3.3
+
+#
+UnittestZero
