@@ -32,6 +32,23 @@ This suite is not finished yet. If you have any idea which could extend the suit
 
 And I really don't like the ninja comments, so please avoid them. If you see any ninja comment in my code, be sure it will disappear soon.
 
+Writing tests:
+=============
+This suite is based on py.test testing framework. There are no changes concerning test discovery. There is no need to write <code>import pytest</code> in each test module. There is an object <code>Test</code> available as a builtin. Some things from pytest are imported into it:
+<pre>
+pytest.mark -> Test.Mark
+pytest.fail -> Test.Fail
+pytest.skip -> Test.Skip
+pytest.fixture -> Test.Fixture
+unittestzero.Assert -> Test.Assert
+conftest -> Test.Fixtures
+</pre>
+Take the already written tests as a reference.
+
+Writing plugins:
+===============
+This suite is equipped with a very simple and easy to use plugin system. Plugins are lazily loaded when called as <code>Test.PLUGIN</code>. If you call eg. <code>Test.RPM</code>, the lookup looks for a module <code>RPM_plugin.py</code> in <code>plugins/</code> folder. If found, it imports it and looks for a varible <code>export</code>, which signifies the object to take as a plugin. Then the plugin is loaded and ready for use. Look in the <code>plugins/</code> folder as a reference.
+
 To-Do:
 =======
 * extend, extend, ...
@@ -60,5 +77,6 @@ curl https://raw.github.com/mfalesni/cloud-app-sanity/master/tools/download_suit
 cd cloud-app-sanity
 </pre>
 3. To run the suite using virtualenv and stuff, wrapper <code>starter.sh</code> is used. It wraps <code>py.test</code> call and passes all parameters to it.
+4. Drink coffee
 
 With current tests scheme, for example, one can run rpm tests by specifying keywordexpr (<code>-k KEYWORD</code>) as "RPM". Look into <code>tests</code> folder.
