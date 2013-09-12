@@ -47,5 +47,7 @@ for package in $REQUIRED_YUM_PACKAGES
 do
     ensure_installed_rpm $package
 done
-echo "Keyword expression: ${1}"
-PY_KEYWORDEXPR="${1}" python setup.py test
+echo "Command-line parameters: ${@}"
+./virtualenv.py build
+. build/bin/activate
+py.test "${@}"
