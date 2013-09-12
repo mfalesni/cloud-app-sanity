@@ -48,6 +48,6 @@ do
     ensure_installed_rpm $package
 done
 echo "Command-line parameters: ${@}"
-./virtualenv.py build
+[ ! -d "./build" ] && ./virtualenv.py build
 . build/bin/activate
 py.test "${@}"
