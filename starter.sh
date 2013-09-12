@@ -30,8 +30,16 @@ function ensure_installed_program()
         yum install -y "${PROGRAM}" && {
             echo ">> Program ${PROGRAM} successfully installed via yum"
         } || {
-            echo ">> Installation of program ${PROGRAM} via yum failed. Quitting"
-            exit 3
+            echo ">> Package ${PROGRAM} not found. Asking yum ..."
+            PKG="`yum whatprovides --rpmverbosity=name ${PROGRAM} 2>/dev/null| grep -vE '^$' | grep -vE '^(Repo|Matched|Other)' | grep -E `uname -i` | sed -r -e 's/^([^:]+):.*?$/\1/' | sort -r | head -n1`"
+            [ ! -z "${PKG}" ] && {
+                yum instally -y ${PKG} && {
+                    echo ">> Package ${PKG} providing ${PROGRAM} successfully installed"
+                } || {
+                    echo ">> Package which would provide ${PROGRAM} not found"
+                    exit 3
+                }
+            }
         }
     }
 }
