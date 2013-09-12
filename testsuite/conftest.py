@@ -31,6 +31,7 @@ import pytest
 import os
 import re
 import subprocess
+import yaml
 
 # This loads the PluginProxy, no need to write this inside tests
 import plugins
@@ -44,6 +45,19 @@ try:
     import json
 except ImportError:
     import simplejson as json
+
+def pytest_addoption(parser):
+    parser.addoption("--parametrize-file", action="store", default="default", help="Where to load parametrizing data from.")
+
+@pytest.fixture
+def parametrize_file(request):
+    return request.config.getoption("--parametrize-file")
+
+@pytest.fixture
+def parametrize_data(parametrize_file):
+    with open("parametrized/%s.yaml" % parametrize_file) as input_file:
+        data = yaml.load(input_file)
+    return data
 
 @pytest.fixture
 def audreyvars():
