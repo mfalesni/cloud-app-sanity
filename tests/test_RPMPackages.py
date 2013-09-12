@@ -28,9 +28,15 @@ import re
 
 class TestRPM(object):
     
+    @Test.Fixture
+    def skip_sig(self, request):
+        opt = request.config.getoption("--RPM-skip-sig-check").lower()
+        assert opt in ["yes", "no"]
+        return {"yes": True, "no": False}[opt]
+
     @Test.Mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false').strip() == 'true'")
     @Test.Mark.parametrize("package", Test.Fixtures.rpm_package_list())
-    def test_signed(self, package):
+    def test_signed(self, package, skip_sig):
         """ This test checks a package whether it has a signature.
 
         :param package: package to be checked
@@ -38,6 +44,8 @@ class TestRPM(object):
 
         :raises: AssertionError
         """
+        if skip_sig:
+            Test.Skip()
         assert Test.RPM.package_signed(package), "Package %s is not signed!" % (package,)
 
     @Test.Mark.parametrize("package", Test.Fixtures.rpm_package_list())

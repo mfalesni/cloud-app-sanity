@@ -46,6 +46,8 @@ except ImportError:
 
 def pytest_addoption(parser):
     parser.addoption("--parametrize-file", action="store", default="default", help="Where to load parametrizing data from.")
+    parser.addoption("--RPM-skip-sig-check", action="store", default="no", help="Whether to skip RPM signature tests.")
+
 
 @pytest.fixture(scope="session")
 def parametrize_data(request):

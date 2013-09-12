@@ -54,7 +54,6 @@ class RPMPlugin(object):
 
         """
         rpm = Test.Run.command("rpm -Vvv %s" % package)
-        assert rpm, "'rpm -Vvv %s' failed, does the package exist?" % package
         return rpm
 
     @classmethod
