@@ -1,0 +1,37 @@
+---
+services:
+  ntpd:
+    3: on
+    5: on
+filesystem:
+  world_writable_whitelist:
+    - /tmp
+    - /var/tmp
+    - /dev/log
+    - /dev/fuse
+    - /dev/shm
+    - /dev/ptmx
+    - /dev/tty
+    - /dev/urandom
+    - /dev/random
+    - /dev/full
+    - /dev/zero
+    - /dev/null
+    - /dev/net/tun
+    - /var/spool/postfix/public/*
+    - /var/spool/postfix/private/*
+    - /var/run/rpcbind.sock
+    - /var/run/dbus/system_bus_socket
+    - /var/run/abrt/abrt.socket
+    - /var/run/cups/cups.sock
+  ignore_patterns:
+    - /proc
+    - /selinux
+    - /dev/.udev
+    - /lib/modules/*/build
+    - /lib/modules/*/source
+    - /usr/lib64/valgrind/*
+packages:
+  must_be_installed:
+    - nfs-utils
+    - nfs-utils-lib
