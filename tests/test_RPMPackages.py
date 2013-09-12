@@ -26,19 +26,6 @@
 
 import re
 
-def packages_that_must_be_installed():
-    """ Reads all rules from file parametrized/packages_installed for purposes of parametrizing of the testing
-
-    :raises: ``IOError``
-    """
-    try:
-        f = open("parametrized/packages_installed", "r")
-    except IOError:
-        f = open("../parametrized/packages_installed", "r") # For testing purposes
-    lines = [re.sub(r"\s+", "\t", re.sub(r"#[^#]*$", "", x.strip())).strip() for x in f.readlines()] # Remove comments and normalize blank spaces into tabs
-    f.close()
-    return [line for line in lines if len(line) > 0] # remove blank lines
-
 class TestRPM(object):
     
     @Test.Mark.skipif("os.environ.get('SKIP_SIGNATURE_CHECK', 'false').strip() == 'true'")
@@ -107,12 +94,15 @@ class TestRPM(object):
             Test.Skip(msg="No binary present in this package")
 
     # TODO better placement of the list
-    @Test.Mark.parametrize("package", packages_that_must_be_installed())
-    def test_whether_package_installed(self, package):
+    def test_whether_package_installed(self, rpm_package_list):
         """
             This test tests whether required packages are present
 
         :raises: ``AssertionError``
         """
-        assert Test.RPM.query(package), "Package %s has to be installed!!" % package
+        failed = []
+        for package in rpm_package_list:
+            if not Test.RPM.query(package):
+                failed.append(package)
+        assert not failed, "Packages %s aren't installed!!" % ", ".join(failed)
         
