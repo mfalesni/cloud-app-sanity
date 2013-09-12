@@ -50,4 +50,5 @@ done
 echo "Command-line parameters: ${@}"
 [ ! -d "./build" ] && ./virtualenv.py build
 . build/bin/activate
+pip install -Ur requirements.txt
 py.test "${@}"
