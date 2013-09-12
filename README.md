@@ -24,16 +24,16 @@ Suite is compatible with these systems:
 * RHEL6
 * partially RHEL5 (it's not the main focus to support it, but anything I add into the suite runs also on RHEL5)
 
+If you need some case-specific tuning, folder parametrized is used to store parametrization details which can be loaded using py.test switch <code>--parametrize-file=somefile</code>, which will load <code>paraemtrized/somefile.yaml</code>. If no parameter specified, file <code>default.yaml</code> is loaded.
 
 Contribute!
 ===========
-This suite is not finished yet. If you have any idea which could extend the suite, feel free to fork, extend and make a pull request. Before making any changes, look into the test_* files to catch the basic principles and look also in the folder <code>testsuite/common</code> which is used to store system-manipulating functions to raise the level of abstraction.
+This suite is not finished yet. If you have any idea which could extend the suite, feel free to fork, extend and make a pull request. Before making any changes, look into the test_* files to catch the basic principles and look also in the folder <code>testsuite/plugins</code> which is used to store system-manipulating functions to raise the level of abstraction.
 
-And I really don't like the ninja comments, so please avoid them.
+And I really don't like the ninja comments, so please avoid them. If you see any ninja comment in my code, be sure it will disappear soon.
 
 To-Do:
 =======
-* some of the tests, which are parametrized from external file (eg. test_SERVICES and other), should be able to change the directory to load from to make it more universal.
 * extend, extend, ...
 
 Prerequisities:
@@ -59,16 +59,6 @@ curl https://raw.github.com/mfalesni/cloud-app-sanity/master/tools/download_suit
 <pre>
 cd cloud-app-sanity
 </pre>
-3. Prepare the environment and run the test suite. You can run all tests with this command:
-<pre>
-python setup.py test
-</pre>
-if you want to run only some tests matching a particular expression, you can use this command:
-<pre>
-PY_KEYWORDEXPR="some-string" python setup.py test
-</pre>
-Where "some-string" specifies a keyword expression used by py.test to determine which tests to run.  For more information, consult the ''-k KEYWORDEXPR'' parameter to py.test.
+3. To run the suite using virtualenv and stuff, wrapper <code>starter.sh</code> is used. It wraps <code>py.test</code> call and passes all parameters to it.
 
-With current tests scheme, for example, one can run rpm tests by specifying keywordexpr as "RPM". Look into <code>testsuite</code> folder.
-
-Reports in JUnit XML format, usable eg. in Jenkins CI, are stored in <code>results</code> folder with filename based on unix timestamp (eg. 1378297684.xml)
+With current tests scheme, for example, one can run rpm tests by specifying keywordexpr (<code>-k KEYWORD</code>) as "RPM". Look into <code>tests</code> folder.
