@@ -1,5 +1,6 @@
 import __builtin__
 import sys
+import inspect
 
 folder_name = __name__
 

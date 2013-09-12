@@ -49,15 +49,35 @@ except ImportError:
 def pytest_addoption(parser):
     parser.addoption("--parametrize-file", action="store", default="default", help="Where to load parametrizing data from.")
 
-@pytest.fixture
-def parametrize_file(request):
-    return request.config.getoption("--parametrize-file")
-
-@pytest.fixture
-def parametrize_data(parametrize_file):
-    with open("parametrized/%s.yaml" % parametrize_file) as input_file:
+@pytest.fixture(scope="session")
+def parametrize_data(request):
+    with open("../parametrized/%s.yaml" % request.config.getoption("--parametrize-file")) as input_file:
         data = yaml.load(input_file)
     return data
+
+@pytest.fixture(scope="session")
+def services_to_test(parametrize_data):
+    """ Reads all rules from file parametrized/services for purposes of parametrizing of the testing
+
+    :raises: ``IOError``
+    """
+    services = parametrize_data.get("services", {})
+    for service in services:
+        for runlevel, enablement in services[service].iteritems():
+            yield service, runlevel, enablement
+
+@pytest.fixture(scope="session")
+def filesystem_ignore_patterns(parametrize_data):
+    return parametrize_data.get("filesystem", {}).get("ignore_patterns", [])
+
+@pytest.fixture(scope="session")
+def filesystem_world_writable_whitelist(parametrize_data):
+    return parametrize_data.get("filesystem", {}).get("world_writable_whitelist", [])
+
+@pytest.fixture(scope="session")
+def packages_must_be_installed(parametrize_data):
+    return parametrize_data.get("packages", {}).get("must_be_installed", [])
+
 
 @pytest.fixture
 def audreyvars():

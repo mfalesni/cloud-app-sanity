@@ -27,39 +27,6 @@ import fnmatch
 
 """ Filesystem checking tests """
 class TestFileSystem(object):
-    @Test.Fixture
-    def world_writable_whitelist(self):
-        """
-            Reads a whitelist of files that can be world_writable.
-
-        :returns: Whitelist of world-writable files
-        """
-        try:
-            f = open("parametrized/world_writable_whitelist", "r")
-        except IOError:
-            f = open("../parametrized/world_writable_whitelist", "r") # For testing purposes
-
-        data = [line.strip() for line in f.readlines()]
-        f.close()
-        return data
-
-    @Test.Fixture
-    def ignore_patterns(self):
-        """
-            Reads a list of ignore patterns which won't be tested.
-
-        :returns: List of ignore patterns
-        """
-        try:
-            f = open("parametrized/fs_ignore_patterns", "r")
-        except IOError:
-            f = open("../parametrized/fs_ignore_patterns", "r") # For testing purposes
-
-        data = [line.strip() for line in f.readlines()]
-        f.close()
-        return data
-
-
     def fmt_mode_str(self, st_mode):
         """ ???
             Does the formatting of props.
@@ -89,7 +56,7 @@ class TestFileSystem(object):
 
         return mode_str + '.'
 
-    def test_check_permissions_and_broken_symlinks(self, world_writable_whitelist, ignore_patterns):
+    def test_check_permissions_and_broken_symlinks(self, filesystem_world_writable_whitelist, filesystem_ignore_patterns):
         """ This test checks whether there are some files with unwanted props in FS.
             Looks for broken symlinks and world-writable files.
 
@@ -121,7 +88,7 @@ class TestFileSystem(object):
                     path = path[1:]
 
                 # Skip this file/dir, has the wrong pattern
-                if any([fnmatch.fnmatch(path, p) for p in ignore_patterns]):
+                if any([fnmatch.fnmatch(path, p) for p in filesystem_ignore_patterns]):
                     sys.stdout.write("[ignoring] %s\n" % (path,))
                     continue
 
@@ -140,7 +107,7 @@ class TestFileSystem(object):
                     # Check its permissions, if wrong, append it
                     if is_world_writable(info):
                         # If the path isn't on the whitelist ... we found a failure
-                        if not any([fnmatch.fnmatch(path, p) for p in world_writable_whitelist]):
+                        if not any([fnmatch.fnmatch(path, p) for p in filesystem_world_writable_whitelist]):
                             sys.stderr.write("[world-writable] %s %s\n" % (self.fmt_mode_str(info.st_mode), path))
                             failed = True
         if failed:
