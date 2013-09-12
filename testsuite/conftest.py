@@ -294,7 +294,13 @@ def rhel_release():
     """
     redhat_release_content = Test.Run.command("cat /etc/redhat-release")
     assert redhat_release_content
-    redhat_version_field = redhat_release_content.stdout.strip().split(" ")[6]
+    release = None
+    if redhat_release_content.stdout.startswith("Fedora"):
+        release = [int(redhat_release_content.stdout.strip().split(" ")[2]), 0]  # Major/minor (0)
+        release.append("Fedora")
+    else:
+        release = redhat_release_content.stdout.strip().split(" ")[6].split(".", 1)
+        release.append("RHEL")
     class RedhatRelease(object):
         def __init__(self, major, minor, distro="RHEL"):
             self.major = int(major)
@@ -310,7 +316,7 @@ def rhel_release():
             else:
                 raise KeyError("only 0 and 1 supported")
     #return tuple(redhat_version_field.split(".", 1))
-    return RedhatRelease(*redhat_version_field.split(".", 1))
+    return RedhatRelease(*release)
 
 @pytest.fixture
 def PATH():
