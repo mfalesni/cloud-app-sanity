@@ -24,7 +24,6 @@
     This file contains tests which can test various aspects around services.
 """
 
-import common.services
 
 class TestServices(object):
     @Test.Fixture
