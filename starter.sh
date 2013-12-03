@@ -56,7 +56,8 @@ do
     ensure_installed_rpm $package
 done
 echo "Command-line parameters: ${@}"
-[ ! -d "./build" ] && ./virtualenv.py build
-. build/bin/activate
+DIR="/tmp/`pwd | sed -r -e 's/^.*?\/([^/]+)$/\1/'`_VE"
+[ ! -d "${DIR}" ] && ./virtualenv.py "${DIR}"
+. $DIR/bin/activate
 pip install -Ur requirements.txt
 py.test "${@}"

@@ -62,7 +62,7 @@ test:
 doc_src: bootstrap
 	[ -d $(DOCS_DIR) ] || mkdir -p $(DOCS_DIR)
 	cd "$(DOCS_DIR)" && rm -rf index.rst
-	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && sphinx-apidoc -F -H "${DOCS_TITLE}" -A "${DOCS_AUTHOR}" -V "${DOCS_VERSION}" -o ./ ../testsuite/
+	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && sphinx-apidoc -F -H "${DOCS_TITLE}" -A "${DOCS_AUTHOR}" -V "${DOCS_VERSION}" -o ./ ../tests/
 
 doc_html: doc_src
 	source "$(BUILD_DIR)/bin/activate" && cd $(DOCS_DIR) && make html
